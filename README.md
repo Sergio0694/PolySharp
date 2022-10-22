@@ -1,14 +1,9 @@
 ![image](https://user-images.githubusercontent.com/10199417/197341200-3810e13c-9104-4911-90fc-b8add0862458.png)
+[![.NET](https://github.com/Sergio0694/PolySharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/PolySharp/actions) [![NuGet](https://img.shields.io/nuget/dt/PolySharp.svg)](https://www.nuget.org/stats/packages/PolySharp?groupby=Version) [![NuGet](https://img.shields.io/nuget/vpre/PolySharp.svg)](https://www.nuget.org/packages/PolySharp/)
 
 # What is it? 🚀
 
 **PolySharp** provides Source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel. The package is distributed as a source generator, so that it will automatically detect which polyfills are needed depending on the target framework and project in use: just add a reference to **PolySharp**, set your C# language version to latest, and have fun!
-
-# Available packages 📦
-
-| Name | Description | Latest version |
-| ------ | ------  | ------ |
-| **PolySharp** | Source-only polyfills for C# language features | [![NuGet](https://img.shields.io/nuget/vpre/PolySharp.svg)](https://www.nuget.org/packages/PolySharp/) |
 
 # Documentation 📖
 
