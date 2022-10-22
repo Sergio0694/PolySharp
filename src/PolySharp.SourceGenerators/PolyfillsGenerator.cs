@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using PolySharp.SourceGenerators.Extensions;
@@ -27,14 +28,21 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
             context.AnalyzerConfigOptionsProvider
             .Select((options, _) => options.GetBoolMSBuildProperty("PolySharpUsePublicAccessibilityForGeneratedTypes"));
 
+        // Do the same as above but for the $(PolySharpIncludeRuntimeSupportedAttributes) property
+        IncrementalValueProvider<bool> includeRuntimeSupportedAttributes =
+            context.AnalyzerConfigOptionsProvider
+            .Select((options, _) => options.GetBoolMSBuildProperty("PolySharpIncludeRuntimeSupportedAttributes"));
+
         // Enumerate each embedded resource: each will map to a type that can be polyfilled. Types are
         // polyfilled one by one if not available, to avoid errors if users had some manual polyfills already.
         foreach (string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames())
         {
+            // Check whether this resource is runtime supported
+            bool isRuntimeSupportedAttribute = resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.Compatibility.");
+
             // Strip the "PolySharp.SourceGenerators.EmbeddedResources." prefix and the ".cs" suffix from each resource name
-            int prefixLength = "PolySharp.SourceGenerators.EmbeddedResources.".Length;
-            int suffixLength = ".cs".Length;
-            string fullyQualifiedMetadataName = resourceName.Substring(prefixLength, resourceName.Length - (prefixLength + suffixLength));
+            const string regex = @"^PolySharp\.SourceGenerators\.EmbeddedResources(?:\.Compatibility)?\.(System(?:\.\w+)+)\.cs$";
+            string fullyQualifiedMetadataName = Regex.Match(resourceName, regex).Groups[1].Value;
 
             // Get an IncrementalValueProvider<bool> representing whether the current type is already available
             IncrementalValueProvider<bool> isTypeAccessible =
@@ -42,14 +50,20 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                 .Select((compilation, _) => compilation.HasAccessibleTypeWithMetadataName(fullyQualifiedMetadataName));
 
             // Prepare the generation options for the current polyfill
-            IncrementalValueProvider<(bool IsTypeAccessible, bool UsePublicAccessibilityForGeneratedTypes)> generationOptions =
-                isTypeAccessible.Combine(usePublicAccessibilityForGeneratedTypes);
+            IncrementalValueProvider<(bool IsTypeAccessible, bool UsePublicAccessibilityForGeneratedTypes, bool IncludeRuntimeSupportedAttributes)> generationOptions =
+                isTypeAccessible.Combine(usePublicAccessibilityForGeneratedTypes, includeRuntimeSupportedAttributes);
 
             // Generate source for the current type depending on current accessibility
             context.RegisterSourceOutput(generationOptions, (context, generationOptions) =>
             {
                 // The type is already accessible, so nothing more to do
                 if (generationOptions.IsTypeAccessible)
+                {
+                    return;
+                }
+
+                // If the type is runtime supported and this wasn't requested, skip it
+                if (isRuntimeSupportedAttribute && !generationOptions.IncludeRuntimeSupportedAttributes)
                 {
                     return;
                 }
