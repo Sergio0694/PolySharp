@@ -9,7 +9,6 @@ namespace System.Runtime.CompilerServices;
 /// Reserved to be used by the compiler for tracking metadata.
 /// This class should not be used by developers in source code.
 /// </summary>
-/// <remarks>Ported from <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Runtime/CompilerServices/IsExternalInit.cs"/>.</remarks>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class IsExternalInit
 {

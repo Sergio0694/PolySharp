@@ -6,7 +6,6 @@ namespace System.Runtime.CompilerServices;
 /// <summary>
 /// Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
 /// </summary>
-/// <remarks>Ported from <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Runtime/CompilerServices/SkipLocalsInitAttribute.cs"/>.</remarks>
 [AttributeUsage(
     AttributeTargets.Module |
     AttributeTargets.Class |

@@ -4,14 +4,6 @@
 namespace System.Diagnostics.CodeAnalysis;
 
 /// <summary>
-/// Applied to a method that will never return under any circumstance.
-/// </summary>
-[AttributeUsage(AttributeTargets.Method, Inherited = false)]
-public sealed class DoesNotReturnAttribute : Attribute
-{
-}
-
-/// <summary>
 /// Specifies that the method will not return if the associated Boolean parameter is passed the specified value.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
