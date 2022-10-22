@@ -27,15 +27,18 @@ namespace System.Runtime.Versioning
                     AttributeTargets.Struct,
                     AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class UnsupportedOSPlatformAttribute : OSPlatformAttribute
+    internal sealed class UnsupportedOSPlatformAttribute : Attribute // OSPlatformAttribute
     {
-        public UnsupportedOSPlatformAttribute(string platformName) : base(platformName)
+        public UnsupportedOSPlatformAttribute(string platformName)
+            // : base(platformName)
         {
         }
-        public UnsupportedOSPlatformAttribute(string platformName, string? message) : base(platformName)
+        public UnsupportedOSPlatformAttribute(string platformName, string? message)
+            // : base(platformName)
         {
             Message = message;
         }
+
         public string? Message { get; }
     }
 }

@@ -26,15 +26,15 @@ namespace System.Runtime.Versioning
                     AttributeTargets.Struct,
                     AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class ObsoletedOSPlatformAttribute : OSPlatformAttribute
+    internal sealed class ObsoletedOSPlatformAttribute : Attribute // OSPlatformAttribute
     {
         public ObsoletedOSPlatformAttribute(string platformName)
-            : base(platformName)
+            // : base(platformName)
         {
         }
 
         public ObsoletedOSPlatformAttribute(string platformName, string? message)
-            : base(platformName)
+            // : base(platformName)
         {
             Message = message;
         }

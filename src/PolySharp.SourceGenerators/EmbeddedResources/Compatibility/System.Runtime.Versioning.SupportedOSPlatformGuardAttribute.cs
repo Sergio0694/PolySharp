@@ -22,9 +22,10 @@ namespace System.Runtime.Versioning
                     AttributeTargets.Property,
                     AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class SupportedOSPlatformGuardAttribute : OSPlatformAttribute
+    internal sealed class SupportedOSPlatformGuardAttribute : Attribute // OSPlatformAttribute
     {
-        public SupportedOSPlatformGuardAttribute(string platformName) : base(platformName)
+        public SupportedOSPlatformGuardAttribute(string platformName)
+            // : base(platformName)
         {
         }
     }

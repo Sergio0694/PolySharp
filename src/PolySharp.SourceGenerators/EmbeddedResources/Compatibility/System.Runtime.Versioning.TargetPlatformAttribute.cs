@@ -12,9 +12,10 @@ namespace System.Runtime.Versioning
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class TargetPlatformAttribute : OSPlatformAttribute
+    internal sealed class TargetPlatformAttribute : Attribute // OSPlatformAttribute
     {
-        public TargetPlatformAttribute(string platformName) : base(platformName)
+        public TargetPlatformAttribute(string platformName)
+            // : base(platformName)
         {
         }
     }
