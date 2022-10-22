@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{8D
 		src\PolySharp.Package\PolySharp.Package.msbuildproj = src\PolySharp.Package\PolySharp.Package.msbuildproj
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D65D0307-1D0F-499D-945B-E33E71F251A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.Tests", "tests\PolySharp.Tests\PolySharp.Tests.csproj", "{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,9 +23,16 @@ Global
 		{DF3A95B8-20FE-44E7-AE9F-E546565DB80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF3A95B8-20FE-44E7-AE9F-E546565DB80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF3A95B8-20FE-44E7-AE9F-E546565DB80A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3} = {D65D0307-1D0F-499D-945B-E33E71F251A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F946EBAA-2D9B-4599-B4A2-7ECD81E0DF61}
