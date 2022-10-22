@@ -52,7 +52,7 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                 }
 
                 // Finally generate the source text
-                context.AddSource(fullyQualifiedMetadataName, sourceText);
+                context.AddSource($"{fullyQualifiedMetadataName}.g.cs", sourceText);
             });
         }
     }
