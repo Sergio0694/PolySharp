@@ -80,7 +80,7 @@
     <Copyright>Copyright (c) 2022 Sergio Pedri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <!--<PackageIcon>icon.png</PackageIcon>-->
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

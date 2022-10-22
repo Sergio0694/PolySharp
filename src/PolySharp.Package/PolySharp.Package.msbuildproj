@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<Content Include="icon.png" PackFolder="\" />-->
+    <Content Include="icon.png" PackFolder="\" />
   </ItemGroup>
 
   <ItemGroup>
