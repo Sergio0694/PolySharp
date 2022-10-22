@@ -1,0 +1,96 @@
+<Project>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!--
+      Enable the latest warning wave, which shows additional warnings for invalid language features that are disabled by default.
+      For additional info, see https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/warning-waves.
+    -->
+    <AnalysisLevel>7</AnalysisLevel>
+
+    <!-- Import the global configs from the CodeStyle package (enables all IDExxxx warnings)-->
+    <AnalysisLevelStyle>7-all</AnalysisLevelStyle>
+
+    <!--
+      Enable the compiler strict mode (see https://www.meziantou.net/csharp-compiler-strict-mode.htm).
+      This (poorly documented) mode enables additional warnings for incorrect usages of some features.
+      For instance, this will warn when using the == operator to compare a struct with a null literal.
+    -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.4.0-2.final" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.4.0-2.final" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Centralized location for all generated artifacts -->
+  <PropertyGroup>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
+  </PropertyGroup>
+
+  <!--
+    The target version being built (this is referenced by all build steps).
+    This version will set the package version prefix and the assembly version.
+    As such, this needs to be changed before a new release as well.
+  -->
+  <PropertyGroup>
+    <PolySharpPackageVersion>1.0.0</PolySharpPackageVersion>
+    <IsCommitOnReleaseBranch>false</IsCommitOnReleaseBranch>
+  </PropertyGroup>
+
+  <!--
+    Check if the current push is for a release build for NuGet, as that will create a package with a hardcoded version.
+    A release build is one that originates from a push to a branch with the format 'rel/<BUILD_VERSION>(.<SUFFIX>)?'.
+  -->
+  <PropertyGroup>
+    <ReleaseVersionParsingRegex>^rel/(\d{1,4}\.\d{1,4}\.\d{1,4})(?:-(\w+(?:\.\w+)?))?$</ReleaseVersionParsingRegex>
+    <IsBranchNameStartingWithRefPrefix>$([System.Text.RegularExpressions.Regex]::IsMatch($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)))</IsBranchNameStartingWithRefPrefix>
+  </PropertyGroup>
+
+  <!-- If the current branch and action match a release for NuGet, override the relative build properties -->
+  <PropertyGroup Condition="'$(GITHUB_EVENT_NAME)' == 'push' AND '$(GITHUB_REF_NAME)' != '' AND '$(IsBranchNameStartingWithRefPrefix)' == 'true'">
+    <IsCommitOnReleaseBranch>true</IsCommitOnReleaseBranch>
+    <PolySharpPackageVersionFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[1].Value)</PolySharpPackageVersionFromReleaseBranch>
+    <PolySharpPackageVersionSuffixFromReleaseBranch>$([System.Text.RegularExpressions.Regex]::Match($(GITHUB_REF_NAME), $(ReleaseVersionParsingRegex)).Groups[2].Value)</PolySharpPackageVersionSuffixFromReleaseBranch>
+    <PolySharpPackageVersion>$(PolySharpPackageVersionFromReleaseBranch)</PolySharpPackageVersion>
+    <VersionSuffix>$(PolySharpPackageVersionSuffixFromReleaseBranch)</VersionSuffix>
+  </PropertyGroup>
+
+  <!-- Configure the assembly version and suffix for both normal CI builds and release builds -->
+  <PropertyGroup>
+    <AssemblyVersion>$(PolySharpPackageVersion).0</AssemblyVersion>
+    <VersionPrefix>$(PolySharpPackageVersion)</VersionPrefix>
+    <VersionSuffix Condition="'$(EXCLUDE_SUFFIX_FROM_VERSION)' != 'true' AND '$(IsCommitOnReleaseBranch)' != 'true'">alpha</VersionSuffix>
+    <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request' AND '$(IsCommitOnReleaseBranch)' != 'true'">pr</VersionSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
+    <RepositoryUrl>https://github.com/Sergio0694/PolySharp/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <ProjectUrl>https://github.com/Sergio0694/PolySharp/</ProjectUrl>
+    <Authors>Sergio Pedri</Authors>
+    <Owners>Sergio Pedri</Owners>
+    <Company>Sergio Pedri</Company>
+    <Copyright>Copyright (c) 2022 Sergio Pedri</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Needed for deterministic builds -->
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+  </ItemGroup>
+</Project>
