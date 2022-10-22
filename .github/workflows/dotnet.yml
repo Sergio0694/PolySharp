@@ -1,0 +1,65 @@
+name: .NET
+
+on: [push, pull_request]
+
+env:
+  EXCLUDE_RUN_ID_FROM_PACKAGE: false
+  EXCLUDE_SUFFIX_FROM_VERSION: false
+
+jobs:
+
+  # Build the whole PolySharp solution, in Debug
+  build-solution-debug:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: dotnet build -c Debug /bl
+      shell: cmd
+    - name: Upload MSBuild binary log
+      uses: actions/upload-artifact@v3
+      with:
+        name: msbuild_log
+        path: msbuild.binlog
+        if-no-files-found: error
+
+  # Build the whole PolySharp solution, in Release
+  build-solution-release:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: dotnet build -c Release /p:Configuration=Release
+      shell: cmd
+
+  # Build the .msbuildproj projects to generate all the NuGet packages
+  build-packages:
+    if: success()
+    needs: [build-solution-debug, build-solution-release]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Build PolySharp package
+      run: dotnet build src\PolySharp.Package\PolySharp.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Upload package artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget_preview
+        path: artifacts\*.nupkg
+        if-no-files-found: error
