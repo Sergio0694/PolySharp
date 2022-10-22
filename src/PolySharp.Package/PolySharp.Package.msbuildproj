@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>PolySharp</PackageId>
+    <Title>PolySharp</Title>
+    <Description>A library easily include polyfills for runtime-agnostic C# features into other projects</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--<Content Include="icon.png" PackFolder="\" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" PackFolder="analyzers\dotnet\cs" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package">
+
+    <!-- Include the custom .targets file to check the source generator -->
+    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="buildTransitive\PolySharp.targets" Pack="true" />
+    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="build\PolySharp.targets" Pack="true" />
+  </ItemGroup>
+
+</Project>
