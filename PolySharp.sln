@@ -2,7 +2,7 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.SourceGenerators", "PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj", "{DF3A95B8-20FE-44E7-AE9F-E546565DB80A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.SourceGenerators", "src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj", "{DF3A95B8-20FE-44E7-AE9F-E546565DB80A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
