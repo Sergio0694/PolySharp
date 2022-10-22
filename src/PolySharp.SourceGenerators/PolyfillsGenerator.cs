@@ -60,7 +60,7 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                     using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
                     // If public accessibility has been requested, we need to update the loaded source files
-                    if (!generationOptions.UsePublicAccessibilityForGeneratedTypes)
+                    if (generationOptions.UsePublicAccessibilityForGeneratedTypes)
                     {
                         using StreamReader reader = new(stream);
 

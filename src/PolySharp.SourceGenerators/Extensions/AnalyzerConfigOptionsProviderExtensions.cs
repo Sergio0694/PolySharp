@@ -21,8 +21,9 @@ internal static class AnalyzerConfigOptionsProviderExtensions
     /// <remarks>The return value is equivalent to a <c>'$(PropertyName)' == 'true'</c> check.</remarks>
     public static bool GetBoolMSBuildProperty(this AnalyzerConfigOptionsProvider options, string propertyName)
     {
+        // MSBuild property that are visible to the compiler are available here with the "build_property." prefix
         return
-            options.GlobalOptions.TryGetValue(propertyName, out string? propertyValue) &&
+            options.GlobalOptions.TryGetValue($"build_property.{propertyName}", out string? propertyValue) &&
             string.Equals(propertyValue, bool.TrueString, StringComparison.OrdinalIgnoreCase);
     }
 }
