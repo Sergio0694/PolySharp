@@ -41,7 +41,7 @@ internal static class AnalyzerConfigOptionsProviderExtensions
         {
             using ImmutableArrayBuilder<string> builder = ImmutableArrayBuilder<string>.Rent();
 
-            foreach (string part in propertyValue.Split(';'))
+            foreach (string part in propertyValue.Split(',', ';'))
             {
                 string trimmed = part.Trim();
 
