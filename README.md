@@ -37,3 +37,10 @@
   - `[InterpolatedStringHandler]`
   - `[InterpolatedStringHandlerArgument]`
 - `[CallerArgumentExpression]` (see [docs](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-10.0/caller-argument-expression))
+
+# Options ⚙️
+
+**PolySharp**'s generation can be configured through some MSBuild properties to set in consuming projects.
+
+The following properties are available:
+- `PolySharpUsePublicAccessibilityForGeneratedTypes`: changes the accessibility of generated types from `internal` to `public`
