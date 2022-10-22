@@ -6,6 +6,7 @@
       https://api.nuget.org/v3/index.json;
       ..\..\artifacts;
     </RestoreSources>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,7 @@
 
   <ItemGroup>
     <Compile Include="..\PolySharp.Tests\LanguageFeatures.cs" />
+    <Compile Include="..\PolySharp.Tests\RuntimeSupport.cs" />
   </ItemGroup>
 
 </Project>

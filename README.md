@@ -35,9 +35,26 @@
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>11.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
+It also includes the following optional runtime-supported polyfills:
+- Reflection annotation attributes (see [docs](https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming)):
+  - `[DynamicallyAccessedMembers]`
+  - `[DynamicDependency]`
+  - `[RequiresUnreferencedCode]`
+  - `[UnconditionalSuppressMessage]`
+- `[StackTraceHidden]` (see [here](https://makolyte.com/csharp-exclude-exception-throw-helper-methods-from-the-stack-trace/))
+- `[UnmanagedCallersOnly]` (see [docs](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)))
+- Platform support annotation attributes (see [docs](https://learn.microsoft.com/dotnet/standard/analyzers/platform-compat-analyzer)):
+  - `[ObsoletedOSPlatform]`
+  - `[SupportedOSPlatform]`
+  - `[SupportedOSPlatformGuard]`
+  - `[TargetPlatform]`
+  - `[UnsupportedOSPlatform]`
+  - `[UnsupportedOSPlatformGuard]`
+
 # Options ⚙️
 
 **PolySharp**'s generation can be configured through some MSBuild properties to set in consuming projects.
 
 The following properties are available:
 - "PolySharpUsePublicAccessibilityForGeneratedTypes": changes the accessibility of generated types from `internal` to `public`.
+- "PolySharpIncludeRuntimeSupportedAttributes": enables polyfills for (dummy) runtime-supported attributes too.
