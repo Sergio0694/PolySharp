@@ -13,10 +13,12 @@
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
           DependsOnTargets="_PolySharpGatherAnalyzers">
 
-    <!-- Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
-         MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
-         the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
-         someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check. -->
+    <!--
+      Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+      MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+      the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+      someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check.
+    -->
     <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
       <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
     </GetAssemblyIdentity>
@@ -35,9 +37,16 @@
       <Analyzer Remove="@(_PolySharpAnalyzer)"/>
     </ItemGroup>
 
-    <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
-         emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
-         disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used. -->
+    <!-- Mark the PolySharpUsePublicAccessibilityForGeneratedTypes property as visible for the compiler, so the analyzer can see it -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+    </ItemGroup>
+
+    <!--
+      If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+      emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+      disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
+    -->
     <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6 SDK or greater)."/>  
   </Target>
   

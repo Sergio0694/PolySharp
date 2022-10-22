@@ -63,3 +63,29 @@ jobs:
         name: nuget_preview
         path: artifacts\*.nupkg
         if-no-files-found: error
+
+  # Download the NuGet packages generated in the previous job and use them
+  # to build and run the sample project referencing them. This is used as
+  # a test to ensure the NuGet packages work in a consuming project.
+  verify-packages:
+    if: success()
+    needs: [build-packages]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v3
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Create local NuGet feed
+      run: mkdir artifacts
+      shell: cmd
+    - name: Download package artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget_preview
+        path: artifacts
+    - name: Build PolySharp.NuGet
+      run: dotnet build tests\PolySharp.NuGet\PolySharp.NuGet.csproj -c Release
+      shell: cmd

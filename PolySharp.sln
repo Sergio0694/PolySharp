@@ -10,8 +10,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{8D
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D65D0307-1D0F-499D-945B-E33E71F251A4}"
+	ProjectSection(SolutionItems) = preProject
+		tests\PolySharp.NuGet\PolySharp.NuGet.csproj = tests\PolySharp.NuGet\PolySharp.NuGet.csproj
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.Tests", "tests\PolySharp.Tests\PolySharp.Tests.csproj", "{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolySharp.Tests", "tests\PolySharp.Tests\PolySharp.Tests.csproj", "{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{C0C25293-DF18-48E5-BCE9-499CB6D66BB6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D78D3FFF-DB82-41B3-951F-40C7ED8F8F07}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +53,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3} = {D65D0307-1D0F-499D-945B-E33E71F251A4}
+		{D78D3FFF-DB82-41B3-951F-40C7ED8F8F07} = {C0C25293-DF18-48E5-BCE9-499CB6D66BB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F946EBAA-2D9B-4599-B4A2-7ECD81E0DF61}
