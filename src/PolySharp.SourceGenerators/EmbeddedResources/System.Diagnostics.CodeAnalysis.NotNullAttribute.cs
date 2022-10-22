@@ -12,7 +12,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that an input argument was not null when the call returns.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
-    public sealed class NotNullAttribute : Attribute
+    internal sealed class NotNullAttribute : Attribute
     {
     }
 }

@@ -35,7 +35,7 @@ namespace System.Diagnostics.CodeAnalysis
         AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter,
         AllowMultiple = false,
         Inherited = false)]
-    public sealed class UnscopedRefAttribute : Attribute
+    internal sealed class UnscopedRefAttribute : Attribute
     {
     }
 }

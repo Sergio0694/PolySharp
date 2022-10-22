@@ -11,7 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that the output will be non-null if the named parameter is non-null.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true, Inherited = false)]
-    public sealed class NotNullIfNotNullAttribute : Attribute
+    internal sealed class NotNullIfNotNullAttribute : Attribute
     {
         /// <summary>
         /// Initializes the attribute with the associated parameter name.

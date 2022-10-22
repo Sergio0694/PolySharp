@@ -12,7 +12,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// members have not-null values when returning with the specified return value condition.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
-    public sealed class MemberNotNullWhenAttribute : Attribute
+    internal sealed class MemberNotNullWhenAttribute : Attribute
     {
         /// <summary>
         /// Initializes the attribute with the specified return value condition and a field or property member.

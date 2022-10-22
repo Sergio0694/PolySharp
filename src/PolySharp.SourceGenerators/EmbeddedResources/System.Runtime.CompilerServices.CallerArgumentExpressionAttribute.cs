@@ -12,7 +12,7 @@ namespace System.Runtime.CompilerServices
     /// </summary>
     /// <remarks>Internal copy from the BCL attribute.</remarks>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public sealed class CallerArgumentExpressionAttribute : Attribute
+    internal sealed class CallerArgumentExpressionAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CallerArgumentExpressionAttribute"/> class.

@@ -11,7 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Applied to a method that will never return under any circumstance.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    public sealed class DoesNotReturnAttribute : Attribute
+    internal sealed class DoesNotReturnAttribute : Attribute
     {
     }
 }

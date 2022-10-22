@@ -11,7 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that when a method returns <see cref="ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
-    public sealed class MaybeNullWhenAttribute : Attribute
+    internal sealed class MaybeNullWhenAttribute : Attribute
     {
         /// <summary>
         /// Initializes the attribute with the specified return value condition.

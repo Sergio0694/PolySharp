@@ -17,7 +17,7 @@ namespace System.Runtime.CompilerServices
         AttributeTargets.Property,
         AllowMultiple = false,
         Inherited = false)]
-    public sealed class RequiredMemberAttribute : Attribute
+    internal sealed class RequiredMemberAttribute : Attribute
     {
     }
 }

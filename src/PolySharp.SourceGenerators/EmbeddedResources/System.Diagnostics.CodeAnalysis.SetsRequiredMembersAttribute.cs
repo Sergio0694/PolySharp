@@ -12,7 +12,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// and callers do not need to set any required members themselves.
     /// </summary>
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
-    public sealed class SetsRequiredMembersAttribute : Attribute
+    internal sealed class SetsRequiredMembersAttribute : Attribute
     {
     }
 }
