@@ -1,0 +1,56 @@
+<Project>
+
+  <!-- Get the analyzer from the PolySharp NuGet package -->
+  <Target Name="_PolySharpGatherAnalyzers">
+    <ItemGroup>
+      <_PolySharpAnalyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'PolySharp'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
+          Condition="'$(CSharpCoreTargetsPath)' != ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- Use the CSharpCoreTargetsPath property to find the version of the compiler we are using. This is the same mechanism
+         MSBuild uses to find the compiler. We could check the assembly version for any compiler assembly (since they all have
+         the same version) but Microsoft.Build.Tasks.CodeAnalysis.dll is where MSBuild loads the compiler tasks from so if
+         someone is getting creative with msbuild tasks/targets this is the "most correct" assembly to check. -->
+    <GetAssemblyIdentity AssemblyFiles="$([System.IO.Path]::Combine(`$([System.IO.Path]::GetDirectoryName($(CSharpCoreTargetsPath)))`,`Microsoft.Build.Tasks.CodeAnalysis.dll`))">
+      <Output TaskParameter="Assemblies" ItemName="PolySharpCurrentCompilerAssemblyIdentity"/>
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+
+      <!-- Transform the resulting item from GetAssemblyIdentity into a property representing its assembly version -->
+      <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
+
+      <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+    </PropertyGroup>
+
+    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+
+    <!-- If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
+         emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
+         disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used. -->
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6 SDK or greater)."/>  
+  </Target>
+  
+  <!-- Remove the analyzer if Roslyn is missing -->
+  <Target Name="_PolySharpRemoveAnalyzersForRosynNotFound"
+          Condition="'$(CSharpCoreTargetsPath)' == ''"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!-- If no Roslyn assembly could be found, just remove the analyzer without emitting a warning -->
+    <ItemGroup>
+      <Analyzer Remove="@(_PolySharpAnalyzer)"/>
+    </ItemGroup>
+  </Target>
+
+</Project>
