@@ -56,5 +56,6 @@ It also includes the following optional runtime-supported polyfills:
 **PolySharp**'s generation can be configured through some MSBuild properties to set in consuming projects.
 
 The following properties are available:
-- "PolySharpUsePublicAccessibilityForGeneratedTypes": changes the accessibility of generated types from `internal` to `public`.
+- "PolySharpUsePublicAccessibilityForGeneratedTypes": makes all generated types public.
 - "PolySharpIncludeRuntimeSupportedAttributes": enables polyfills for (dummy) runtime-supported attributes too.
+- "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
