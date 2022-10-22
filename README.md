@@ -38,9 +38,11 @@
   - `[InterpolatedStringHandlerArgument]`
 - `[CallerArgumentExpression]` (see [docs](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-10.0/caller-argument-expression))
 
+To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>11.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
+
 # Options ⚙️
 
 **PolySharp**'s generation can be configured through some MSBuild properties to set in consuming projects.
 
 The following properties are available:
-- `PolySharpUsePublicAccessibilityForGeneratedTypes`: changes the accessibility of generated types from `internal` to `public`
+- "PolySharpUsePublicAccessibilityForGeneratedTypes": changes the accessibility of generated types from `internal` to `public`.
