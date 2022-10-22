@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.IO;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using PolySharp.SourceGenerators.Extensions;
@@ -48,7 +49,7 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                 {
                     using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
-                    sourceText = SourceText.From(stream);
+                    sourceText = SourceText.From(stream, Encoding.UTF8, canBeEmbedded: true);
 
                     _ = this.manifestSources.TryAdd(fullyQualifiedMetadataName, sourceText);
                 }
