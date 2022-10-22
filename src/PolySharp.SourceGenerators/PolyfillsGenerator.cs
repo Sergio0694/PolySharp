@@ -24,8 +24,10 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
         // polyfilled one by one if not available, to avoid errors if users had some manual polyfills already.
         foreach (string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames())
         {
-            // Strip the "EmbeddedResource." prefix and the ".cs" suffix from each resource name
-            string fullyQualifiedMetadataName = resourceName.Substring("EmbeddedResources.".Length, resourceName.Length - ("EmbeddedResources.".Length + ".cs".Length));
+            // Strip the "PolySharp.SourceGenerators.EmbeddedResources." prefix and the ".cs" suffix from each resource name
+            int prefixLength = "PolySharp.SourceGenerators.EmbeddedResources.".Length;
+            int suffixLength = ".cs".Length;
+            string fullyQualifiedMetadataName = resourceName.Substring(prefixLength, resourceName.Length - (prefixLength + suffixLength));
 
             // Get an IncrementalValueProvider<bool> representing whether the current type is already available
             IncrementalValueProvider<bool> isTypeAccessible =
