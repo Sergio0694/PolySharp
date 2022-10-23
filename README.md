@@ -3,7 +3,7 @@
 
 # What is it? 🚀
 
-**PolySharp** provides Source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel. The package is distributed as a source generator, so that it will automatically detect which polyfills are needed depending on the target framework and project in use: just add a reference to **PolySharp**, set your C# language version to latest, and have fun!
+**PolySharp** provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel. The package is distributed as a source generator, so that it will automatically detect which polyfills are needed depending on the target framework and project in use: just add a reference to **PolySharp**, set your C# language version to latest, and have fun!
 
 # Documentation 📖
 
