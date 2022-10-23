@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 namespace PolySharp.Tests;
 
@@ -80,6 +81,11 @@ internal class TestClass
         value = this.name ?? "";
 
         return true;
+    }
+
+    [RequiresPreviewFeatures]
+    public void PreviewApi()
+    {
     }
 }
 
