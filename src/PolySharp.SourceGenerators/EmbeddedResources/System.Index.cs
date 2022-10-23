@@ -7,7 +7,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
- 
+
 namespace System
 {
     /// <summary>Represent a type can be used to index a collection either from the start or the end.</summary>
@@ -33,7 +33,7 @@ namespace System
         {
             if (value < 0)
             {
-                ThrowValueArgumentOutOfRange_NeedNonNegNumException(nameof(value));
+                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
             if (fromEnd)
@@ -61,7 +61,7 @@ namespace System
         {
             if (value < 0)
             {
-                ThrowValueArgumentOutOfRange_NeedNonNegNumException(nameof(value));
+                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
             return new Index(value);
@@ -74,7 +74,7 @@ namespace System
         {
             if (value < 0)
             {
-                ThrowValueArgumentOutOfRange_NeedNonNegNumException(nameof(value));
+                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
             return new Index(~value);
@@ -146,9 +146,13 @@ namespace System
             return '^' + Value.ToString();
         }
 
-        private static void ThrowValueArgumentOutOfRange_NeedNonNegNumException(string paramName)
+        private static class ThrowHelper
         {
-            throw new ArgumentOutOfRangeException(paramName, "value must be non-negative");
+            [DoesNotReturn]
+            public static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
+            {
+                throw new ArgumentOutOfRangeException("value", "Non-negative number required.");
+            }
         }
     }
 }

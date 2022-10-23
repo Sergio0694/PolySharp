@@ -48,10 +48,16 @@ namespace System
         public bool Equals(Range other) => other.Start.Equals(Start) && other.End.Equals(End);
 
         /// <summary>Returns the hash code for this instance.</summary>
-        public override int GetHashCode() => Start.GetHashCode() * 31 + End.GetHashCode();
+        public override int GetHashCode()
+        {
+            return HashHelpers.Combine(Start.GetHashCode(), End.GetHashCode());
+        }
 
         /// <summary>Converts the value of the current Range object to its equivalent string representation.</summary>
-        public override string ToString() => Start.ToString() + ".." + End.ToString();
+        public override string ToString()
+        {
+            return Start.ToString() + ".." + End.ToString();
+        }
 
         /// <summary>Create a Range object starting from start index to the end of the collection.</summary>
         public static Range StartAt(Index start) => new Range(start, Index.End);
@@ -88,15 +94,28 @@ namespace System
 
             if ((uint)end > (uint)length || (uint)start > (uint)end)
             {
-                ThrowArgumentOutOfRangeException(nameof(length));
+                ThrowHelper.ThrowArgumentOutOfRangeException();
             }
 
             return (start, end - start);
         }
 
-        private static void ThrowArgumentOutOfRangeException(string paramName)
+        private static class HashHelpers
         {
-            throw new ArgumentOutOfRangeException(paramName);
+            public static int Combine(int h1, int h2)
+            {
+                uint rol5 = ((uint)h1 << 5) | ((uint)h1 >> 27);
+                return ((int)rol5 + h1) ^ h2;
+            }
+        }
+
+        private static class ThrowHelper
+        {
+            [DoesNotReturn]
+            public static void ThrowArgumentOutOfRangeException()
+            {
+                throw new ArgumentOutOfRangeException("length");
+            }
         }
     }
 }
