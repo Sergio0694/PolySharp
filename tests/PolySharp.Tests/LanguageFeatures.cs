@@ -2,6 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
+#if !NETCOREAPP3_1
+using System.Threading.Tasks;
+#endif
 
 namespace PolySharp.Tests;
 
@@ -155,3 +158,58 @@ internal class AnotherTestClass
 internal struct TestHandler
 {
 }
+
+#if !NETCOREAPP3_1
+
+internal struct TaskLikeType
+{
+    [AsyncMethodBuilder(typeof(CustomAsyncMethodBuilder))]
+    public static async TaskLikeType TestAsync()
+    {
+        await Task.Delay(1);
+    }
+
+    private sealed class CustomAsyncMethodBuilder
+    {
+        public static CustomAsyncMethodBuilder Create()
+        {
+            return null!;
+        }
+
+        public TaskLikeType Task => default;
+
+        public void SetException(Exception e)
+        {
+        }
+
+        public void SetResult()
+        {
+        }
+
+        public void SetStateMachine(IAsyncStateMachine _)
+        {
+        }
+
+        public void AwaitOnCompleted<TAwaiter, TStateMachine>(
+            ref TAwaiter awaiter, ref TStateMachine stateMachine)
+            where TAwaiter : INotifyCompletion
+            where TStateMachine : IAsyncStateMachine
+        {
+        }
+
+        public void AwaitUnsafeOnCompleted<TAwaiter, TStateMachine>(
+            ref TAwaiter awaiter, ref TStateMachine stateMachine)
+            where TAwaiter : ICriticalNotifyCompletion
+            where TStateMachine : IAsyncStateMachine
+        {
+        }
+
+        public void Start<TStateMachine>(ref TStateMachine stateMachine)
+            where TStateMachine : IAsyncStateMachine
+        {
+
+        }
+    }
+}
+
+#endif
