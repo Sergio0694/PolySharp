@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using PolySharp.SourceGenerators.Extensions;
+using PolySharp.SourceGenerators.Helpers;
 using PolySharp.SourceGenerators.Models;
 
 namespace PolySharp.SourceGenerators;

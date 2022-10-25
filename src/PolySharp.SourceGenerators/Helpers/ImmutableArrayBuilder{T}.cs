@@ -6,7 +6,7 @@ using System;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.SourceGeneration.Helpers;
+namespace PolySharp.SourceGenerators.Helpers;
 
 /// <summary>
 /// A helper type to build sequences of values with pooled buffers.

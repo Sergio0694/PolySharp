@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections.Immutable;
-using ComputeSharp.SourceGeneration.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
+using PolySharp.SourceGenerators.Helpers;
 
 namespace PolySharp.SourceGenerators.Extensions;
 

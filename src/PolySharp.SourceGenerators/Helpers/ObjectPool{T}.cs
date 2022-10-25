@@ -8,7 +8,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace ComputeSharp.SourceGeneration.Helpers;
+namespace PolySharp.SourceGenerators.Helpers;
 
 /// <summary>
 /// <para>
