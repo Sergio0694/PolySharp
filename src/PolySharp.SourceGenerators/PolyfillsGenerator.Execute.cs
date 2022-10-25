@@ -80,30 +80,32 @@ partial class PolyfillsGenerator
     /// Calculates the collection of <see cref="GeneratedType"/>-s to emit.
     /// </summary>
     /// <param name="info">The input info for the current generation.</param>
-    /// <param name="_">The cancellation token for the operation.</param>
+    /// <param name="token">The cancellation token for the operation.</param>
     /// <returns>The collection of <see cref="GeneratedType"/>-s to emit.</returns>
-    private ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken _)
+    private ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
     {
         // Helper function to check whether a type should be included for generation
-        bool ShouldIncludeGeneratedType(string name)
+        static bool ShouldIncludeGeneratedType(Compilation compilation, GenerationOptions options, string name, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             // First check whether the type is accessible, and if it is already then there is nothing left to do
-            if (info.Compilation.HasAccessibleTypeWithMetadataName(name))
+            if (compilation.HasAccessibleTypeWithMetadataName(name))
             {
                 return false;
             }
 
             // If the explicit list of types to generate isn't empty, take it into account.
             // Types will be generated only if explicitly requested and not explicitly excluded.
-            if (info.Options.IncludeGeneratedTypes.Length > 0)
+            if (options.IncludeGeneratedTypes.Length > 0)
             {
                 return
-                    info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(name) &&
-                    !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
+                    options.IncludeGeneratedTypes.AsImmutableArray().Contains(name) &&
+                    !options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
             }
 
             // Otherwise, check that the type is not in the list of excluded types
-            return !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
+            return !options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
         }
 
         using ImmutableArrayBuilder<GeneratedType> builder = ImmutableArrayBuilder<GeneratedType>.Rent();
@@ -111,7 +113,7 @@ partial class PolyfillsGenerator
         // First go through the language support types
         foreach (string name in this.languageSupportTypeNames)
         {
-            if (ShouldIncludeGeneratedType(name))
+            if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
             {
                 builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes));
             }
@@ -124,7 +126,7 @@ partial class PolyfillsGenerator
         {
             foreach (string name in this.runtimeSupportedTypeNames)
             {
-                if (ShouldIncludeGeneratedType(name))
+                if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
                 {
                     builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes));
                 }
