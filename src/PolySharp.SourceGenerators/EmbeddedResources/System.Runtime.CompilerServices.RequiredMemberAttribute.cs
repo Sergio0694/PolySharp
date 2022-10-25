@@ -10,14 +10,14 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// Specifies that a type has required members or that a member is required.
     /// </summary>
-    [AttributeUsage(
-        AttributeTargets.Class |
-        AttributeTargets.Struct |
-        AttributeTargets.Field |
-        AttributeTargets.Property,
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Struct |
+        global::System.AttributeTargets.Field |
+        global::System.AttributeTargets.Property,
         AllowMultiple = false,
         Inherited = false)]
-    internal sealed class RequiredMemberAttribute : Attribute
+    internal sealed class RequiredMemberAttribute : global::System.Attribute
     {
     }
 }

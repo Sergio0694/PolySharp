@@ -11,12 +11,17 @@ namespace System.Diagnostics
     /// Types and Methods attributed with StackTraceHidden will be omitted from the stack trace text shown in StackTrace.ToString()
     /// and Exception.StackTrace
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Struct, Inherited = false)]
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Constructor |
+        global::System.AttributeTargets.Struct,
+        Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class StackTraceHiddenAttribute : Attribute
+    internal sealed class StackTraceHiddenAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StackTraceHiddenAttribute"/> class.
+        /// Initializes a new instance of the <see cref="global::System.Diagnostics.StackTraceHiddenAttribute"/> class.
         /// </summary>
         public StackTraceHiddenAttribute() { }
     }

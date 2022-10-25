@@ -11,8 +11,11 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that the method or property will ensure that the listed field and property
     /// members have not-null values when returning with the specified return value condition.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
-    internal sealed class MemberNotNullWhenAttribute : Attribute
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Property,
+        Inherited = false, AllowMultiple = true)]
+    internal sealed class MemberNotNullWhenAttribute : global::System.Attribute
     {
         /// <summary>
         /// Initializes the attribute with the specified return value condition and a field or property member.

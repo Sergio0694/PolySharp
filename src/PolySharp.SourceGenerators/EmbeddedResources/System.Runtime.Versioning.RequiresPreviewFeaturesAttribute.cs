@@ -7,27 +7,28 @@
 
 namespace System.Runtime.Versioning
 {
-    [AttributeUsage(AttributeTargets.Assembly |
-                AttributeTargets.Module |
-                AttributeTargets.Class |
-                AttributeTargets.Interface |
-                AttributeTargets.Delegate |
-                AttributeTargets.Struct |
-                AttributeTargets.Enum |
-                AttributeTargets.Constructor |
-                AttributeTargets.Method |
-                AttributeTargets.Property |
-                AttributeTargets.Field |
-                AttributeTargets.Event, Inherited = false)]
-    internal sealed class RequiresPreviewFeaturesAttribute : Attribute
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Assembly |
+        global::System.AttributeTargets.Module |
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Interface |
+        global::System.AttributeTargets.Delegate |
+        global::System.AttributeTargets.Struct |
+        global::System.AttributeTargets.Enum |
+        global::System.AttributeTargets.Constructor |
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.Field |
+        AttributeTargets.Event, Inherited = false)]
+    internal sealed class RequiresPreviewFeaturesAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequiresPreviewFeaturesAttribute"/> class.
+        /// Initializes a new instance of the <see cref="global::System.Runtime.Versioning.RequiresPreviewFeaturesAttribute"/> class.
         /// </summary>
         public RequiresPreviewFeaturesAttribute() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequiresPreviewFeaturesAttribute"/> class with the specified message.
+        /// Initializes a new instance of the <see cref="global::System.Runtime.Versioning.RequiresPreviewFeaturesAttribute"/> class with the specified message.
         /// </summary>
         /// <param name="message">An optional message associated with this attribute instance.</param>
         public RequiresPreviewFeaturesAttribute(string? message)

@@ -9,18 +9,21 @@ namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
     /// Indicates that the specified method requires dynamic access to code that is not referenced
-    /// statically, for example through <see cref="System.Reflection"/>.
+    /// statically, for example through <see cref="global::System.Reflection"/>.
     /// </summary>
     /// <remarks>
     /// This allows tools to understand which methods are unsafe to call when removing unreferenced
     /// code from an application.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Class, Inherited = false)]
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Constructor |
+        global::System.AttributeTargets.Class, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class RequiresUnreferencedCodeAttribute : Attribute
+    internal sealed class RequiresUnreferencedCodeAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequiresUnreferencedCodeAttribute"/> class
+        /// Initializes a new instance of the <see cref="global::System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/> class
         /// with the specified message.
         /// </summary>
         /// <param name="message">

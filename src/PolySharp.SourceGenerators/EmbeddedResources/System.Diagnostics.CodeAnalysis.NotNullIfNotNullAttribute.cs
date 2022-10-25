@@ -10,8 +10,12 @@ namespace System.Diagnostics.CodeAnalysis
     /// <summary>
     /// Specifies that the output will be non-null if the named parameter is non-null.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true, Inherited = false)]
-    internal sealed class NotNullIfNotNullAttribute : Attribute
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Parameter |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.ReturnValue,
+        AllowMultiple = true, Inherited = false)]
+    internal sealed class NotNullIfNotNullAttribute : global::System.Attribute
     {
         /// <summary>
         /// Initializes the attribute with the associated parameter name.

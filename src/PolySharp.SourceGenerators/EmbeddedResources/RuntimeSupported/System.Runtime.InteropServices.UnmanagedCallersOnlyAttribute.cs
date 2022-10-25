@@ -8,7 +8,7 @@
 namespace System.Runtime.InteropServices
 {
     /// <summary>
-    /// Any method marked with <see cref="System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" /> can be directly called from
+    /// Any method marked with <see cref="global::System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" /> can be directly called from
     /// native code. The function token can be loaded to a local variable using the <see href="https://docs.microsoft.com/dotnet/csharp/language-reference/operators/pointer-related-operators#address-of-operator-">address-of</see> operator
     /// in C# and passed as a callback to a native method.
     /// </summary>
@@ -18,9 +18,9 @@ namespace System.Runtime.InteropServices
     ///   * Must not be called from managed code.
     ///   * Must only have <see href="https://docs.microsoft.com/dotnet/framework/interop/blittable-and-non-blittable-types">blittable</see> arguments.
     /// </remarks>
+    [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    internal sealed class UnmanagedCallersOnlyAttribute : Attribute
+    internal sealed class UnmanagedCallersOnlyAttribute : global::System.Attribute
     {
         public UnmanagedCallersOnlyAttribute()
         {
@@ -33,7 +33,7 @@ namespace System.Runtime.InteropServices
         /// Supplied types must be from the official "System.Runtime.CompilerServices" namespace and
         /// be of the form "CallConvXXX".
         /// </remarks>
-        public Type[]? CallConvs;
+        public global::System.Type[]? CallConvs;
 
         /// <summary>
         /// Optional. If omitted, no named export is emitted during compilation.

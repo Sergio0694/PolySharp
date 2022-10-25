@@ -12,16 +12,16 @@ namespace System.Diagnostics.CodeAnalysis
     /// single code artifact.
     /// </summary>
     /// <remarks>
-    /// <see cref="UnconditionalSuppressMessageAttribute"/> is different than
-    /// <see cref="SuppressMessageAttribute"/> in that it doesn't have a
-    /// <see cref="ConditionalAttribute"/>. So it is always preserved in the compiled assembly.
+    /// <see cref="global::System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessageAttribute"/> is different than
+    /// <see cref="global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute"/> in that it doesn't have a
+    /// <see cref="global::System.Diagnostics.ConditionalAttribute"/>. So it is always preserved in the compiled assembly.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    [global::System.AttributeUsage(global::System.AttributeTargets.All, Inherited = false, AllowMultiple = true)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class UnconditionalSuppressMessageAttribute : Attribute
+    internal sealed class UnconditionalSuppressMessageAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnconditionalSuppressMessageAttribute"/>
+        /// Initializes a new instance of the <see cref="global::System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessageAttribute"/>
         /// class, specifying the category of the tool and the identifier for an analysis rule.
         /// </summary>
         /// <param name="category">The category for the attribute.</param>
@@ -76,7 +76,7 @@ namespace System.Diagnostics.CodeAnalysis
         /// <remarks>
         /// The <see cref="MessageId "/> property is an optional argument that specifies additional
         /// exclusion where the literal metadata target is not sufficiently precise. For example,
-        /// the <see cref="UnconditionalSuppressMessageAttribute"/> cannot be applied within a method,
+        /// the <see cref="global::System.Diagnostics.CodeAnalysis.UnconditionalSuppressMessageAttribute"/> cannot be applied within a method,
         /// and it may be desirable to suppress a violation against a statement in the method that will
         /// give a rule violation, but not against all statements in the method.
         /// </remarks>
