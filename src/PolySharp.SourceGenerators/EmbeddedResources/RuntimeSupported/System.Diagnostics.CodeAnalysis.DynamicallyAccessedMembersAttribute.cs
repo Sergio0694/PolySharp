@@ -8,20 +8,20 @@
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
-    /// Indicates that certain members on a specified <see cref="Type"/> are accessed dynamically,
-    /// for example through <see cref="System.Reflection"/>.
+    /// Indicates that certain members on a specified <see cref="global::System.Type"/> are accessed dynamically,
+    /// for example through <see cref="global::System.Reflection"/>.
     /// </summary>
     /// <remarks>
     /// This allows tools to understand which members are being accessed during the execution
     /// of a program.
     ///
-    /// This attribute is valid on members whose type is <see cref="Type"/> or <see cref="string"/>.
+    /// This attribute is valid on members whose type is <see cref="global::System.Type"/> or <see cref="string"/>.
     ///
     /// When this attribute is applied to a location of type <see cref="string"/>, the assumption is
     /// that the string represents a fully qualified type name.
     ///
     /// When this attribute is applied to a class, interface, or struct, the members specified
-    /// can be accessed dynamically on <see cref="Type"/> instances returned from calling
+    /// can be accessed dynamically on <see cref="global::System.Type"/> instances returned from calling
     /// <see cref="object.GetType"/> on instances of that class, interface, or struct.
     ///
     /// If the attribute is applied to a method it's treated as a special case and it implies
@@ -29,28 +29,34 @@ namespace System.Diagnostics.CodeAnalysis
     /// should only be used on instance methods of types assignable to System.Type (or string, but no methods
     /// will use it there).
     /// </remarks>
-    [AttributeUsage(
-        AttributeTargets.Field | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter |
-        AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Method |
-        AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct,
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Field |
+        global::System.AttributeTargets.ReturnValue |
+        global::System.AttributeTargets.GenericParameter |
+        global::System.AttributeTargets.Parameter |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Interface |
+        global::System.AttributeTargets.Struct,
         Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class DynamicallyAccessedMembersAttribute : Attribute
+    internal sealed class DynamicallyAccessedMembersAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicallyAccessedMembersAttribute"/> class
+        /// Initializes a new instance of the <see cref="global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute"/> class
         /// with the specified member types.
         /// </summary>
         /// <param name="memberTypes">The types of members dynamically accessed.</param>
-        public DynamicallyAccessedMembersAttribute(DynamicallyAccessedMemberTypes memberTypes)
+        public DynamicallyAccessedMembersAttribute(global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes memberTypes)
         {
             MemberTypes = memberTypes;
         }
 
         /// <summary>
-        /// Gets the <see cref="DynamicallyAccessedMemberTypes"/> which specifies the type
+        /// Gets the <see cref="global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes"/> which specifies the type
         /// of members dynamically accessed.
         /// </summary>
-        public DynamicallyAccessedMemberTypes MemberTypes { get; }
+        public global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes MemberTypes { get; }
     }
 }

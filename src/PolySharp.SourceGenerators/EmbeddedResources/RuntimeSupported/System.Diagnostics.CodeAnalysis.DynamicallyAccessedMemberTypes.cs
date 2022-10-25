@@ -10,10 +10,10 @@ namespace System.Diagnostics.CodeAnalysis
     /// <summary>
     /// Specifies the types of members that are dynamically accessed.
     ///
-    /// This enumeration has a <see cref="FlagsAttribute"/> attribute that allows a
+    /// This enumeration has a <see cref="global::System.FlagsAttribute"/> attribute that allows a
     /// bitwise combination of its member values.
     /// </summary>
-    [Flags]
+    [global::System.Flags]
     internal enum DynamicallyAccessedMemberTypes
     {
         /// <summary>
@@ -29,7 +29,7 @@ namespace System.Diagnostics.CodeAnalysis
         /// <summary>
         /// Specifies all public constructors.
         /// </summary>
-        PublicConstructors = 0x0002 | PublicParameterlessConstructor,
+        PublicConstructors = 0x0002 | global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicParameterlessConstructor,
 
         /// <summary>
         /// Specifies all non-public constructors.
@@ -94,6 +94,6 @@ namespace System.Diagnostics.CodeAnalysis
         /// <summary>
         /// Specifies all members.
         /// </summary>
-        All = ~None
+        All = ~global::System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.None
     }
 }

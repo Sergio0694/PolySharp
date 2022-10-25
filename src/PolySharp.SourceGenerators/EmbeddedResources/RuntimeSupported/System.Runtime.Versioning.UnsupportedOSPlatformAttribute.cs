@@ -14,20 +14,21 @@ namespace System.Runtime.Versioning
     /// Primarily used by OS bindings to indicate APIs that are only available in
     /// earlier versions.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Assembly |
-                    AttributeTargets.Class |
-                    AttributeTargets.Constructor |
-                    AttributeTargets.Enum |
-                    AttributeTargets.Event |
-                    AttributeTargets.Field |
-                    AttributeTargets.Interface |
-                    AttributeTargets.Method |
-                    AttributeTargets.Module |
-                    AttributeTargets.Property |
-                    AttributeTargets.Struct,
-                    AllowMultiple = true, Inherited = false)]
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Assembly |
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Constructor |
+        global::System.AttributeTargets.Enum |
+        global::System.AttributeTargets.Event |
+        global::System.AttributeTargets.Field |
+        global::System.AttributeTargets.Interface |
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Module |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.Struct,
+        AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class UnsupportedOSPlatformAttribute : Attribute // OSPlatformAttribute
+    internal sealed class UnsupportedOSPlatformAttribute : global::System.Attribute // OSPlatformAttribute
     {
         public UnsupportedOSPlatformAttribute(string platformName)
             // : base(platformName)

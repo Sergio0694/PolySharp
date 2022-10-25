@@ -10,9 +10,9 @@ namespace System.Runtime.Versioning
     /// <summary>
     /// Records the platform that the project targeted.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [global::System.AttributeUsage(global::System.AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    internal sealed class TargetPlatformAttribute : Attribute // OSPlatformAttribute
+    internal sealed class TargetPlatformAttribute : global::System.Attribute // OSPlatformAttribute
     {
         public TargetPlatformAttribute(string platformName)
             // : base(platformName)
