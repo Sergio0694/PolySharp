@@ -26,7 +26,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
-    private readonly ImmutableArray<string> languageSupportTypeNames = ImmutableArray.CreateRange(
+    public static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
         from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         where !resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
         select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
@@ -34,7 +34,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
-    private readonly ImmutableArray<string> runtimeSupportedTypeNames = ImmutableArray.CreateRange(
+    public static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
         from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
         select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
@@ -42,7 +42,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The mapping of fully qualified type names to embedded resource names.
     /// </summary>
-    private readonly ImmutableDictionary<string, string> fullyQualifiedTypeNamesToResourceNames = ImmutableDictionary.CreateRange(
+    public static readonly ImmutableDictionary<string, string> FullyQualifiedTypeNamesToResourceNames = ImmutableDictionary.CreateRange(
         from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         select new KeyValuePair<string, string>(Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value, resourceName));
 
@@ -82,7 +82,7 @@ partial class PolyfillsGenerator
     /// <param name="info">The input info for the current generation.</param>
     /// <param name="token">The cancellation token for the operation.</param>
     /// <returns>The collection of <see cref="GeneratedType"/>-s to emit.</returns>
-    private ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
+    private static ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
     {
         // Helper function to check whether a type should be included for generation
         static bool ShouldIncludeGeneratedType(Compilation compilation, GenerationOptions options, string name, CancellationToken token)
@@ -111,7 +111,7 @@ partial class PolyfillsGenerator
         using ImmutableArrayBuilder<GeneratedType> builder = ImmutableArrayBuilder<GeneratedType>.Rent();
 
         // First go through the language support types
-        foreach (string name in this.languageSupportTypeNames)
+        foreach (string name in LanguageSupportTypeNames)
         {
             if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
             {
@@ -124,7 +124,7 @@ partial class PolyfillsGenerator
         if (info.Options.IncludeRuntimeSupportedAttributes ||
             info.Options.IncludeGeneratedTypes.Length > 0)
         {
-            foreach (string name in this.runtimeSupportedTypeNames)
+            foreach (string name in RuntimeSupportedTypeNames)
             {
                 if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
                 {
@@ -146,7 +146,7 @@ partial class PolyfillsGenerator
         // Get the source text from the cache, or load it if needed
         if (!this.manifestSources.TryGetValue(type, out SourceText? sourceText))
         {
-            string resourceName = this.fullyQualifiedTypeNamesToResourceNames[type.FullyQualifiedMetadataName];
+            string resourceName = FullyQualifiedTypeNamesToResourceNames[type.FullyQualifiedMetadataName];
 
             using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
