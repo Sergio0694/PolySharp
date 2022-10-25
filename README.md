@@ -61,3 +61,4 @@ The following properties are available:
 - "PolySharpUsePublicAccessibilityForGeneratedTypes": makes all generated types public.
 - "PolySharpIncludeRuntimeSupportedAttributes": enables polyfills for (dummy) runtime-supported attributes too.
 - "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
+- "PolySharpIncludeGeneratedTypes": only includes specific types for generation (';' or ',' separated type names).
