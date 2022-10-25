@@ -8,7 +8,9 @@ namespace PolySharp.SourceGenerators.Models;
 /// <param name="UsePublicAccessibilityForGeneratedTypes">Whether to use public accessibility for the generated types.</param>
 /// <param name="IncludeRuntimeSupportedAttributes">Whether to also generated dummy runtime supported attributes.</param>
 /// <param name="ExcludeGeneratedTypes">The collection of fully qualified type names of types to exclude from generation.</param>
+/// <param name="IncludeGeneratedTypes">The collection of fully qualified type names of types to include in the generation.</param>
 internal sealed record GenerationOptions(
     bool UsePublicAccessibilityForGeneratedTypes,
     bool IncludeRuntimeSupportedAttributes,
-    EquatableArray<string> ExcludeGeneratedTypes);
+    EquatableArray<string> ExcludeGeneratedTypes,
+    EquatableArray<string> IncludeGeneratedTypes);

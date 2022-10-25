@@ -71,7 +71,10 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                 // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
                 ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty("PolySharpExcludeGeneratedTypes");
 
-                return new GenerationOptions(usePublicAccessibilityForGeneratedTypes, includeRuntimeSupportedAttributes, excludeGeneratedTypes);
+                // Gather the list of polyfills to explicitly include in the generation. This will override combinations expressed above.
+                ImmutableArray<string> includeGeneratedTypes = options.GetStringArrayMSBuildProperty("PolySharpIncludeGeneratedTypes");
+
+                return new GenerationOptions(usePublicAccessibilityForGeneratedTypes, includeRuntimeSupportedAttributes, excludeGeneratedTypes, includeGeneratedTypes);
             });
 
         // Gather the sequence of all types to generate, along with their additional info
@@ -89,7 +92,16 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                         return false;
                     }
 
-                    // Then check that the type is not in the list of excluded types
+                    // If the explicit list of types to generate isn't empty, take it into account.
+                    // Types will be generated only if explicitly requested and not explicitly excluded.
+                    if (info.Right.IncludeGeneratedTypes.Length > 0)
+                    {
+                        return
+                            info.Right.IncludeGeneratedTypes.AsImmutableArray().Contains(name) &&
+                            !info.Right.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
+                    }
+
+                    // Otherwise, check that the type is not in the list of excluded types
                     return !info.Right.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
                 }
 
@@ -104,8 +116,10 @@ internal sealed class PolyfillsGenerator : IIncrementalGenerator
                     }
                 }
 
-                // Only go through the runtime supported attributes if explicitly requested
-                if (info.Right.IncludeRuntimeSupportedAttributes)
+                // Only go through the runtime supported attributes if explicitly requested or if the explicit set of included types is not empty.
+                // That is, attributes from this category are only emitted if opted-in, or if any of them has explicitly been requested by the user.
+                if (info.Right.IncludeRuntimeSupportedAttributes ||
+                    info.Right.IncludeGeneratedTypes.Length > 0)
                 {
                     foreach (string name in this.runtimeSupportedTypeNames)
                     {

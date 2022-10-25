@@ -42,6 +42,7 @@
       <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
       <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
       <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
     </ItemGroup>
 
     <!--
