@@ -10,7 +10,6 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// An attribute that allows parameters to receive the expression of other parameters.
     /// </summary>
-    /// <remarks>Internal copy from the BCL attribute.</remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     internal sealed class CallerArgumentExpressionAttribute : global::System.Attribute
     {
