@@ -31,11 +31,13 @@ namespace System.Diagnostics.CodeAnalysis
     /// API authors to understand the lifetime implications of applying this attribute and how it may impact their users.
     /// </para>
     /// </remarks>
-    [AttributeUsage(
-        AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Parameter,
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Method |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.Parameter,
         AllowMultiple = false,
         Inherited = false)]
-    internal sealed class UnscopedRefAttribute : Attribute
+    internal sealed class UnscopedRefAttribute : global::System.Attribute
     {
     }
 }

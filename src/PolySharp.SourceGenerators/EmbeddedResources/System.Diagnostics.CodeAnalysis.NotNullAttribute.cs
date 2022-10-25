@@ -11,8 +11,13 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that an output will not be null even if the corresponding type allows it.
     /// Specifies that an input argument was not null when the call returns.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
-    internal sealed class NotNullAttribute : Attribute
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Field |
+        global::System.AttributeTargets.Parameter |
+        global::System.AttributeTargets.Property |
+        global::System.AttributeTargets.ReturnValue,
+        Inherited = false)]
+    internal sealed class NotNullAttribute : global::System.Attribute
     {
     }
 }

@@ -10,11 +10,11 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// Indicates that compiler support for a particular feature is required for the location where this attribute is applied.
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = false)]
-    internal sealed class CompilerFeatureRequiredAttribute : Attribute
+    [global::System.AttributeUsage(global::System.AttributeTargets.All, AllowMultiple = true, Inherited = false)]
+    internal sealed class CompilerFeatureRequiredAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="CompilerFeatureRequiredAttribute"/> type.
+        /// Creates a new instance of the <see cref="global::System.Runtime.CompilerServices.CompilerFeatureRequiredAttribute"/> type.
         /// </summary>
         /// <param name="featureName">The name of the feature to indicate.</param>
         public CompilerFeatureRequiredAttribute(string featureName)

@@ -10,8 +10,8 @@ namespace System.Diagnostics.CodeAnalysis
     /// <summary>
     /// Specifies that the method will not return if the associated Boolean parameter is passed the specified value.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
-    internal sealed class DoesNotReturnIfAttribute : Attribute
+    [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class DoesNotReturnIfAttribute : global::System.Attribute
     {
         /// <summary>
         /// Initializes the attribute with the specified parameter value.

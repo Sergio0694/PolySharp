@@ -12,14 +12,21 @@ namespace System.Runtime.CompilerServices
     /// build the attributed async method or to build the attributed type when used as the return type
     /// of an async method.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface | AttributeTargets.Delegate | AttributeTargets.Enum | AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public sealed class AsyncMethodBuilderAttribute : Attribute
+    [global::System.AttributeUsage(
+        global::System.AttributeTargets.Class |
+        global::System.AttributeTargets.Struct |
+        global::System.AttributeTargets.Interface |
+        global::System.AttributeTargets.Delegate |
+        global::System.AttributeTargets.Enum |
+        global::System.AttributeTargets.Method,
+        Inherited = false, AllowMultiple = false)]
+    public sealed class AsyncMethodBuilderAttribute : global::System.Attribute
     {
-        /// <summary>Initializes the <see cref="AsyncMethodBuilderAttribute"/>.</summary>
-        /// <param name="builderType">The <see cref="Type"/> of the associated builder.</param>
-        public AsyncMethodBuilderAttribute(Type builderType) => BuilderType = builderType;
+        /// <summary>Initializes the <see cref="global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute"/>.</summary>
+        /// <param name="builderType">The <see cref="global::System.Type"/> of the associated builder.</param>
+        public AsyncMethodBuilderAttribute(global::System.Type builderType) => BuilderType = builderType;
 
-        /// <summary>Gets the <see cref="Type"/> of the associated builder.</summary>
-        public Type BuilderType { get; }
+        /// <summary>Gets the <see cref="global::System.Type"/> of the associated builder.</summary>
+        public global::System.Type BuilderType { get; }
     }
 }

@@ -10,11 +10,11 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// Indicates which arguments to a method involving an interpolated string handler should be passed to that handler.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    internal sealed class InterpolatedStringHandlerArgumentAttribute : Attribute
+    [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    internal sealed class InterpolatedStringHandlerArgumentAttribute : global::System.Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InterpolatedStringHandlerArgumentAttribute"/> class.
+        /// Initializes a new instance of the <see cref="global::System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute"/> class.
         /// </summary>
         /// <param name="argument">The name of the argument that should be passed to the handler.</param>
         /// <remarks><see langword="null"/> may be used as the name of the receiver in an instance method.</remarks>
@@ -24,7 +24,7 @@ namespace System.Runtime.CompilerServices
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InterpolatedStringHandlerArgumentAttribute"/> class.
+        /// Initializes a new instance of the <see cref="global::System.Runtime.CompilerServices.InterpolatedStringHandlerArgumentAttribute"/> class.
         /// </summary>
         /// <param name="arguments">The names of the arguments that should be passed to the handler.</param>
         /// <remarks><see langword="null"/> may be used as the name of the receiver in an instance method.</remarks>

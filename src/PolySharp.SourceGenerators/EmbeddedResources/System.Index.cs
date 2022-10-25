@@ -5,9 +5,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-
 namespace System
 {
     /// <summary>Represent a type can be used to index a collection either from the start or the end.</summary>
@@ -18,7 +15,7 @@ namespace System
     /// int lastElement = someArray[^1]; // lastElement = 5
     /// </code>
     /// </remarks>
-    internal readonly struct Index : IEquatable<Index>
+    internal readonly struct Index : global::System.IEquatable<global::System.Index>
     {
         private readonly int _value;
 
@@ -28,12 +25,12 @@ namespace System
         /// <remarks>
         /// If the Index constructed from the end, index value 1 means pointing at the last element and index value 0 means pointing at beyond last element.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public Index(int value, bool fromEnd = false)
         {
             if (value < 0)
             {
-                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
+                global::System.Index.ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
             if (fromEnd)
@@ -49,35 +46,35 @@ namespace System
         }
 
         /// <summary>Create an Index pointing at first element.</summary>
-        public static Index Start => new Index(0);
+        public static global::System.Index Start => new global::System.Index(0);
 
         /// <summary>Create an Index pointing at beyond last element.</summary>
-        public static Index End => new Index(~0);
+        public static global::System.Index End => new global::System.Index(~0);
 
         /// <summary>Create an Index from the start at the position indicated by the value.</summary>
         /// <param name="value">The index value from the start.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Index FromStart(int value)
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static global::System.Index FromStart(int value)
         {
             if (value < 0)
             {
-                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
+                global::System.Index.ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
-            return new Index(value);
+            return new global::System.Index(value);
         }
 
         /// <summary>Create an Index from the end at the position indicated by the value.</summary>
         /// <param name="value">The index value from the end.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Index FromEnd(int value)
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static global::System.Index FromEnd(int value)
         {
             if (value < 0)
             {
-                ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
+                global::System.Index.ThrowHelper.ThrowValueArgumentOutOfRange_NeedNonNegNumException();
             }
 
-            return new Index(~value);
+            return new global::System.Index(~value);
         }
 
         /// <summary>Returns the index value.</summary>
@@ -103,7 +100,7 @@ namespace System
         /// It is expected Index will be used with collections which always have non negative length/count. If the returned offset is negative and
         /// then used to index a collection will get out of range exception which will be same affect as the validation.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public int GetOffset(int length)
         {
             int offset = _value;
@@ -120,17 +117,17 @@ namespace System
 
         /// <summary>Indicates whether the current Index object is equal to another object of the same type.</summary>
         /// <param name="value">An object to compare with this object</param>
-        public override bool Equals([NotNullWhen(true)] object? value) => value is Index && _value == ((Index)value)._value;
+        public override bool Equals([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] object? value) => value is global::System.Index && _value == ((global::System.Index)value)._value;
 
         /// <summary>Indicates whether the current Index object is equal to another Index object.</summary>
         /// <param name="other">An object to compare with this object</param>
-        public bool Equals(Index other) => _value == other._value;
+        public bool Equals(global::System.Index other) => _value == other._value;
 
         /// <summary>Returns the hash code for this instance.</summary>
         public override int GetHashCode() => _value;
 
         /// <summary>Converts integer number to an Index.</summary>
-        public static implicit operator Index(int value) => FromStart(value);
+        public static implicit operator global::System.Index(int value) => FromStart(value);
 
         /// <summary>Converts the value of the current Index object to its equivalent string representation.</summary>
         public override string ToString()
@@ -148,10 +145,10 @@ namespace System
 
         private static class ThrowHelper
         {
-            [DoesNotReturn]
+            [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
             public static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
             {
-                throw new ArgumentOutOfRangeException("value", "Non-negative number required.");
+                throw new global::System.ArgumentOutOfRangeException("value", "Non-negative number required.");
             }
         }
     }
