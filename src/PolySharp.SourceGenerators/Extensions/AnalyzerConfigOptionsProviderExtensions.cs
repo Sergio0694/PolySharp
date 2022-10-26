@@ -27,6 +27,7 @@ internal static class AnalyzerConfigOptionsProviderExtensions
         // MSBuild property that are visible to the compiler are available here with the "build_property." prefix
         return
             !options.GlobalOptions.TryGetValue($"build_property.{propertyName}", out propertyValue) ||
+            string.Equals(propertyValue, string.Empty) ||
             string.Equals(propertyValue, bool.TrueString, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(propertyValue, bool.FalseString, StringComparison.OrdinalIgnoreCase);
     }

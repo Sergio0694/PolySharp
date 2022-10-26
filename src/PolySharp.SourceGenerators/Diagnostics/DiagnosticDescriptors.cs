@@ -38,7 +38,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidPolyfillFullyQualifiedMetadataName = new DiagnosticDescriptor(
         id: "POLYSP0002",
         title: "Invalid fully qualified metadata name for polyfill",
-        messageFormat: "The fully qualified metadata name \"{0}\" used in property \"{1}\" is not valid, and it does not match any available polyfill type",
+        messageFormat: "The fully qualified metadata name \"{0}\" used in property \"{1}\" is not a valid fully qualified type name, or it does not match any available polyfill type",
         category: typeof(InvalidPolySharpMSBuildOptionAnalyzer).FullName,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
