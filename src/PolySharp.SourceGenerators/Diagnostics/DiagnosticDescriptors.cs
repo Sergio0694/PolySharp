@@ -16,7 +16,7 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> indicating when an invalid value has been set for a <see cref="bool"/> MSBuild property.
     /// <para>
-    /// Format: <c>"The value \"{0}\" is not valid for property \"{1}\" (it has to be a valid MSBuild bool value)"</c>.
+    /// Format: <c>"The value "{0}" is not valid for property "{1}" (it has to be a valid MSBuild bool value)"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidBoolMSBuildProperty = new DiagnosticDescriptor(
@@ -32,13 +32,13 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> indicating when an invalid fully qualified metadata name has been used for a targeted polyfill.
     /// <para>
-    /// Format: <c>"Cannot apply [ObservableObjectAttribute] to type {0}, as it already declares the INotifyPropertyChanged interface"</c>.
+    /// Format: <c>"The fully qualified metadata name "{0}" used in property "{1}" is not valid, and it does not match any available polyfill type"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidPolyfillFullyQualifiedMetadataName = new DiagnosticDescriptor(
         id: "POLYSP0002",
         title: "Invalid fully qualified metadata name for polyfill",
-        messageFormat: "The fully qualified metadata name \"{0\" used in property \"{1}\" is not valid, and it does not match any available polyfill type",
+        messageFormat: "The fully qualified metadata name \"{0}\" used in property \"{1}\" is not valid, and it does not match any available polyfill type",
         category: typeof(InvalidPolySharpMSBuildOptionAnalyzer).FullName,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,

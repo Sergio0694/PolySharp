@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using PolySharp.SourceGenerators.Helpers;
 
@@ -19,12 +20,13 @@ internal static class AnalyzerConfigOptionsProviderExtensions
     /// </summary>
     /// <param name="options">The input <see cref="AnalyzerConfigOptionsProvider"/> instance.</param>
     /// <param name="propertyName">The MSBuild property name.</param>
+    /// <param name="propertyValue">The resulting property value, if invalid.</param>
     /// <returns>Whether the target property is a valid <see cref="bool"/> value.</returns>
-    public static bool IsValidMSBuildProperty(this AnalyzerConfigOptionsProvider options, string propertyName)
+    public static bool IsValidMSBuildProperty(this AnalyzerConfigOptionsProvider options, string propertyName, [NotNullWhen(false)] out string? propertyValue)
     {
         // MSBuild property that are visible to the compiler are available here with the "build_property." prefix
         return
-            !options.GlobalOptions.TryGetValue($"build_property.{propertyName}", out string? propertyValue) ||
+            !options.GlobalOptions.TryGetValue($"build_property.{propertyName}", out propertyValue) ||
             string.Equals(propertyValue, bool.TrueString, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(propertyValue, bool.FalseString, StringComparison.OrdinalIgnoreCase);
     }
