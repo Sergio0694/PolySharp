@@ -90,6 +90,10 @@ internal class TestClass
     public void PreviewApi()
     {
     }
+
+    public void TakeRegex([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+    {
+    }
 }
 
 internal class TestClassWithRequiredMembers
