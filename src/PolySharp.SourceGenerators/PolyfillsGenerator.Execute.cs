@@ -25,6 +25,13 @@ partial class PolyfillsGenerator
     private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources(?:\.RuntimeSupported)?\.(System(?:\.\w+)+)\.cs$";
 
     /// <summary>
+    /// The mapping of fully qualified type names to embedded resource names.
+    /// </summary>
+    public static readonly ImmutableDictionary<string, string> FullyQualifiedTypeNamesToResourceNames = ImmutableDictionary.CreateRange(
+        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
+        select new KeyValuePair<string, string>(Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value, resourceName));
+
+    /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
     private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
@@ -39,13 +46,6 @@ partial class PolyfillsGenerator
         from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
         select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
-
-    /// <summary>
-    /// The mapping of fully qualified type names to embedded resource names.
-    /// </summary>
-    private static readonly ImmutableDictionary<string, string> FullyQualifiedTypeNamesToResourceNames = ImmutableDictionary.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        select new KeyValuePair<string, string>(Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value, resourceName));
 
     /// <summary>
     /// The dictionary of cached sources to produce.
