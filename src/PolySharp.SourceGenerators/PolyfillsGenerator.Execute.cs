@@ -9,6 +9,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+using PolySharp.SourceGenerators.Constants;
 using PolySharp.SourceGenerators.Extensions;
 using PolySharp.SourceGenerators.Helpers;
 using PolySharp.SourceGenerators.Models;
@@ -61,17 +62,17 @@ partial class PolyfillsGenerator
     {
         // Check whether the generated types should use public accessibility. Consuming projects can define the
         // $(PolySharpUsePublicAccessibilityForGeneratedTypes) MSBuild property to configure this however they need.
-        bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty("PolySharpUsePublicAccessibilityForGeneratedTypes");
+        bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
 
         // Do the same as above but for the $(PolySharpIncludeRuntimeSupportedAttributes) property
-        bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty("PolySharpIncludeRuntimeSupportedAttributes");
+        bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
 
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
-        ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty("PolySharpExcludeGeneratedTypes");
+        ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.ExcludeGeneratedTypes);
 
         // Gather the list of polyfills to explicitly include in the generation. This will override combinations expressed above.
-        ImmutableArray<string> includeGeneratedTypes = options.GetStringArrayMSBuildProperty("PolySharpIncludeGeneratedTypes");
+        ImmutableArray<string> includeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.IncludeGeneratedTypes);
 
         return new(usePublicAccessibilityForGeneratedTypes, includeRuntimeSupportedAttributes, excludeGeneratedTypes, includeGeneratedTypes);
     }
