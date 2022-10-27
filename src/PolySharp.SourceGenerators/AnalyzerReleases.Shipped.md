@@ -9,3 +9,4 @@ Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 POLYSP0001 | PolySharp.SourceGenerators.InvalidPolySharpMSBuildOptionAnalyzer | Warning | See https://github.com/Sergio0694/PolySharp
 POLYSP0002 | PolySharp.SourceGenerators.InvalidPolySharpMSBuildOptionAnalyzer | Warning | See https://github.com/Sergio0694/PolySharp
+POLYSP0003 | PolySharp.SourceGenerators.UnsupportedCSharpLanguageVersionAnalyzer | Warning | See https://github.com/Sergio0694/PolySharp
