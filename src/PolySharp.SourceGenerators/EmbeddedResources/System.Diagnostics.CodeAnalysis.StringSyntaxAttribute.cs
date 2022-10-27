@@ -24,7 +24,7 @@ namespace System.Diagnostics.CodeAnalysis
         public StringSyntaxAttribute(string syntax)
         {
             Syntax = syntax;
-            Arguments = global::System.Array.Empty<object?>();
+            Arguments = new object?[0];
         }
 
         /// <summary>Initializes the <see cref="global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute"/> with the identifier of the syntax used.</summary>
