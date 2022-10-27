@@ -30,7 +30,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// If true, the compiler can choose to allow access to the location where this attribute is applied if it does not understand <see cref="FeatureName"/>.
         /// </summary>
-        public bool IsOptional { get; init; }
+        public bool IsOptional { get; set; }
 
         /// <summary>
         /// The <see cref="FeatureName"/> used for the ref structs C# feature.

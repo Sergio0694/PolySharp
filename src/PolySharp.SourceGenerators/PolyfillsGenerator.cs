@@ -8,7 +8,7 @@ namespace PolySharp.SourceGenerators;
 /// A source generator injecting all needed C# polyfills at compile time.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
-internal sealed partial class PolyfillsGenerator : IIncrementalGenerator
+public sealed partial class PolyfillsGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)

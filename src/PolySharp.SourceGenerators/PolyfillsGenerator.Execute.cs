@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using PolySharp.SourceGenerators.Constants;
@@ -85,6 +86,12 @@ partial class PolyfillsGenerator
     /// <returns>The collection of <see cref="GeneratedType"/>-s to emit.</returns>
     private static ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
     {
+        // A minimum of C# 8.0 is required to benefit from the polyfills
+        if (!info.Compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
+        {
+            return ImmutableArray<GeneratedType>.Empty;
+        }
+
         // Helper function to check whether a type should be included for generation
         static bool ShouldIncludeGeneratedType(Compilation compilation, GenerationOptions options, string name, CancellationToken token)
         {

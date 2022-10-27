@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 #pragma warning disable IDE0090 // Use 'new DiagnosticDescriptor(...)'
 
@@ -43,5 +44,18 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "Only fully qualified metadata names for existing polyfill types should be used as options to configure PolySharp's generation.",
+        helpLinkUri: "https://github.com/Sergio0694/PolySharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> indicating when an unsupported C# language version is being used.
+    /// </summary>
+    public static readonly DiagnosticDescriptor UnsupportedCSharpLanguageVersionError = new DiagnosticDescriptor(
+        id: "POLYSP0003",
+        title: "Unsupported C# language version",
+        messageFormat: "The source generator features from PolySharp require consuming projects to set the C# language version to at least C# 8.0",
+        category: typeof(CSharpParseOptions).FullName,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "The source generator features from PolySharp require consuming projects to set the C# language version to at least C# 8.0. Make sure to add <LangVersion>8.0</LangVersion> (or above) to your .csproj file.",
         helpLinkUri: "https://github.com/Sergio0694/PolySharp");
 }
