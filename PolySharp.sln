@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D78D3FFF-DB8
 		src\Directory.Build.targets = src\Directory.Build.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.MinimumCSharpVersion.Tests", "tests\PolySharp.MinimumCSharpVersion.Tests\PolySharp.MinimumCSharpVersion.Tests.csproj", "{B9459D6D-247C-435D-9642-D6A933ECEECC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9459D6D-247C-435D-9642-D6A933ECEECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9459D6D-247C-435D-9642-D6A933ECEECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9459D6D-247C-435D-9642-D6A933ECEECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9459D6D-247C-435D-9642-D6A933ECEECC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{41EC2F2E-797F-486A-8E2E-1788C7CF0DF3} = {D65D0307-1D0F-499D-945B-E33E71F251A4}
 		{D78D3FFF-DB82-41B3-951F-40C7ED8F8F07} = {C0C25293-DF18-48E5-BCE9-499CB6D66BB6}
+		{B9459D6D-247C-435D-9642-D6A933ECEECC} = {D65D0307-1D0F-499D-945B-E33E71F251A4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F946EBAA-2D9B-4599-B4A2-7ECD81E0DF61}
