@@ -5,6 +5,16 @@
 
 **PolySharp** provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel. The package is distributed as a source generator, so that it will automatically detect which polyfills are needed depending on the target framework and project in use: just add a reference to **PolySharp**, set your C# language version to latest, and have fun!
 
+# TLDR? What is this for? ✨
+
+Put simply: are you working on .NET Framework, or UWP, or some other older .NET runtime and still would like to use all the cool new features that C# 11 has? Well this library lets you do just that! It will generate for you all the "magic types" that the C# compiler needs to "see" in order for it to allow using new language features even if you're not using the latest framework out there.
+
+Here's an example of some of the new features that **PolySharp** can enable downlevel:
+
+![image](https://user-images.githubusercontent.com/10199417/198630498-df1e215c-6788-4aef-8ba5-b0b71772233e.png)
+
+> **Note**: not all the new C# features can be "tricked" this way (eg. those requiring runtime support, such as [static abstract members](https://learn.microsoft.com/dotnet/csharp/whats-new/tutorials/static-virtual-interface-members), still won't work). But almost everything else will (eg. nullability annotations, pattern matching, etc.), and this applies to a big number of new C# features. Try **PolySharp** out, don't get stuck on C# 6.0 or other older versions! 🎉
+
 # Documentation 📖
 
 **PolySharp** includes the following polyfills:
