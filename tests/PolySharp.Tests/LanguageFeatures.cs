@@ -6,6 +6,8 @@ using System.Runtime.Versioning;
 using System.Threading.Tasks;
 #endif
 
+#pragma warning disable CA2255
+
 namespace PolySharp.Tests;
 
 internal class TestClass
@@ -92,6 +94,11 @@ internal class TestClass
     }
 
     public void TakeRegex([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+    {
+    }
+
+    [ModuleInitializer]
+    public static void InitializeModule()
     {
     }
 }

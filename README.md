@@ -35,6 +35,7 @@
 - `[RequiresPreviewFeatures]` (needed for [preview features](https://github.com/dotnet/designs/blob/main/accepted/2021/preview-features/preview-features.md))
 - `[AsyncMethodBuilder]` (needed for [custom method builder types](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-10.0/async-method-builders))
 - `[StringSyntax]` (needed to enable [syntax highlight in the IDE](https://github.com/dotnet/runtime/issues/62505))
+- `[ModuleInitializer]` (needed to enable [custom module initializers](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-9.0/module-initializers))
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>11.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
