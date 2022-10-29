@@ -20,7 +20,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Enum |
         global::System.AttributeTargets.Method,
         Inherited = false, AllowMultiple = false)]
-    public sealed class AsyncMethodBuilderAttribute : global::System.Attribute
+    internal sealed class AsyncMethodBuilderAttribute : global::System.Attribute
     {
         /// <summary>Initializes the <see cref="global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute"/>.</summary>
         /// <param name="builderType">The <see cref="global::System.Type"/> of the associated builder.</param>
