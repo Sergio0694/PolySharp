@@ -19,6 +19,7 @@ internal class RandomApis
 internal class PlatformSpecificApis
 {
     [UnmanagedCallersOnly]
+    [SuppressGCTransition]
     public static void NativeFunction()
     {
     }
