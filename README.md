@@ -64,6 +64,7 @@ It also includes the following optional runtime-supported polyfills:
   - `[TargetPlatform]`
   - `[UnsupportedOSPlatform]`
   - `[UnsupportedOSPlatformGuard]`
+- `[SuppressGCTransition]` (see [here](https://devblogs.microsoft.com/dotnet/improvements-in-native-code-interop-in-net-5-0/))
 
 # Options ⚙️
 
