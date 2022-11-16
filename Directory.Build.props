@@ -70,6 +70,7 @@
 
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <RepositoryUrl>https://github.com/Sergio0694/PolySharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
