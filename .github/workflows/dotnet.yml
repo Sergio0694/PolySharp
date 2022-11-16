@@ -14,10 +14,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build
       run: dotnet build -c Debug /bl
       shell: cmd
@@ -34,10 +30,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build
       run: dotnet build -c Release /p:Configuration=Release
       shell: cmd
@@ -50,10 +42,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Build PolySharp package
       run: dotnet build src\PolySharp.Package\PolySharp.Package.msbuildproj -c Release
       shell: cmd
@@ -74,10 +62,6 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-    - name: Setup .NET 6 SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
     - name: Create local NuGet feed
       run: mkdir artifacts
       shell: cmd
