@@ -85,7 +85,38 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(RepositoryBranch)' == ''">
+    <!-- GitHub Actions: https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(GITHUB_REF)' != '' and $(GITHUB_REF.Contains('refs/pull/'))">pr$(GITHUB_REF.Replace('refs/pull/', '').Replace('/merge', ''))</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(GITHUB_REF)' != ''">$(GITHUB_REF.Replace('refs/heads/', '').Replace('refs/tags/', ''))</RepositoryBranch>
+    <!-- Azure DevOps: https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(BUILD_SOURCEBRANCH)' != ''">$(BUILD_SOURCEBRANCH.Replace('refs/heads/', '').Replace('refs/tags/', ''))</RepositoryBranch>
+    <!-- AppVeyor: https://www.appveyor.com/docs/environment-variables/ -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(APPVEYOR_PULL_REQUEST_NUMBER)' != ''">pr$(APPVEYOR_PULL_REQUEST_NUMBER)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(APPVEYOR_REPO_TAG_NAME)' != ''">$(APPVEYOR_REPO_TAG_NAME)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(APPVEYOR_REPO_BRANCH)' != ''">$(APPVEYOR_REPO_BRANCH)</RepositoryBranch>
+    <!-- TeamCity: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Branch-Related+Parameters -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(TEAMCITY_BUILD_BRANCH)' != ''">$(TEAMCITY_BUILD_BRANCH)</RepositoryBranch>
+    <!--TravisCI: https://docs.travis-ci.com/user/environment-variables/ -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(TRAVIS_PULL_REQUEST)' != '' and '$(TRAVIS_PULL_REQUEST)' != 'false'">pr$(TRAVIS_PULL_REQUEST)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(TRAVIS_BRANCH)' != ''">$(TRAVIS_BRANCH)</RepositoryBranch>
+    <!-- CircleCI: https://circleci.com/docs/2.0/env-vars/ -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CIRCLE_PR_NUMBER)' != ''">pr$(CIRCLE_PR_NUMBER)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CIRCLE_TAG)' != ''">$(CIRCLE_TAG)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CIRCLE_BRANCH)' != ''">$(CIRCLE_BRANCH)</RepositoryBranch>
+    <!-- GitLab: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CI_COMMIT_TAG)' != ''">$(CI_COMMIT_TAG)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CI_MERGE_REQUEST_IID)' != ''">pr$(CI_MERGE_REQUEST_IID)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CI_EXTERNAL_PULL_REQUEST_IID)' != ''">pr$(CI_EXTERNAL_PULL_REQUEST_IID)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(CI_COMMIT_BRANCH)' != ''">$(CI_COMMIT_BRANCH)</RepositoryBranch>
+    <!-- Buddy: https://buddy.works/docs/pipelines/environment-variables#default-environment-variables -->
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(BUDDY_EXECUTION_PULL_REQUEST_NO)' != ''">pr$(BUDDY_EXECUTION_PULL_REQUEST_NO)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(BUDDY_EXECUTION_TAG)' != ''">$(BUDDY_EXECUTION_TAG)</RepositoryBranch>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == '' and '$(BUDDY_EXECUTION_BRANCH)' != ''">$(BUDDY_EXECUTION_BRANCH)</RepositoryBranch>
+  </PropertyGroup>    
+
   <ItemGroup>
+  <!-- Delete the previous property group when https://github.com/dotnet/reproducible-builds/pull/27 ships -->
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 
