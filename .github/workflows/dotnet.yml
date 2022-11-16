@@ -8,36 +8,29 @@ env:
 
 jobs:
 
-  # Build the whole PolySharp solution, in Debug
-  build-solution-debug:
+  # Build the whole PolySharp solution
+  build-solution:
+    strategy:
+        matrix:
+          configuration: [Debug, Release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Build
-      run: dotnet build -c Debug /bl
+      run: dotnet build -c ${{matrix.configuration}} /bl
       shell: cmd
     - name: Upload MSBuild binary log
       uses: actions/upload-artifact@v3
       with:
-        name: msbuild_log
+        name: msbuild_log_${{matrix.configuration}}
         path: msbuild.binlog
         if-no-files-found: error
-
-  # Build the whole PolySharp solution, in Release
-  build-solution-release:
-    runs-on: windows-2022
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v3
-    - name: Build
-      run: dotnet build -c Release /p:Configuration=Release
-      shell: cmd
 
   # Build the .msbuildproj projects to generate all the NuGet packages
   build-packages:
     if: success()
-    needs: [build-solution-debug, build-solution-release]
+    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -48,7 +41,7 @@ jobs:
     - name: Upload package artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts\*.nupkg
         if-no-files-found: error
 
@@ -68,7 +61,7 @@ jobs:
     - name: Download package artifacts
       uses: actions/download-artifact@v3
       with:
-        name: nuget_preview
+        name: nuget_packages
         path: artifacts
     - name: Build PolySharp.NuGet
       run: dotnet build tests\PolySharp.NuGet\PolySharp.NuGet.csproj -c Release
