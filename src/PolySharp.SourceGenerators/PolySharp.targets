@@ -37,14 +37,6 @@
       <Analyzer Remove="@(_PolySharpAnalyzer)"/>
     </ItemGroup>
 
-    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
-    <ItemGroup>
-      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
-      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
-      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
-      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
-    </ItemGroup>
-
     <!--
       If the source generators are disabled, also emit an error. This would've been produced by MSBuild itself as well, but
       emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
@@ -63,6 +55,25 @@
     <ItemGroup>
       <Analyzer Remove="@(_PolySharpAnalyzer)"/>
     </ItemGroup>
+  </Target>
+
+  <!-- Configure the MSBuild properties used to control PolySharp's generator -->
+  <Target Name="ConfigurePolySharpMSBuildProperties"
+          BeforeTargets="PrepareForBuild">
+
+    <!-- Mark the MSBuild properties to configure the generator visible for the compiler, so the analyzer can see them -->
+    <ItemGroup>
+      <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+    </ItemGroup>
+
+    <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->
+    <PropertyGroup>
+      <PolySharpExcludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpExcludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpExcludeGeneratedTypes>
+      <PolySharpIncludeGeneratedTypes>$([System.Text.RegularExpressions.Regex]::Replace($(PolySharpIncludeGeneratedTypes.Replace(';', ',')), '[\r\n]', ''))</PolySharpIncludeGeneratedTypes>
+    </PropertyGroup>
   </Target>
 
 </Project>
