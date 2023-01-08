@@ -2,32 +2,37 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Linq;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 using PolySharp.SourceGenerators.Extensions;
-using PolySharp.SourceGenerators.Models;
+using static PolySharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 namespace PolySharp.SourceGenerators;
 
 /// <summary>
 /// A diagnostic analyzer that generates an error whenever a source-generator attribute is used with not high enough C# version enabled.
 /// </summary>
-/// <remarks>
-/// This has to be a generator because emitting diagnostics for analyzer options from an analyzer is not currently supported.
-/// See <see href="https://github.com/dotnet/roslyn/issues/64213"/>.
-/// </remarks>
-[Generator(LanguageNames.CSharp)]
-public sealed partial class UnsupportedCSharpLanguageVersionAnalyzer : IIncrementalGenerator
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public sealed partial class UnsupportedCSharpLanguageVersionAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public void Initialize(IncrementalGeneratorInitializationContext context)
-    {
-        // Prepare all the diagnostics for the analyzer options being used
-        IncrementalValuesProvider<DiagnosticInfo> analyzerOptionsDiagnostics =
-            context.CompilationProvider
-            .SelectMany(GetOptionsDiagnostics);
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(UnsupportedCSharpLanguageVersionError);
 
-        // Output the diagnostics
-        context.ReportDiagnostics(analyzerOptionsDiagnostics);
+    /// <inheritdoc/>
+    public override void Initialize(AnalysisContext context)
+    {
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.EnableConcurrentExecution();
+
+        // Check that the language version is not high enough, otherwise no diagnostic should ever be produced
+        context.RegisterCompilationAction(static context =>
+        {
+            if (!context.Compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(UnsupportedCSharpLanguageVersionError, null));
+            }
+        });
     }
 }
