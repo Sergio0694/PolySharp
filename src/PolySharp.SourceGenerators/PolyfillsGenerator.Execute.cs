@@ -113,7 +113,18 @@ partial class PolyfillsGenerator
             }
 
             // Otherwise, check that the type is not in the list of excluded types
-            return !options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
+            if (options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name))
+            {
+                return false;
+            }
+
+            // Special case System.Range on System.ValueTuple`2 existing
+            if (name is "System.Range")
+            {
+                return compilation.GetTypeByMetadataName("System.ValueTuple`2") is not null;
+            }
+
+            return true;
         }
 
         using ImmutableArrayBuilder<GeneratedType> builder = ImmutableArrayBuilder<GeneratedType>.Rent();
