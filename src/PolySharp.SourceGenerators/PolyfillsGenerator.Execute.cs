@@ -49,6 +49,11 @@ partial class PolyfillsGenerator
         select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
 
     /// <summary>
+    /// The <see cref="Regex"/> to find all <see cref="System.Runtime.CompilerServices.MethodImplOptions"/> uses.
+    /// </summary>
+    private static readonly Regex MethodImplOptionsRegex = new(@" *\[global::System\.Runtime\.CompilerServices\.MethodImpl\(global::System\.Runtime\.CompilerServices\.MethodImplOptions\.AggressiveInlining\)\]\r?\n", RegexOptions.Compiled);
+
+    /// <summary>
     /// The dictionary of cached sources to produce.
     /// </summary>
     private readonly ConcurrentDictionary<GeneratedType, SourceText> manifestSources = new();
@@ -113,7 +118,33 @@ partial class PolyfillsGenerator
             }
 
             // Otherwise, check that the type is not in the list of excluded types
-            return !options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
+            if (options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name))
+            {
+                return false;
+            }
+
+            // Special case System.Range on System.ValueTuple`2 existing
+            if (name is "System.Range")
+            {
+                return compilation.GetTypeByMetadataName("System.ValueTuple`2") is not null;
+            }
+
+            return true;
+        }
+
+        // Helper to get the syntax fixup to apply to a given type
+        static SyntaxFixupType GetSyntaxFixupType(Compilation compilation, GenerationOptions options, string name)
+        {
+            if (name is "System.Range" or "System.Index")
+            {
+                // If MethodImplOptions.AggressiveInlining isn't found, remove the attribute
+                if (compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.MethodImplOptions")?.GetMembers("AggressiveInlining") is not [IFieldSymbol])
+                {
+                    return SyntaxFixupType.RemoveMethodImplAttributes;
+                }
+            }
+
+            return SyntaxFixupType.None;
         }
 
         using ImmutableArrayBuilder<GeneratedType> builder = ImmutableArrayBuilder<GeneratedType>.Rent();
@@ -123,7 +154,7 @@ partial class PolyfillsGenerator
         {
             if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
             {
-                builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes));
+                builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes, GetSyntaxFixupType(info.Compilation, info.Options, name)));
             }
         }
 
@@ -136,7 +167,7 @@ partial class PolyfillsGenerator
             {
                 if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
                 {
-                    builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes));
+                    builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes, GetSyntaxFixupType(info.Compilation, info.Options, name)));
                 }
             }
         }
@@ -158,17 +189,31 @@ partial class PolyfillsGenerator
 
             using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
-            // If public accessibility has been requested, we need to update the loaded source files
-            if (type.IsPublicAccessibilityRequired)
+            // If public accessibility has been requested or a syntax fixup is needed, we need to update the loaded source files
+            if (type is { IsPublicAccessibilityRequired: true } or { FixupType: not SyntaxFixupType.None })
             {
-                using StreamReader reader = new(stream);
+                string adjustedSource;
 
-                // Read the source and replace all internal keywords with public. Use a space before and after the identifier
-                // to avoid potential false positives. This could also be done by loading the source tree and using a syntax
-                // rewriter, or just by retrieving the type declaration syntax and updating the modifier tokens, but since the
-                // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
-                string originalSource = reader.ReadToEnd();
-                string adjustedSource = originalSource.Replace(" internal ", " public ");
+                using (StreamReader reader = new(stream))
+                {
+                    adjustedSource = reader.ReadToEnd();
+                }
+
+                if (type.IsPublicAccessibilityRequired)
+                {
+                    // After reading the file, replace all internal keywords with public. Use a space before and after the identifier
+                    // to avoid potential false positives. This could also be done by loading the source tree and using a syntax
+                    // rewriter, or just by retrieving the type declaration syntax and updating the modifier tokens, but since the
+                    // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
+                    adjustedSource = adjustedSource.Replace(" internal ", " public ");
+                }
+
+                if (type.FixupType == SyntaxFixupType.RemoveMethodImplAttributes)
+                {
+                    // Just use a regex to remove the attribute. We could use a SyntaxRewriter, but we don't really have that many
+                    // cases to handle for now, so once again we can just use the simplest approach for the time being, that's fine.
+                    adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
+                }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);
             }
