@@ -6,12 +6,14 @@
 
   <PropertyGroup>
     <PackageId>PolySharp</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>PolySharp</Title>
     <Description>PolySharp provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="icon.png" PackFolder="\" />
+    <None Include="icon.png" PackFolder="\" />
+    <None Include="..\..\README.md" PackFolder="\" />
   </ItemGroup>
 
   <ItemGroup>

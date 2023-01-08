@@ -1,4 +1,5 @@
 ![image](https://user-images.githubusercontent.com/10199417/197341200-3810e13c-9104-4911-90fc-b8add0862458.png)
+<br/>
 [![.NET](https://github.com/Sergio0694/PolySharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/PolySharp/actions) [![NuGet](https://img.shields.io/nuget/dt/PolySharp.svg)](https://www.nuget.org/stats/packages/PolySharp?groupby=Version) [![NuGet](https://img.shields.io/nuget/vpre/PolySharp.svg)](https://www.nuget.org/packages/PolySharp/)
 
 # What is it? 🚀
