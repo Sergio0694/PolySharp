@@ -49,6 +49,11 @@ partial class PolyfillsGenerator
         select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
 
     /// <summary>
+    /// The collection of all fully qualified type names for available polyfill types.
+    /// </summary>
+    private static readonly ImmutableArray<string> AllSupportTypeNames = ImmutableArray.CreateRange(LanguageSupportTypeNames.Concat(RuntimeSupportedTypeNames));
+
+    /// <summary>
     /// The <see cref="Regex"/> to find all <see cref="System.Runtime.CompilerServices.MethodImplOptions"/> uses.
     /// </summary>
     private static readonly Regex MethodImplOptionsRegex = new(@" *\[global::System\.Runtime\.CompilerServices\.MethodImpl\(global::System\.Runtime\.CompilerServices\.MethodImplOptions\.AggressiveInlining\)\]\r?\n", RegexOptions.Compiled);
@@ -84,41 +89,26 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Calculates the collection of <see cref="GeneratedType"/>-s to emit.
+    /// Calculates the collection of <see cref="AvailableType"/> that could be generated.
     /// </summary>
-    /// <param name="info">The input info for the current generation.</param>
+    /// <param name="compilation">The current <see cref="Compilation"/> instance.</param>
     /// <param name="token">The cancellation token for the operation.</param>
-    /// <returns>The collection of <see cref="GeneratedType"/>-s to emit.</returns>
-    private static ImmutableArray<GeneratedType> GetGeneratedTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
+    /// <returns>The collection of <see cref="AvailableType"/> that could be generated.</returns>
+    private static ImmutableArray<AvailableType> GetAvailableTypes(Compilation compilation, CancellationToken token)
     {
         // A minimum of C# 8.0 is required to benefit from the polyfills
-        if (!info.Compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
+        if (!compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
         {
-            return ImmutableArray<GeneratedType>.Empty;
+            return ImmutableArray<AvailableType>.Empty;
         }
 
-        // Helper function to check whether a type should be included for generation
-        static bool ShouldIncludeGeneratedType(Compilation compilation, GenerationOptions options, string name, CancellationToken token)
+        // Helper function to check whether a type is available
+        static bool IsTypeAvailable(Compilation compilation, string name, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             // First check whether the type is accessible, and if it is already then there is nothing left to do
             if (compilation.HasAccessibleTypeWithMetadataName(name))
-            {
-                return false;
-            }
-
-            // If the explicit list of types to generate isn't empty, take it into account.
-            // Types will be generated only if explicitly requested and not explicitly excluded.
-            if (options.IncludeGeneratedTypes.Length > 0)
-            {
-                return
-                    options.IncludeGeneratedTypes.AsImmutableArray().Contains(name) &&
-                    !options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name);
-            }
-
-            // Otherwise, check that the type is not in the list of excluded types
-            if (options.ExcludeGeneratedTypes.AsImmutableArray().Contains(name))
             {
                 return false;
             }
@@ -133,7 +123,7 @@ partial class PolyfillsGenerator
         }
 
         // Helper to get the syntax fixup to apply to a given type
-        static SyntaxFixupType GetSyntaxFixupType(Compilation compilation, GenerationOptions options, string name)
+        static SyntaxFixupType GetSyntaxFixupType(Compilation compilation, string name)
         {
             if (name is "System.Range" or "System.Index")
             {
@@ -147,32 +137,49 @@ partial class PolyfillsGenerator
             return SyntaxFixupType.None;
         }
 
-        using ImmutableArrayBuilder<GeneratedType> builder = ImmutableArrayBuilder<GeneratedType>.Rent();
+        using ImmutableArrayBuilder<AvailableType> builder = ImmutableArrayBuilder<AvailableType>.Rent();
 
-        // First go through the language support types
-        foreach (string name in LanguageSupportTypeNames)
+        // Inspect all available types and filter them down according to the current compilation
+        foreach (string name in AllSupportTypeNames)
         {
-            if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
+            if (IsTypeAvailable(compilation, name, token))
             {
-                builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes, GetSyntaxFixupType(info.Compilation, info.Options, name)));
-            }
-        }
-
-        // Only go through the runtime supported attributes if explicitly requested or if the explicit set of included types is not empty.
-        // That is, attributes from this category are only emitted if opted-in, or if any of them has explicitly been requested by the user.
-        if (info.Options.IncludeRuntimeSupportedAttributes ||
-            info.Options.IncludeGeneratedTypes.Length > 0)
-        {
-            foreach (string name in RuntimeSupportedTypeNames)
-            {
-                if (ShouldIncludeGeneratedType(info.Compilation, info.Options, name, token))
-                {
-                    builder.Add(new GeneratedType(name, info.Options.UsePublicAccessibilityForGeneratedTypes, GetSyntaxFixupType(info.Compilation, info.Options, name)));
-                }
+                builder.Add(new AvailableType(name, GetSyntaxFixupType(compilation, name)));
             }
         }
 
         return builder.ToImmutable();
+    }
+
+    /// <summary>
+    /// Checks whether a given <see cref="AvailableType"/> is selected for generation
+    /// </summary>
+    /// <param name="info">The input info for the current generation.</param>
+    /// <returns>Whether the current <see cref="AvailableType"/> is selected for generation</returns>
+    private static bool IsAvailableTypeSelected((AvailableType AvailableType, GenerationOptions Options) info)
+    {
+        // If the explicit list of types to generate isn't empty, take it into account.
+        // Types will be generated only if explicitly requested and not explicitly excluded.
+        if (info.Options.IncludeGeneratedTypes.Length > 0)
+        {
+            return
+                info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName) &&
+                !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName);
+        }
+
+        // Otherwise, the selected types are all language support ones, and runtime support ones if selected
+        return LanguageSupportTypeNames.Contains(info.AvailableType.FullyQualifiedMetadataName) || info.Options.IncludeRuntimeSupportedAttributes;
+    }
+
+    /// <summary>
+    /// Creates a final <see cref="GeneratedType"/> model for generation.
+    /// </summary>
+    /// <param name="info">The input info for the current generation.</param>
+    /// <param name="token">The cancellation token for the operation.</param>
+    /// <returns>A <see cref="GeneratedType"/> model for generation.</returns>
+    private static GeneratedType GetGeneratedType((AvailableType AvailableType, GenerationOptions Options) info, CancellationToken token)
+    {
+        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, info.AvailableType.FixupType);
     }
 
     /// <summary>

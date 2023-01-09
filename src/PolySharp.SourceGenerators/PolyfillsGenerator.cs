@@ -18,13 +18,19 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
             context.AnalyzerConfigOptionsProvider
             .Select(GetGenerationOptions);
 
-        // Gather the sequence of all types to generate, along with their additional info
-        IncrementalValuesProvider<GeneratedType> requestedTypes =
+        // Get the sequence of all avaailable types that could be generated
+        IncrementalValuesProvider<AvailableType> availableTypes =
             context.CompilationProvider
+            .SelectMany(GetAvailableTypes);
+
+        // Gather the sequence of all types to generate after filtering
+        IncrementalValuesProvider<GeneratedType> generatedTypes =
+            availableTypes
             .Combine(generationOptions)
-            .SelectMany(GetGeneratedTypes);
+            .Where(IsAvailableTypeSelected)
+            .Select(GetGeneratedType);
 
         // Generate source for the current type depending on current accessibility
-        context.RegisterSourceOutput(requestedTypes, EmitGeneratedType);
+        context.RegisterSourceOutput(generatedTypes, EmitGeneratedType);
     }
 }
