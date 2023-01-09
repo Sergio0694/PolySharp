@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <None Include="icon.png" PackagePath="icon.png" Pack="true" />
-    <None Include="..\..\README.md" PackagePath="README.md" Pack="true" />
+    <None Include="README.md" PackagePath="README.md" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>
