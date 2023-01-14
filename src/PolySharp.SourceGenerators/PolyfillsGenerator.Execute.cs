@@ -140,6 +140,15 @@ partial class PolyfillsGenerator
                 }
             }
 
+            if (name is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute")
+            {
+                // Check if the aliased type is available
+                if (compilation.HasAccessibleTypeWithMetadataName("System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute"))
+                {
+                    return SyntaxFixupType.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested;
+                }
+            }
+
             return SyntaxFixupType.None;
         }
 
@@ -171,6 +180,14 @@ partial class PolyfillsGenerator
             return
                 info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName) &&
                 !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName);
+        }
+
+        // Skip UnmanagedCallersOnlyAttribute if an alias exists and an alias has also been requested
+        if (info.AvailableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
+            info.AvailableType.FixupType == SyntaxFixupType.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested &&
+            info.Options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+        {
+            return false;
         }
 
         // Otherwise, the selected types are all language support ones, and runtime support ones if selected
