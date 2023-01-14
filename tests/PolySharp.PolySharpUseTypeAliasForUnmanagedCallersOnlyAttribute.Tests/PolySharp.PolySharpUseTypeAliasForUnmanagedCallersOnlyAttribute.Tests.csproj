@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-    <PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute>true</PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute>
+    <PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>true</PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute>  
   </PropertyGroup>
 
   <ItemGroup>
     <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes" />
-    <CompilerVisibleProperty Include="PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute" />
+    <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute" />
   </ItemGroup>
 
   <ItemGroup>

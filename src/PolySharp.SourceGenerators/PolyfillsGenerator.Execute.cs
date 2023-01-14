@@ -77,7 +77,7 @@ partial class PolyfillsGenerator
 
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
-        bool useTypeAliasForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseTypeAliasForUnmanagedCallersOnlyAttribute);
+        bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
 
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
@@ -89,7 +89,7 @@ partial class PolyfillsGenerator
         return new(
             usePublicAccessibilityForGeneratedTypes,
             includeRuntimeSupportedAttributes,
-            useTypeAliasForUnmanagedCallersOnlyAttribute,
+            useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
             excludeGeneratedTypes,
             includeGeneratedTypes);
     }
@@ -189,9 +189,9 @@ partial class PolyfillsGenerator
         static SyntaxFixupType GetSyntaxFixupType(AvailableType availableType, GenerationOptions options)
         {
             if (availableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
-                options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+                options.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute)
             {
-                return SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType;
+                return SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute;
             }
 
             return SyntaxFixupType.None;
@@ -243,19 +243,12 @@ partial class PolyfillsGenerator
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
                 }
 
-                if (type.FixupType == SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType)
+                if (type.FixupType == SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute)
                 {
                     // Update the namespace and add the type alias
                     adjustedSource = adjustedSource.Replace(
-                        "namespace System.Runtime.InteropServices",
-                        """
-                        global using UnmanagedCallersOnlyAttribute = global::System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute;
-
-                        namespace System.Runtime.InteropServices2
-                        """);
-
-                    // Adjust any remaining references
-                    adjustedSource = adjustedSource.Replace("System.Runtime.InteropServices.", "System.Runtime.InteropServices2.");
+                        "System.Runtime.InteropServices",
+                        "System.Runtime.InteropServices2");
                 }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);
