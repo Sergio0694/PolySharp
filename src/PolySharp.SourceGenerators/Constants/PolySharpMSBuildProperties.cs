@@ -16,6 +16,11 @@ internal static class PolySharpMSBuildProperties
     public const string IncludeRuntimeSupportedAttributes = "PolySharpIncludeRuntimeSupportedAttributes";
 
     /// <summary>
+    /// The MSBuild property for <see cref="Models.GenerationOptions.UseTypeAliasForUnmanagedCallersOnlyAttribute"/>.
+    /// </summary>
+    public const string UseTypeAliasForUnmanagedCallersOnlyAttribute = "PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute";
+
+    /// <summary>
     /// The MSBuild property for <see cref="Models.GenerationOptions.ExcludeGeneratedTypes"/>.
     /// </summary>
     public const string ExcludeGeneratedTypes = "PolySharpExcludeGeneratedTypes";

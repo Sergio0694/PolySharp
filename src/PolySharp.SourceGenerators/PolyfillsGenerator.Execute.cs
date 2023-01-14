@@ -75,8 +75,9 @@ partial class PolyfillsGenerator
         // $(PolySharpUsePublicAccessibilityForGeneratedTypes) MSBuild property to configure this however they need.
         bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
 
-        // Do the same as above but for the $(PolySharpIncludeRuntimeSupportedAttributes) property
+        // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
+        bool useTypeAliasForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseTypeAliasForUnmanagedCallersOnlyAttribute);
 
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
@@ -85,7 +86,12 @@ partial class PolyfillsGenerator
         // Gather the list of polyfills to explicitly include in the generation. This will override combinations expressed above.
         ImmutableArray<string> includeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.IncludeGeneratedTypes);
 
-        return new(usePublicAccessibilityForGeneratedTypes, includeRuntimeSupportedAttributes, excludeGeneratedTypes, includeGeneratedTypes);
+        return new(
+            usePublicAccessibilityForGeneratedTypes,
+            includeRuntimeSupportedAttributes,
+            useTypeAliasForUnmanagedCallersOnlyAttribute,
+            excludeGeneratedTypes,
+            includeGeneratedTypes);
     }
 
     /// <summary>
@@ -179,7 +185,22 @@ partial class PolyfillsGenerator
     /// <returns>A <see cref="GeneratedType"/> model for generation.</returns>
     private static GeneratedType GetGeneratedType((AvailableType AvailableType, GenerationOptions Options) info, CancellationToken token)
     {
-        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, info.AvailableType.FixupType);
+        // Helper to update the syntax fixup with generation options
+        static SyntaxFixupType GetSyntaxFixupType(AvailableType availableType, GenerationOptions options)
+        {
+            if (availableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
+                options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+            {
+                return SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType;
+            }
+
+            return SyntaxFixupType.None;
+        }
+
+        // Combine the syntax type with any analyzer options
+        SyntaxFixupType fixupType = info.AvailableType.FixupType | GetSyntaxFixupType(info.AvailableType, info.Options);
+
+        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, fixupType);
     }
 
     /// <summary>
@@ -220,6 +241,21 @@ partial class PolyfillsGenerator
                     // Just use a regex to remove the attribute. We could use a SyntaxRewriter, but we don't really have that many
                     // cases to handle for now, so once again we can just use the simplest approach for the time being, that's fine.
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
+                }
+
+                if (type.FixupType == SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType)
+                {
+                    // Update the namespace and add the type alias
+                    adjustedSource = adjustedSource.Replace(
+                        "namespace System.Runtime.InteropServices",
+                        """
+                        global using UnmanagedCallersOnlyAttribute = global::System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute;
+
+                        namespace System.Runtime.InteropServices2
+                        """);
+
+                    // Adjust any remaining references
+                    adjustedSource = adjustedSource.Replace("System.Runtime.InteropServices.", "System.Runtime.InteropServices2.");
                 }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);
