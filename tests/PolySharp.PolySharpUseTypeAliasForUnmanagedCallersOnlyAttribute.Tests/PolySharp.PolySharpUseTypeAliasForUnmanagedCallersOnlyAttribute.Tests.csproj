@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute>true</PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes" />
+    <CompilerVisibleProperty Include="PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+</Project>
