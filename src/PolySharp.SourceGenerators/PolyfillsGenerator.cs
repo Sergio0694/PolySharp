@@ -32,5 +32,13 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
 
         // Generate source for the current type depending on current accessibility
         context.RegisterSourceOutput(generatedTypes, EmitGeneratedType);
+
+        // Get all potential type forwarded type names
+        IncrementalValuesProvider<string> typeForwardTypeNames =
+            context.CompilationProvider
+            .SelectMany(GetCoreLibTypes);
+
+        // Generate the type forwards, if any
+        context.RegisterImplementationSourceOutput(typeForwardTypeNames, EmitTypeForwards);
     }
 }
