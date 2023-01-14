@@ -128,15 +128,15 @@ partial class PolyfillsGenerator
             return true;
         }
 
-        // Helper to get the syntax fixup to apply to a given type
-        static SyntaxFixupType GetSyntaxFixupType(Compilation compilation, string name)
+        // Helper to get the fixup for an available type
+        static AvailableTypeFixup GetFixup(Compilation compilation, string name)
         {
             if (name is "System.Range" or "System.Index")
             {
                 // If MethodImplOptions.AggressiveInlining isn't found, remove the attribute
                 if (compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.MethodImplOptions")?.GetMembers("AggressiveInlining") is not [IFieldSymbol])
                 {
-                    return SyntaxFixupType.RemoveMethodImplAttributes;
+                    return AvailableTypeFixup.RemoveMethodImplAttributes;
                 }
             }
 
@@ -145,11 +145,11 @@ partial class PolyfillsGenerator
                 // Check if the aliased type is available
                 if (compilation.HasAccessibleTypeWithMetadataName("System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute"))
                 {
-                    return SyntaxFixupType.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested;
+                    return AvailableTypeFixup.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested;
                 }
             }
 
-            return SyntaxFixupType.None;
+            return AvailableTypeFixup.None;
         }
 
         using ImmutableArrayBuilder<AvailableType> builder = ImmutableArrayBuilder<AvailableType>.Rent();
@@ -159,7 +159,7 @@ partial class PolyfillsGenerator
         {
             if (IsTypeAvailable(compilation, name, token))
             {
-                builder.Add(new AvailableType(name, GetSyntaxFixupType(compilation, name)));
+                builder.Add(new AvailableType(name, GetFixup(compilation, name)));
             }
         }
 
@@ -182,14 +182,6 @@ partial class PolyfillsGenerator
                 !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName);
         }
 
-        // Skip UnmanagedCallersOnlyAttribute if an alias exists and an alias has also been requested
-        if (info.AvailableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
-            info.AvailableType.FixupType == SyntaxFixupType.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested &&
-            info.Options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
-        {
-            return false;
-        }
-
         // Otherwise, the selected types are all language support ones, and runtime support ones if selected
         return LanguageSupportTypeNames.Contains(info.AvailableType.FullyQualifiedMetadataName) || info.Options.IncludeRuntimeSupportedAttributes;
     }
@@ -202,22 +194,36 @@ partial class PolyfillsGenerator
     /// <returns>A <see cref="GeneratedType"/> model for generation.</returns>
     private static GeneratedType GetGeneratedType((AvailableType AvailableType, GenerationOptions Options) info, CancellationToken token)
     {
-        // Helper to update the syntax fixup with generation options
-        static SyntaxFixupType GetSyntaxFixupType(AvailableType availableType, GenerationOptions options)
+        // Helper to get the fixup for a generated type
+        static GeneratedTypeFixup GetFixup(AvailableType availableType, GenerationOptions options)
         {
-            if (availableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
-                options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+            if (availableType.FullyQualifiedMetadataName is "System.Range" or "System.Index" &&
+                availableType.Fixup == AvailableTypeFixup.RemoveMethodImplAttributes)
             {
-                return SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType;
+                return GeneratedTypeFixup.RemoveMethodImplAttributes;
             }
 
-            return SyntaxFixupType.None;
+            if (availableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute")
+            {
+                if (availableType.Fixup == AvailableTypeFixup.BypassUnmanagedCallersOnlyAttributeTypeIfAliasRequested &&
+                    options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+                {
+                    return GeneratedTypeFixup.GenerateUnmanagedCallersOnlyAttributeTypeAliasOnly;
+                }
+
+                if (options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+                {
+                    return GeneratedTypeFixup.AliasUnmanagedCallersOnlyAttributeType;
+                }
+            }
+
+            return GeneratedTypeFixup.None;
         }
 
-        // Combine the syntax type with any analyzer options
-        SyntaxFixupType fixupType = info.AvailableType.FixupType | GetSyntaxFixupType(info.AvailableType, info.Options);
-
-        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, fixupType);
+        return new(
+            info.AvailableType.FullyQualifiedMetadataName,
+            info.Options.UsePublicAccessibilityForGeneratedTypes,
+            GetFixup(info.AvailableType, info.Options));
     }
 
     /// <summary>
@@ -235,7 +241,7 @@ partial class PolyfillsGenerator
             using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
             // If public accessibility has been requested or a syntax fixup is needed, we need to update the loaded source files
-            if (type is { IsPublicAccessibilityRequired: true } or { FixupType: not SyntaxFixupType.None })
+            if (type is { IsPublicAccessibilityRequired: true } or { Fixup: not GeneratedTypeFixup.None })
             {
                 string adjustedSource;
 
@@ -253,14 +259,13 @@ partial class PolyfillsGenerator
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
                 }
 
-                if (type.FixupType == SyntaxFixupType.RemoveMethodImplAttributes)
+                if (type.Fixup == GeneratedTypeFixup.RemoveMethodImplAttributes)
                 {
                     // Just use a regex to remove the attribute. We could use a SyntaxRewriter, but we don't really have that many
                     // cases to handle for now, so once again we can just use the simplest approach for the time being, that's fine.
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
                 }
-
-                if (type.FixupType == SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType)
+                else if (type.Fixup == GeneratedTypeFixup.AliasUnmanagedCallersOnlyAttributeType)
                 {
                     // Update the namespace and add the type alias
                     adjustedSource = adjustedSource.Replace(
@@ -273,6 +278,13 @@ partial class PolyfillsGenerator
 
                     // Adjust any remaining references
                     adjustedSource = adjustedSource.Replace("System.Runtime.InteropServices.", "System.Runtime.InteropServices2.");
+                }
+                else if (type.Fixup == GeneratedTypeFixup.GenerateUnmanagedCallersOnlyAttributeTypeAliasOnly)
+                {
+                    // Skip generating the type, only include the type alias
+                    adjustedSource =
+                        adjustedSource.Substring(0, adjustedSource.IndexOf("namespace")) +
+                        "global using UnmanagedCallersOnlyAttribute = global::System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute;";
                 }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);
