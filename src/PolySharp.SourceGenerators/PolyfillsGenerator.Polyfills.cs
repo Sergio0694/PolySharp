@@ -158,23 +158,40 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Checks whether a given <see cref="AvailableType"/> is selected for generation
+    /// Checks whether a type with a specific fully qualified name is selected for generation.
+    /// </summary>
+    /// <param name="info">The input info for the current generation.</param>
+    /// <returns>Whether the current type is selected for generation</returns>
+    private static bool IsAvailableTypeSelected((string FullyQualifiedTypeName, GenerationOptions Options) info)
+    {
+        bool isExplicitlyIncluded = info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.FullyQualifiedTypeName);
+        bool isExplicitlyExcluded = info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.FullyQualifiedTypeName);
+
+        // If the explicit list of types to generate isn't empty, take it into account.
+        // Types will be generated only if explicitly requested and not explicitly excluded.
+        if (info.Options.IncludeGeneratedTypes.Length > 0)
+        {
+            return isExplicitlyIncluded && !isExplicitlyExcluded;
+        }
+
+        // If there is no list of explicit types, still ignore types that are explicitly excluded
+        if (isExplicitlyExcluded)
+        {
+            return false;
+        }
+
+        // Otherwise, the selected types are all language support ones, and runtime support ones if selected
+        return LanguageSupportTypeNames.Contains(info.FullyQualifiedTypeName) || info.Options.IncludeRuntimeSupportedAttributes;
+    }
+
+    /// <summary>
+    /// Checks whether a given <see cref="AvailableType"/> is selected for generation.
     /// </summary>
     /// <param name="info">The input info for the current generation.</param>
     /// <returns>Whether the current <see cref="AvailableType"/> is selected for generation</returns>
     private static bool IsAvailableTypeSelected((AvailableType AvailableType, GenerationOptions Options) info)
     {
-        // If the explicit list of types to generate isn't empty, take it into account.
-        // Types will be generated only if explicitly requested and not explicitly excluded.
-        if (info.Options.IncludeGeneratedTypes.Length > 0)
-        {
-            return
-                info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName) &&
-                !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName);
-        }
-
-        // Otherwise, the selected types are all language support ones, and runtime support ones if selected
-        return LanguageSupportTypeNames.Contains(info.AvailableType.FullyQualifiedMetadataName) || info.Options.IncludeRuntimeSupportedAttributes;
+        return IsAvailableTypeSelected((info.AvailableType.FullyQualifiedMetadataName, info.Options));
     }
 
     /// <summary>
