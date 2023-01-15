@@ -39,8 +39,6 @@ jobs:
 
   # Build the .msbuildproj projects to generate all the NuGet packages
   build-packages:
-    if: success()
-    needs: [build-solution]
     runs-on: windows-2022
     steps:
     - name: Git checkout
