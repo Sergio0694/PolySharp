@@ -51,6 +51,14 @@ partial class InvalidPolySharpMSBuildOptionAnalyzer
 
         token.ThrowIfCancellationRequested();
 
+        // And for "ExcludeTypeForwardedToDeclarations" as well
+        if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations, out string? excludeTypeForwardedToDeclarations))
+        {
+            builder.Add(InvalidBoolMSBuildProperty, excludeTypeForwardedToDeclarations, PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations);
+        }
+
+        token.ThrowIfCancellationRequested();
+
         ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.ExcludeGeneratedTypes);
 
         // Validate the fully qualified type names for "ExcludeGeneratedTypes"

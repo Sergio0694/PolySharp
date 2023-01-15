@@ -56,6 +56,12 @@ partial class PolyfillsGenerator
     /// <returns>Whether the current type forward is selected for generation</returns>
     private static bool IsCoreLibTypeSelected((string FullyQualifiedTypeName, GenerationOptions Options) info)
     {
+        // If type forwards are disabled, never select any type
+        if (info.Options.ExcludeTypeForwardedToDeclarations)
+        {
+            return false;
+        }
+
         // If the type is not selected for generation, no type forward is needed
         if (!IsAvailableTypeSelected(info))
         {

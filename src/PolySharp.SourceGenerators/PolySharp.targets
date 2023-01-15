@@ -68,6 +68,7 @@
       <CompilerVisibleProperty Include="PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>
       <CompilerVisibleProperty Include="PolySharpExcludeGeneratedTypes"/>
       <CompilerVisibleProperty Include="PolySharpIncludeGeneratedTypes"/>
+      <CompilerVisibleProperty Include="PolySharpExcludeTypeForwardedToDeclarations"/>
     </ItemGroup>
 
     <!-- Adds necessary fixups for multiline properties (replaces ';' characters with ',' and strip new lines) -->

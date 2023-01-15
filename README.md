@@ -79,3 +79,4 @@ The following properties are available:
 - "PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute": moves `[UnmanagedCallersOnly]`.
 - "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
 - "PolySharpIncludeGeneratedTypes": only includes specific types for generation (';' or ',' separated type names).
+- "PolySharpExcludeTypeForwardedToDeclarations": never generates any `[TypeForwardedTo]` declarations.

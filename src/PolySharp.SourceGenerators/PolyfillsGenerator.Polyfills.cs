@@ -78,6 +78,7 @@ partial class PolyfillsGenerator
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
         bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
+        bool excludeTypeForwardedToDeclarations = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations);
 
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
@@ -90,6 +91,7 @@ partial class PolyfillsGenerator
             usePublicAccessibilityForGeneratedTypes,
             includeRuntimeSupportedAttributes,
             useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
+            excludeTypeForwardedToDeclarations,
             excludeGeneratedTypes,
             includeGeneratedTypes);
     }
