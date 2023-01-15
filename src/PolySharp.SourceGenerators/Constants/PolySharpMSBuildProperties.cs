@@ -16,9 +16,9 @@ internal static class PolySharpMSBuildProperties
     public const string IncludeRuntimeSupportedAttributes = "PolySharpIncludeRuntimeSupportedAttributes";
 
     /// <summary>
-    /// The MSBuild property for <see cref="Models.GenerationOptions.UseTypeAliasForUnmanagedCallersOnlyAttribute"/>.
+    /// The MSBuild property for <see cref="Models.GenerationOptions.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute"/>.
     /// </summary>
-    public const string UseTypeAliasForUnmanagedCallersOnlyAttribute = "PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute";
+    public const string UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = "PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute";
 
     /// <summary>
     /// The MSBuild property for <see cref="Models.GenerationOptions.ExcludeGeneratedTypes"/>.
@@ -29,4 +29,9 @@ internal static class PolySharpMSBuildProperties
     /// The MSBuild property for <see cref="Models.GenerationOptions.IncludeGeneratedTypes"/>.
     /// </summary>
     public const string IncludeGeneratedTypes = "PolySharpIncludeGeneratedTypes";
+
+    /// <summary>
+    /// The MSBuild property for <see cref="Models.GenerationOptions.ExcludeTypeForwardedToDeclarations"/>.
+    /// </summary>
+    public const string ExcludeTypeForwardedToDeclarations = "PolySharpExcludeTypeForwardedToDeclarations";
 }

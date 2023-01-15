@@ -43,6 +43,22 @@ partial class InvalidPolySharpMSBuildOptionAnalyzer
 
         token.ThrowIfCancellationRequested();
 
+        // And for "UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute" as well
+        if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute, out string? useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute))
+        {
+            builder.Add(InvalidBoolMSBuildProperty, useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute, PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
+        }
+
+        token.ThrowIfCancellationRequested();
+
+        // And for "ExcludeTypeForwardedToDeclarations" as well
+        if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations, out string? excludeTypeForwardedToDeclarations))
+        {
+            builder.Add(InvalidBoolMSBuildProperty, excludeTypeForwardedToDeclarations, PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations);
+        }
+
+        token.ThrowIfCancellationRequested();
+
         ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.ExcludeGeneratedTypes);
 
         // Validate the fully qualified type names for "ExcludeGeneratedTypes"

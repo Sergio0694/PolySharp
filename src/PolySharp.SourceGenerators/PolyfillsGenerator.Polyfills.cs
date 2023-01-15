@@ -77,7 +77,8 @@ partial class PolyfillsGenerator
 
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
-        bool useTypeAliasForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseTypeAliasForUnmanagedCallersOnlyAttribute);
+        bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
+        bool excludeTypeForwardedToDeclarations = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations);
 
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
@@ -89,7 +90,8 @@ partial class PolyfillsGenerator
         return new(
             usePublicAccessibilityForGeneratedTypes,
             includeRuntimeSupportedAttributes,
-            useTypeAliasForUnmanagedCallersOnlyAttribute,
+            useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
+            excludeTypeForwardedToDeclarations,
             excludeGeneratedTypes,
             includeGeneratedTypes);
     }
@@ -158,23 +160,40 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Checks whether a given <see cref="AvailableType"/> is selected for generation
+    /// Checks whether a type with a specific fully qualified name is selected for generation.
+    /// </summary>
+    /// <param name="info">The input info for the current generation.</param>
+    /// <returns>Whether the current type is selected for generation</returns>
+    private static bool IsAvailableTypeSelected((string FullyQualifiedTypeName, GenerationOptions Options) info)
+    {
+        bool isExplicitlyIncluded = info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.FullyQualifiedTypeName);
+        bool isExplicitlyExcluded = info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.FullyQualifiedTypeName);
+
+        // If the explicit list of types to generate isn't empty, take it into account.
+        // Types will be generated only if explicitly requested and not explicitly excluded.
+        if (info.Options.IncludeGeneratedTypes.Length > 0)
+        {
+            return isExplicitlyIncluded && !isExplicitlyExcluded;
+        }
+
+        // If there is no list of explicit types, still ignore types that are explicitly excluded
+        if (isExplicitlyExcluded)
+        {
+            return false;
+        }
+
+        // Otherwise, the selected types are all language support ones, and runtime support ones if selected
+        return LanguageSupportTypeNames.Contains(info.FullyQualifiedTypeName) || info.Options.IncludeRuntimeSupportedAttributes;
+    }
+
+    /// <summary>
+    /// Checks whether a given <see cref="AvailableType"/> is selected for generation.
     /// </summary>
     /// <param name="info">The input info for the current generation.</param>
     /// <returns>Whether the current <see cref="AvailableType"/> is selected for generation</returns>
     private static bool IsAvailableTypeSelected((AvailableType AvailableType, GenerationOptions Options) info)
     {
-        // If the explicit list of types to generate isn't empty, take it into account.
-        // Types will be generated only if explicitly requested and not explicitly excluded.
-        if (info.Options.IncludeGeneratedTypes.Length > 0)
-        {
-            return
-                info.Options.IncludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName) &&
-                !info.Options.ExcludeGeneratedTypes.AsImmutableArray().Contains(info.AvailableType.FullyQualifiedMetadataName);
-        }
-
-        // Otherwise, the selected types are all language support ones, and runtime support ones if selected
-        return LanguageSupportTypeNames.Contains(info.AvailableType.FullyQualifiedMetadataName) || info.Options.IncludeRuntimeSupportedAttributes;
+        return IsAvailableTypeSelected((info.AvailableType.FullyQualifiedMetadataName, info.Options));
     }
 
     /// <summary>
@@ -189,9 +208,9 @@ partial class PolyfillsGenerator
         static SyntaxFixupType GetSyntaxFixupType(AvailableType availableType, GenerationOptions options)
         {
             if (availableType.FullyQualifiedMetadataName is "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute" &&
-                options.UseTypeAliasForUnmanagedCallersOnlyAttribute)
+                options.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute)
             {
-                return SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType;
+                return SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute;
             }
 
             return SyntaxFixupType.None;
@@ -243,19 +262,12 @@ partial class PolyfillsGenerator
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
                 }
 
-                if (type.FixupType == SyntaxFixupType.AliasUnmanagedCallersOnlyAttributeType)
+                if (type.FixupType == SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute)
                 {
                     // Update the namespace and add the type alias
                     adjustedSource = adjustedSource.Replace(
-                        "namespace System.Runtime.InteropServices",
-                        """
-                        global using UnmanagedCallersOnlyAttribute = global::System.Runtime.InteropServices2.UnmanagedCallersOnlyAttribute;
-
-                        namespace System.Runtime.InteropServices2
-                        """);
-
-                    // Adjust any remaining references
-                    adjustedSource = adjustedSource.Replace("System.Runtime.InteropServices.", "System.Runtime.InteropServices2.");
+                        "System.Runtime.InteropServices",
+                        "System.Runtime.InteropServices2");
                 }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);
