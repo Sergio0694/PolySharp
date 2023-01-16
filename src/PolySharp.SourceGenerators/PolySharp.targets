@@ -57,6 +57,18 @@
     </ItemGroup>
   </Target>
 
+  <!-- Remove the analyzer if packages.config is used -->
+  <Target Name="_PolySharpWarnForPackagesConfigUse"
+          AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+          DependsOnTargets="_PolySharpGatherAnalyzers">
+
+    <!--
+      Emit a warning in case packages.config is used, by reading the associated MSBuild property.
+      See https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+    -->
+    <Warning Condition ="'$(RestorePackagesConfig)' == 'true'" Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/> 
+  </Target>
+
   <!-- Configure the MSBuild properties used to control PolySharp's generator -->
   <Target Name="ConfigurePolySharpMSBuildProperties"
           BeforeTargets="PrepareForBuild">
