@@ -71,4 +71,9 @@ internal class ReflectionApis
     {
         _ = type.GetProperties();
     }
+
+    [RequiresDynamicCode("This method creates some type at runtime")]
+    public void MakeUpSomeNewType()
+    {
+    }
 }
