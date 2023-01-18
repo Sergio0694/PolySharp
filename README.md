@@ -57,6 +57,7 @@ It also includes the following optional runtime-supported polyfills:
   - `[DynamicallyAccessedMembers]`
   - `[DynamicDependency]`
   - `[RequiresUnreferencedCode]`
+  - `[RequiresDynamicCode]`
   - `[UnconditionalSuppressMessage]`
 - `[StackTraceHidden]` (see [here](https://makolyte.com/csharp-exclude-exception-throw-helper-methods-from-the-stack-trace/))
 - `[UnmanagedCallersOnly]` (see [docs](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)))
