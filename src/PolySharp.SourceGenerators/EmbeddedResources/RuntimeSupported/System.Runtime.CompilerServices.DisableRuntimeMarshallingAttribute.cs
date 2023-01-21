@@ -25,6 +25,7 @@ namespace System.Runtime.CompilerServices
     /// - LCIDConversionAttribute support is disabled.
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Assembly, Inherited = false, AllowMultiple = false)]
+    [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class DisableRuntimeMarshallingAttribute : global::System.Attribute
     {
     }
