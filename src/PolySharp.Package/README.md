@@ -14,7 +14,7 @@ Here's an example of some of the new features that **PolySharp** can enable down
 
 > **Note**: not all the new C# features can be "tricked" this way (eg. those requiring runtime support, such as [static abstract members](https://learn.microsoft.com/dotnet/csharp/whats-new/tutorials/static-virtual-interface-members), still won't work). But almost everything else will (eg. nullability annotations, pattern matching, etc.), and this applies to a big number of new C# features. Try **PolySharp** out, don't get stuck on C# 6.0 or other older versions! 🎉
 
-> **Note**: use on .NET Framework 3.5 is particularly limited due to shortcomings of the BCL there. In particular, the `System.Range` type will not be generated unless `System.ValueTuple` is referenced (meaning that eg. list patterns won't work by default), and some features such as records will not be usable at all due to the C# compiler missing some necessary APIs that cannot be polifilled. All other features should work as expected.
+> **Note**: use on .NET Framework 3.5 is particularly limited due to shortcomings of the BCL there. In particular, the `System.Range` type will not be generated unless `System.ValueTuple` is referenced (meaning that eg. list patterns won't work by default), and some features such as records will not be usable at all due to the C# compiler missing some necessary APIs that cannot be polyfilled. All other features should work as expected.
 
 # Documentation 📖
 
