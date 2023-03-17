@@ -15,6 +15,7 @@ namespace System
     /// int lastElement = someArray[^1]; // lastElement = 5
     /// </code>
     /// </remarks>
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal readonly struct Index : global::System.IEquatable<global::System.Index>
     {
         private readonly int _value;

@@ -11,6 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Applied to a method that will never return under any circumstance.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class DoesNotReturnAttribute : global::System.Attribute
     {
     }

@@ -20,6 +20,7 @@ namespace System.Runtime.Versioning
         global::System.AttributeTargets.Property |
         global::System.AttributeTargets.Field |
         AttributeTargets.Event, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class RequiresPreviewFeaturesAttribute : global::System.Attribute
     {
         /// <summary>

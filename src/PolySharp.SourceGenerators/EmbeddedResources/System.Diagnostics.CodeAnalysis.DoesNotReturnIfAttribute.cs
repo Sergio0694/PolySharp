@@ -11,6 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that the method will not return if the associated Boolean parameter is passed the specified value.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class DoesNotReturnIfAttribute : global::System.Attribute
     {
         /// <summary>

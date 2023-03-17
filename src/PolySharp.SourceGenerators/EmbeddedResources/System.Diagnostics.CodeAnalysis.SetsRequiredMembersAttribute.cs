@@ -12,6 +12,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// and callers do not need to set any required members themselves.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class SetsRequiredMembersAttribute : global::System.Attribute
     {
     }

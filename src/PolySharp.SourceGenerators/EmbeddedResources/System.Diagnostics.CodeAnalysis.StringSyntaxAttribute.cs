@@ -15,6 +15,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Field |
         global::System.AttributeTargets.Property,
         AllowMultiple = false, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class StringSyntaxAttribute : global::System.Attribute
     {
         /// <summary>

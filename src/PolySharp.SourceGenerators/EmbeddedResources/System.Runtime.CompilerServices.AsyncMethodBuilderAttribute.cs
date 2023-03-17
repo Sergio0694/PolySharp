@@ -20,6 +20,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Enum |
         global::System.AttributeTargets.Method,
         Inherited = false, AllowMultiple = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class AsyncMethodBuilderAttribute : global::System.Attribute
     {
         /// <summary>Initializes the <see cref="global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute"/>.</summary>

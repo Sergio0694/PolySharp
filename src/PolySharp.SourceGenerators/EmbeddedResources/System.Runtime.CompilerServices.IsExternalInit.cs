@@ -12,6 +12,7 @@ namespace System.Runtime.CompilerServices
     /// This class should not be used by developers in source code.
     /// </summary>
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal static class IsExternalInit
     {
     }

@@ -17,6 +17,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// <see cref="global::System.Diagnostics.ConditionalAttribute"/>. So it is always preserved in the compiled assembly.
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class UnconditionalSuppressMessageAttribute : global::System.Attribute
     {

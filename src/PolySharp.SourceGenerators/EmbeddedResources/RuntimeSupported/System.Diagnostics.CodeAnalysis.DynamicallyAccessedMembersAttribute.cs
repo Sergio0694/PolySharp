@@ -40,6 +40,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Interface |
         global::System.AttributeTargets.Struct,
         Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class DynamicallyAccessedMembersAttribute : global::System.Attribute
     {

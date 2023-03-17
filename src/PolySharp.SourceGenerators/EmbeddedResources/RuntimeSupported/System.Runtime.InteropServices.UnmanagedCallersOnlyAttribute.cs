@@ -19,6 +19,7 @@ namespace System.Runtime.InteropServices
     ///   * Must only have <see href="https://docs.microsoft.com/dotnet/framework/interop/blittable-and-non-blittable-types">blittable</see> arguments.
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class UnmanagedCallersOnlyAttribute : global::System.Attribute
     {

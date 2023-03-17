@@ -20,6 +20,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Property |
         global::System.AttributeTargets.Event,
         Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class SkipLocalsInitAttribute : global::System.Attribute
     {
     }

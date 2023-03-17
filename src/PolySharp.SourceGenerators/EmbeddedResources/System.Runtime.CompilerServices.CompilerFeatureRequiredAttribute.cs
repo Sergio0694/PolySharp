@@ -11,6 +11,7 @@ namespace System.Runtime.CompilerServices
     /// Indicates that compiler support for a particular feature is required for the location where this attribute is applied.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.All, AllowMultiple = true, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class CompilerFeatureRequiredAttribute : global::System.Attribute
     {
         /// <summary>
