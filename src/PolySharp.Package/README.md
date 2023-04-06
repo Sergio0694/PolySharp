@@ -57,6 +57,7 @@ It also includes the following optional runtime-supported polyfills:
   - `[RequiresUnreferencedCode]`
   - `[RequiresDynamicCode]`
   - `[UnconditionalSuppressMessage]`
+  - `[RequiresAssemblyFiles]`
 - `[StackTraceHidden]` (see [here](https://makolyte.com/csharp-exclude-exception-throw-helper-methods-from-the-stack-trace/))
 - `[UnmanagedCallersOnly]` (see [docs](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)))
 - Platform support annotation attributes (see [docs](https://learn.microsoft.com/dotnet/standard/analyzers/platform-compat-analyzer)):

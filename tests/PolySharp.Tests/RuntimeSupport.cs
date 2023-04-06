@@ -79,4 +79,9 @@ internal class ReflectionApis
     public void MakeUpSomeNewType()
     {
     }
+
+    [RequiresAssemblyFiles("This method needs access to the assembly files")]
+    public void ReferenceSomeAssemblyFile()
+    {
+    }
 }
