@@ -12,11 +12,18 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
+  <!-- NuGet package info -->
   <PropertyGroup>
-    <PackageId>PolySharp</PackageId>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>PolySharp</Title>
     <Description>PolySharp provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel</Description>
+    <PackageId>PolySharp</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
 
   <ItemGroup>
