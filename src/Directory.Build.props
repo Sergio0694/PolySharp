@@ -1,7 +1,0 @@
-<Project>
-  <Import Project="..\Directory.Build.props" />
-
-  <ItemGroup>
-    <PackageReference Include="NuGetizer" Version="0.9.1" PrivateAssets="all" />
-  </ItemGroup>
-</Project>

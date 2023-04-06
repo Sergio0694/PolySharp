@@ -68,9 +68,9 @@
     <VersionSuffix Condition="'$(GITHUB_EVENT_NAME)' == 'pull_request' AND '$(IsCommitOnReleaseBranch)' != 'true'">pr</VersionSuffix>
   </PropertyGroup>
 
+  <!-- Shared attribution and configuration properties -->
   <PropertyGroup>
     <ContinuousIntegrationBuild Condition="'$(GITHUB_RUN_ID)' != ''">true</ContinuousIntegrationBuild>
-    <DevelopmentDependency>true</DevelopmentDependency>
     <RepositoryUrl>https://github.com/Sergio0694/PolySharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -78,11 +78,7 @@
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Company>Sergio Pedri</Company>
-    <Copyright>Copyright (c) 2022 Sergio Pedri</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
+    <Copyright>Copyright (c) 2023 Sergio Pedri</Copyright>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

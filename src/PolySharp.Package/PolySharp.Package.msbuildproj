@@ -2,29 +2,47 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+
+    <!--
+      This ignores the following warning:
+      "NU5128: some target frameworks declared in the dependencies group of the nuspec and the lib/ref folder do not
+      have exact matches in the other location. [...] Add lib or ref assemblies for the netstandard2.0 target framework."
+      This happens because the package only includes an analyzer, and no binaries to reference at runtime at all.
+    -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
+  <!-- NuGet package info -->
   <PropertyGroup>
-    <PackageId>PolySharp</PackageId>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>PolySharp</Title>
     <Description>PolySharp provides generated, source-only polyfills for C# language features, to easily use all runtime-agnostic features downlevel</Description>
+    <PackageId>PolySharp</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" PackagePath="icon.png" Pack="true" />
-    <None Include="README.md" PackagePath="README.md" Pack="true" />
+    <None Include="icon.png" PackagePath="\" Pack="true" />
+    <None Include="README.md" PackagePath="\" Pack="true" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" PackFolder="analyzers\dotnet\cs" />
+    <ProjectReference Include="..\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup Label="Package">
 
     <!-- Include the custom .targets file to check the source generator -->
-    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="buildTransitive\PolySharp.targets" Pack="true" />
-    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="build\PolySharp.targets" Pack="true" />
+    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="buildTransitive\" Pack="true" />
+    <None Include="..\PolySharp.SourceGenerators\PolySharp.targets" PackagePath="build\" Pack="true" />
+
+    <!-- Pack the source generator binary -->
+     <None Include="..\PolySharp.SourceGenerators\bin\$(Configuration)\netstandard2.0\PolySharp.SourceGenerators.dll" PackagePath="analyzers\dotnet\cs" Pack="true" />
   </ItemGroup>
 
 </Project>
