@@ -20,7 +20,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp/</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Sergio0694/PolySharp/</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>dotnet net netcore netstandard csharp library generator polyfill roslyn</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>

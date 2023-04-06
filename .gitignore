@@ -341,4 +341,4 @@ ASALocalRun/
 samples/**/city_*.jpg
 
 # XML docs files
-src/**/ComputeSharp*.xml
+src/**/PolySharp*.xml
