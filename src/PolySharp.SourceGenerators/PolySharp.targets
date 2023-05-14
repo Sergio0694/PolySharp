@@ -42,7 +42,9 @@
       emitting this manually lets us customize the message to inform developers as to why exactly the generators have been
       disabled, and that PolySharp will not work at all unless a more up to date IDE or compiler version are used.
     -->
-    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'" Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+    <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
+           Code="POLYSPCFG0001"
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to process shaders, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->
@@ -57,16 +59,47 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if packages.config is used -->
+  <!--
+    Inform the user if packages.config is used (as the analyzers and the source generators
+    won't work at all). Since packages.config can only be used with legacy-style projects,
+    the entire package can be skipped if an SDK-style project is used.
+  -->
   <Target Name="_PolySharpWarnForPackagesConfigUse"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
-          DependsOnTargets="_PolySharpGatherAnalyzers">
+          Condition="'$(UsingMicrosoftNetSDK)' != 'true'">
 
     <!--
-      Emit a warning in case packages.config is used, by reading the associated MSBuild property.
-      See https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
+      Check whether packages are being restored via packages.config, by reading the associated MSBuild property.
+      This happens when either the project style is using packages.config, or when explicitly requested.
+      See https://learn.microsoft.com/nuget/reference/msbuild-targets#restoring-packagereference-and-packagesconfig-projects-with-msbuild.
     -->
-    <Warning Condition ="'$(RestorePackagesConfig)' == 'true'" Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/> 
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(RestorePackagesConfig)' == 'true' OR '$(RestoreProjectStyle)' == 'PackagesConfig'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!--
+      If no packages.config properties are set, also try to manually find the packages.config file.
+      This will be in the @(None) elements, if present. Doing so makes sure this works in builds as
+      well, since the implicit targets populating the properties above only run when restoring.
+      Since the packages.config file will always be in the root of the project, if present, we will
+      match with the full item spec (see https://learn.microsoft.com/nuget/reference/packages-config).
+    -->
+    <FindInList ItemSpecToFind="packages.config"
+                List="@(None)"
+                MatchFileNameOnly="false"
+                Condition="'$(PolySharpIsTargetProjectUsingPackagesConfig)' != 'true'">
+      <Output TaskParameter="ItemFound" PropertyName="PolySharpPackagesConfigFile"/>
+    </FindInList>
+
+    <!-- Make sure to update the MSBuild property if the above task did find something -->
+    <PropertyGroup>
+      <PolySharpIsTargetProjectUsingPackagesConfig Condition ="'$(PolySharpPackagesConfigFile)' == 'packages.config'">true</PolySharpIsTargetProjectUsingPackagesConfig>
+    </PropertyGroup>
+
+    <!-- Emit a warning in case packages.config is used -->
+    <Warning Condition ="'$(PolySharpIsTargetProjectUsingPackagesConfig)' == 'true'"
+             Code="POLYSPCFG0002"
+             Text="The PolySharp source generators might not be loaded correctly, as the current project is using the packages.config setup to restore NuGet packages. Source generators require PackageReference to be used (either in a legacy-style or SDK-style .csproj project, both are supported as long as PackageReference is used)."/>
   </Target>
 
   <!-- Configure the MSBuild properties used to control PolySharp's generator -->
