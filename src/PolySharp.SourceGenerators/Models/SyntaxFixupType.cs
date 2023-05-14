@@ -19,8 +19,13 @@ internal enum SyntaxFixupType
     RemoveMethodImplAttributes = 1 << 0,
 
     /// <summary>
+    /// Remove all <c>[ExcludeFromCodeCoverage]</c> attributes.
+    /// </summary>
+    RemoveExcludeFromCodeCoverageAttributes = 1 << 1,
+
+    /// <summary>
     /// Generates the <c>[UnmanagedCallersOnly]</c> type in the <c>InteropServices2</c> dummy namespace.
     /// </summary>
     /// <remarks>This is needed when methods annotated with the attribute have to be assigned to delegates, which Roslyn will otherwise block.</remarks>
-    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 1
+    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 2
 }

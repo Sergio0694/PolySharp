@@ -59,6 +59,11 @@ partial class PolyfillsGenerator
     private static readonly Regex MethodImplOptionsRegex = new(@" *\[global::System\.Runtime\.CompilerServices\.MethodImpl\(global::System\.Runtime\.CompilerServices\.MethodImplOptions\.AggressiveInlining\)\]\r?\n", RegexOptions.Compiled);
 
     /// <summary>
+    /// The <see cref="Regex"/> to find all <see cref="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"/> uses.
+    /// </summary>
+    private static readonly Regex ExcludeFromCodeCoverageRegex = new(@" *\[global::System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverage\]\r?\n", RegexOptions.Compiled);
+
+    /// <summary>
     /// The dictionary of cached sources to produce.
     /// </summary>
     private readonly ConcurrentDictionary<GeneratedType, SourceText> manifestSources = new();
@@ -133,16 +138,22 @@ partial class PolyfillsGenerator
         // Helper to get the syntax fixup to apply to a given type
         static SyntaxFixupType GetSyntaxFixupType(Compilation compilation, string name)
         {
-            if (name is "System.Range" or "System.Index")
+            SyntaxFixupType fixupType = SyntaxFixupType.None;
+
+            // Strip the [ExcludeFromCodeCoverage] uses if the target framework doesn't have the type
+            if (compilation.GetTypeByMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute") is null)
             {
-                // If MethodImplOptions.AggressiveInlining isn't found, remove the attribute
-                if (compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.MethodImplOptions")?.GetMembers("AggressiveInlining") is not [IFieldSymbol])
-                {
-                    return SyntaxFixupType.RemoveMethodImplAttributes;
-                }
+                fixupType |= SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
             }
 
-            return SyntaxFixupType.None;
+            // Just for the Range and Index types, if MethodImplOptions.AggressiveInlining isn't found, remove the attribute
+            if (name is "System.Range" or "System.Index" &&
+                compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.MethodImplOptions")?.GetMembers("AggressiveInlining") is not [IFieldSymbol])
+            {
+                fixupType |= SyntaxFixupType.RemoveMethodImplAttributes;
+            }
+
+            return fixupType;
         }
 
         using ImmutableArrayBuilder<AvailableType> builder = ImmutableArrayBuilder<AvailableType>.Rent();
@@ -260,6 +271,12 @@ partial class PolyfillsGenerator
                     // Just use a regex to remove the attribute. We could use a SyntaxRewriter, but we don't really have that many
                     // cases to handle for now, so once again we can just use the simplest approach for the time being, that's fine.
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
+                }
+
+                if (type.FixupType == SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes)
+                {
+                    // Just use a regex to remove the attribute, same as in the case above
+                    adjustedSource = ExcludeFromCodeCoverageRegex.Replace(adjustedSource, "");
                 }
 
                 if (type.FixupType == SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute)
