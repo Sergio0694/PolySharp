@@ -11,6 +11,7 @@ namespace System.Runtime.CompilerServices
     /// Indicates which arguments to a method involving an interpolated string handler should be passed to that handler.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class InterpolatedStringHandlerArgumentAttribute : global::System.Attribute
     {
         /// <summary>

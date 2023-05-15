@@ -17,6 +17,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Property |
         global::System.AttributeTargets.ReturnValue,
         Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class NotNullAttribute : global::System.Attribute
     {
     }

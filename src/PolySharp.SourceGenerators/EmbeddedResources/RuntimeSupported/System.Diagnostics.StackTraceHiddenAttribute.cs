@@ -17,6 +17,7 @@ namespace System.Diagnostics
         global::System.AttributeTargets.Constructor |
         global::System.AttributeTargets.Struct,
         Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class StackTraceHiddenAttribute : global::System.Attribute
     {

@@ -28,6 +28,7 @@ namespace System.Runtime.CompilerServices
     /// https://github.com/dotnet/runtime/blob/main/docs/design/specs/Ecma-335-Augments.md#module-initializer
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class ModuleInitializerAttribute : global::System.Attribute
     {
         public ModuleInitializerAttribute()

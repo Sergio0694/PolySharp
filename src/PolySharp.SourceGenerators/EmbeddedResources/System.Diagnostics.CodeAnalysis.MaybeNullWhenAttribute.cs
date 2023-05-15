@@ -11,6 +11,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// Specifies that when a method returns <see cref="ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class MaybeNullWhenAttribute : global::System.Attribute
     {
         /// <summary>

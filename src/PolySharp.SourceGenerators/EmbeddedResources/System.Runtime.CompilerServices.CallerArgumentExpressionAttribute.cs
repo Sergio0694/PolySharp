@@ -11,6 +11,7 @@ namespace System.Runtime.CompilerServices
     /// An attribute that allows parameters to receive the expression of other parameters.
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class CallerArgumentExpressionAttribute : global::System.Attribute
     {
         /// <summary>

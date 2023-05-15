@@ -14,6 +14,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Class |
         global::System.AttributeTargets.Struct,
         AllowMultiple = false, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class InterpolatedStringHandlerAttribute : global::System.Attribute
     {
     }

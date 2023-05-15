@@ -17,6 +17,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Property,
         AllowMultiple = false,
         Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class RequiredMemberAttribute : global::System.Attribute
     {
     }

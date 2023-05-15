@@ -26,6 +26,7 @@ namespace System.Runtime.Versioning
         global::System.AttributeTargets.Property |
         global::System.AttributeTargets.Struct,
         AllowMultiple = true, Inherited = false)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class ObsoletedOSPlatformAttribute : global::System.Attribute // OSPlatformAttribute
     {

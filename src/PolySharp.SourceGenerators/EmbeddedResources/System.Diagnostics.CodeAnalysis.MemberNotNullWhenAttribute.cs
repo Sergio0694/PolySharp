@@ -15,6 +15,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Method |
         global::System.AttributeTargets.Property,
         Inherited = false, AllowMultiple = true)]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class MemberNotNullWhenAttribute : global::System.Attribute
     {
         /// <summary>
