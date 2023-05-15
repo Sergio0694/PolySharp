@@ -266,20 +266,20 @@ partial class PolyfillsGenerator
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
                 }
 
-                if (type.FixupType == SyntaxFixupType.RemoveMethodImplAttributes)
+                if ((type.FixupType & SyntaxFixupType.RemoveMethodImplAttributes) != 0)
                 {
                     // Just use a regex to remove the attribute. We could use a SyntaxRewriter, but we don't really have that many
                     // cases to handle for now, so once again we can just use the simplest approach for the time being, that's fine.
                     adjustedSource = MethodImplOptionsRegex.Replace(adjustedSource, "");
                 }
 
-                if (type.FixupType == SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes)
+                if ((type.FixupType & SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes) != 0)
                 {
                     // Just use a regex to remove the attribute, same as in the case above
                     adjustedSource = ExcludeFromCodeCoverageRegex.Replace(adjustedSource, "");
                 }
 
-                if (type.FixupType == SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute)
+                if ((type.FixupType & SyntaxFixupType.UseInteropServices2ForUnmanagedCallersOnlyAttribute) != 0)
                 {
                     // Update the namespace and add the type alias
                     adjustedSource = adjustedSource.Replace(
