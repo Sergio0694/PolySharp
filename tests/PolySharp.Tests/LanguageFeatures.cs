@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
-#if !NETCOREAPP3_1 && !NETSTANDARD2_1
+#if !NETSTANDARD2_1
 using System.Threading.Tasks;
 #endif
 
@@ -170,7 +170,7 @@ internal struct TestHandler
 {
 }
 
-#if !NETCOREAPP3_1 && !NETSTANDARD2_1
+#if !NETSTANDARD2_1
 
 internal struct TaskLikeType
 {
