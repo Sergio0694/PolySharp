@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net472;net48;net6.0;net7.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
   </PropertyGroup>

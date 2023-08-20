@@ -13,7 +13,7 @@ public class TypeForwardTests
     [TestMethod]
     public void Index_IsForwarded()
     {
-#if NETCOREAPP3_1 || NET6_0_OR_GREATER 
+#if NET6_0_OR_GREATER 
         Assert.AreEqual(typeof(object).Assembly, typeof(Index).Assembly);
         Assert.AreEqual(typeof(Index).Assembly.GetName().Name!, typeof(TypeForwardTests).Assembly.GetType("System.Index")!.Assembly.GetName().Name);
 #else
@@ -24,7 +24,7 @@ public class TypeForwardTests
     [TestMethod]
     public void Range_IsForwarded()
     {
-#if NETCOREAPP3_1 || NET6_0_OR_GREATER 
+#if NET6_0_OR_GREATER 
         Assert.AreEqual(typeof(object).Assembly, typeof(Range).Assembly);
         Assert.AreEqual(typeof(Range).Assembly.GetName().Name!, typeof(TypeForwardTests).Assembly.GetType("System.Range")!.Assembly.GetName().Name);
 #else
