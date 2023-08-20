@@ -31,8 +31,5 @@ namespace System.Runtime.CompilerServices
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal sealed class ModuleInitializerAttribute : global::System.Attribute
     {
-        public ModuleInitializerAttribute()
-        {
-        }
     }
 }
