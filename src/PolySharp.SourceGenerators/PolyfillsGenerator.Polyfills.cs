@@ -140,8 +140,9 @@ partial class PolyfillsGenerator
         {
             SyntaxFixupType fixupType = SyntaxFixupType.None;
 
-            // Strip the [ExcludeFromCodeCoverage] uses if the target framework doesn't have the type
-            if (compilation.GetTypeByMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute") is null)
+            // Strip the [ExcludeFromCodeCoverage] uses if the target framework doesn't have the type or cannot access it.
+            // We can't just check whether the type exists, as on .NET Standard 1.3 projects it might exist but be internal.
+            if (!compilation.HasAccessibleTypeWithMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"))
             {
                 fixupType |= SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
             }
