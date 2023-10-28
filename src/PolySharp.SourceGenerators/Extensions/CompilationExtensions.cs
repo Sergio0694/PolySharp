@@ -50,13 +50,13 @@ internal static class CompilationExtensions
         // If there is only a single matching symbol, check its accessibility
         if (compilation.GetTypeByMetadataName(fullyQualifiedMetadataName) is INamedTypeSymbol typeSymbol)
         {
-            return typeSymbol.CanBeAccessedFrom(compilation.Assembly);
+            return compilation.IsSymbolAccessibleWithin(typeSymbol, compilation.Assembly);
         }
 
         // Otherwise, check all available types
         foreach (INamedTypeSymbol currentTypeSymbol in compilation.GetTypesByMetadataName(fullyQualifiedMetadataName))
         {
-            if (currentTypeSymbol.CanBeAccessedFrom(compilation.Assembly))
+            if (compilation.IsSymbolAccessibleWithin(currentTypeSymbol, compilation.Assembly))
             {
                 return true;
             }
