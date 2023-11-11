@@ -101,6 +101,11 @@ internal class TestClass
     public static void InitializeModule()
     {
     }
+
+    [Experimental("PS0001")]
+    public void ExperimentalMethod()
+    {
+    }
 }
 
 internal class TestClassWithRequiredMembers
