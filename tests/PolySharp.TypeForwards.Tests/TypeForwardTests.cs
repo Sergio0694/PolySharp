@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 #if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
@@ -58,5 +59,32 @@ public class TypeForwardTests
 #endif
     }
 
+    [TestMethod]
+    public void RequiresLocationAttribute_IsForwarded()
+    {
+        MethodInfo method = typeof(TypeForwardTests).GetMethod(nameof(MethodWithRefReadonlyParameter), BindingFlags.Static | BindingFlags.NonPublic)!;
+        ParameterInfo parameter = method.GetParameters()[0];
+        CustomAttributeData attribute = parameter.CustomAttributes.Last();
+
+        Assert.AreEqual("System.Runtime.CompilerServices.RequiresLocationAttribute", attribute.AttributeType.FullName);
+
+#if NET8_0_OR_GREATER
+        Assert.AreEqual(typeof(object).Assembly, typeof(RequiresLocationAttribute).Assembly);
+
+        string requiresLocationAttributeAssemblyName = typeof(RequiresLocationAttribute).Assembly.GetName().Name!;
+
+        // Verify the type has been forwarded correctly
+        Assert.AreEqual(requiresLocationAttributeAssemblyName, attribute.AttributeType.Assembly.GetName().Name);
+        Assert.AreEqual(requiresLocationAttributeAssemblyName, typeof(TypeForwardTests).Assembly.GetType("System.Runtime.CompilerServices.RequiresLocationAttribute")!.Assembly.GetName().Name);
+#else
+        // If RequiresLocationAttribute is not available, it should be polyfilled in this project
+        Assert.AreEqual("PolySharp.TypeForwards.Tests", attribute.AttributeType.Assembly.GetName().Name);
+#endif
+    }
+
     private sealed record Person(string Name);
+
+    private static void MethodWithRefReadonlyParameter(ref readonly int x)
+    {
+    }
 }
