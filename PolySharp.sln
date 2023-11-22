@@ -6,7 +6,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolySharp.SourceGenerators"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{8DAA0C71-4529-44EB-8994-DE331A3ADC52}"
 	ProjectSection(SolutionItems) = preProject
+		src\PolySharp.Package\icon.png = src\PolySharp.Package\icon.png
 		src\PolySharp.Package\PolySharp.Package.msbuildproj = src\PolySharp.Package\PolySharp.Package.msbuildproj
+		src\PolySharp.Package\README.md = src\PolySharp.Package\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D65D0307-1D0F-499D-945B-E33E71F251A4}"
@@ -37,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolySharp.MinimumCSharpVers
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests", "tests\PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests\PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests.csproj", "{C865CEDE-2DC9-4E1E-BB58-529E6E2A9DBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolySharp.TypeForwards.Tests", "tests\PolySharp.TypeForwards.Tests\PolySharp.TypeForwards.Tests.csproj", "{AAF3B574-66F1-4EF0-936A-82390E30D539}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolySharp.TypeForwards.Tests", "tests\PolySharp.TypeForwards.Tests\PolySharp.TypeForwards.Tests.csproj", "{AAF3B574-66F1-4EF0-936A-82390E30D539}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

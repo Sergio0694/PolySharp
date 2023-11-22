@@ -17,7 +17,8 @@ partial class PolyfillsGenerator
     private static readonly ImmutableArray<string> ModreqCandidateFullyQualifiedTypeNames = ImmutableArray.Create(
         "System.Index",
         "System.Range",
-        "System.Runtime.CompilerServices.IsExternalInit");
+        "System.Runtime.CompilerServices.IsExternalInit",
+        "System.Runtime.CompilerServices.RequiresLocationAttribute");
 
     /// <summary>
     /// Gets the types from the BCL that should potentially receive type forwards.

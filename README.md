@@ -8,7 +8,7 @@
 
 # TLDR? What is this for? ✨
 
-Put simply: are you working on .NET Framework, or UWP, or some other older .NET runtime and still would like to use all the cool new features that C# 11 has? Well this library lets you do just that! It will generate for you all the "magic types" that the C# compiler needs to "see" in order for it to allow using new language features even if you're not using the latest framework out there.
+Put simply: are you working on .NET Framework, or UWP, or some other older .NET runtime and still would like to use all the cool new features that C# 12 has? Well this library lets you do just that! It will generate for you all the "magic types" that the C# compiler needs to "see" in order for it to allow using new language features even if you're not using the latest framework out there.
 
 Here's an example of some of the new features that **PolySharp** can enable downlevel:
 
@@ -49,8 +49,11 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[AsyncMethodBuilder]` (needed for [custom method builder types](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-10.0/async-method-builders))
 - `[StringSyntax]` (needed to enable [syntax highlight in the IDE](https://github.com/dotnet/runtime/issues/62505))
 - `[ModuleInitializer]` (needed to enable [custom module initializers](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-9.0/module-initializers))
+- `[RequiresLocation]` (needed to enable [ref readonly parameters](https://github.com/dotnet/csharplang/issues/6010))
+- `[CollectionBuilder]` (needed for [collection expressions](https://github.com/dotnet/csharplang/issues/5354))
+- `[Experimental]` (needed for [experimental features](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-12.0/experimental-attribute))
 
-To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>11.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
+To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>12.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
 It also includes the following optional runtime-supported polyfills:
 - Reflection annotation attributes (see [docs](https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming)):
@@ -71,6 +74,8 @@ It also includes the following optional runtime-supported polyfills:
   - `[UnsupportedOSPlatformGuard]`
 - `[SuppressGCTransition]` (see [here](https://devblogs.microsoft.com/dotnet/improvements-in-native-code-interop-in-net-5-0/))
 - `[DisableRuntimeMarshalling]` (see [here](https://learn.microsoft.com/dotnet/standard/native-interop/disabled-marshalling))
+- `[UnsafeAccessor]` (see [here](https://github.com/dotnet/runtime/issues/81741))
+- `[InlineArray]` (see [here](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-12.0/inline-arrays))
 
 # Options ⚙️
 

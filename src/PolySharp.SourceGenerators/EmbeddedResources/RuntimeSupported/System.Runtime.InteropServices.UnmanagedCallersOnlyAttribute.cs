@@ -23,10 +23,6 @@ namespace System.Runtime.InteropServices
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class UnmanagedCallersOnlyAttribute : global::System.Attribute
     {
-        public UnmanagedCallersOnlyAttribute()
-        {
-        }
-
         /// <summary>
         /// Optional. If omitted, the runtime will use the default platform calling convention.
         /// </summary>
