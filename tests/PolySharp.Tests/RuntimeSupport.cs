@@ -88,9 +88,9 @@ internal class ReflectionApis
 
 internal class AccessorApis
 {
-#pragma warning disable IDE0044
+#pragma warning disable CS0169, IDE0044
     private int field;
-#pragma warning restore IDE0044
+#pragma warning restore CS0169, IDE0044
 
     [StackTraceHidden]
     public void HideMe()
@@ -99,4 +99,12 @@ internal class AccessorApis
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = nameof(field))]
     public static extern ref int GetField(RandomApis obj);
+}
+
+[InlineArray(16)]
+internal struct Int8
+{
+#pragma warning disable CS0169, IDE0044, IDE0051
+    private int value0;
+#pragma warning restore CS0169, IDE0044, IDE0051
 }

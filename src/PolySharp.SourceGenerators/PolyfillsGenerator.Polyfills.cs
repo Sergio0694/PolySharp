@@ -154,6 +154,13 @@ partial class PolyfillsGenerator
                 fixupType |= SyntaxFixupType.RemoveMethodImplAttributes;
             }
 
+            // Emit the global using for the dummy [InlineArray] type, if allowed
+            if (name is "System.Runtime.CompilerServices.InlineArrayAttribute" &&
+                compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp10))
+            {
+                fixupType |= SyntaxFixupType.EmitGlobalUsingForInlineArrayAttribute;
+            }
+
             return fixupType;
         }
 
@@ -286,6 +293,18 @@ partial class PolyfillsGenerator
                     adjustedSource = adjustedSource.Replace(
                         "System.Runtime.InteropServices",
                         "System.Runtime.InteropServices2");
+                }
+
+                if ((type.FixupType & SyntaxFixupType.EmitGlobalUsingForInlineArrayAttribute) != 0)
+                {
+                    // Generate a global using for [InlineArray]
+                    adjustedSource = adjustedSource.Replace(
+                        "namespace System.Runtime.CompilerServices2",
+                        """
+                        global using InlineArrayAttribute = global::System.Runtime.CompilerServices2.InlineArrayAttribute;
+
+                        namespace System.Runtime.CompilerServices2
+                        """);
                 }
 
                 sourceText = SourceText.From(adjustedSource, Encoding.UTF8);

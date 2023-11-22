@@ -27,5 +27,11 @@ internal enum SyntaxFixupType
     /// Generates the <c>[UnmanagedCallersOnly]</c> type in the <c>InteropServices2</c> dummy namespace.
     /// </summary>
     /// <remarks>This is needed when methods annotated with the attribute have to be assigned to delegates, which Roslyn will otherwise block.</remarks>
-    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 2
+    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 2,
+
+    /// <summary>
+    /// Generates a global using for the <c>[InlineArray]</c> type in the dummy namespace.
+    /// </summary>
+    /// <remarks>This is always needed when the type is used, as the usage is entirely blocked in the normal namespace.</remarks>
+    EmitGlobalUsingForInlineArrayAttribute = 1 << 3
 }
