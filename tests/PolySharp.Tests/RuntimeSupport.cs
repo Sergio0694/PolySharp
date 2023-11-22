@@ -85,3 +85,18 @@ internal class ReflectionApis
     {
     }
 }
+
+internal class AccessorApis
+{
+#pragma warning disable IDE0044
+    private int field;
+#pragma warning restore IDE0044
+
+    [StackTraceHidden]
+    public void HideMe()
+    {
+    }
+
+    [UnsafeAccessor(UnsafeAccessorKind.Field, Name = nameof(field))]
+    public static extern ref int GetField(RandomApis obj);
+}

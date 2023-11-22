@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
@@ -102,6 +104,10 @@ internal class TestClass
     {
     }
 
+    public void RefReadonlyMethod(ref readonly int x)
+    {
+    }
+
     [Experimental("PS0001")]
     public void ExperimentalMethod()
     {
@@ -148,6 +154,30 @@ internal static class IndexAndRangeTests
     public static ReadOnlySpan<int> TestRange(ReadOnlySpan<int> numbers)
     {
         return numbers[1..^4];
+    }
+}
+
+[CollectionBuilder(typeof(CollectionClass), nameof(Create))]
+internal class CollectionClass : IEnumerable<int>
+{
+    public CollectionClass Test()
+    {
+        return [1, 2, 3];
+    }
+
+    public static CollectionClass Create(ReadOnlySpan<int> values)
+    {
+        return new();
+    }
+
+    IEnumerator<int> IEnumerable<int>.GetEnumerator()
+    {
+        return null!;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return null!;
     }
 }
 
