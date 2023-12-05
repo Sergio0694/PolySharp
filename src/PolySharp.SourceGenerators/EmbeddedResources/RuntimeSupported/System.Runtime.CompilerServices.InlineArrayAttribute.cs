@@ -29,7 +29,7 @@ namespace System.Runtime.CompilerServices2
     [global::System.AttributeUsage(global::System.AttributeTargets.Struct, AllowMultiple = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
-    public sealed class InlineArrayAttribute : global::System.Attribute
+    internal sealed class InlineArrayAttribute : global::System.Attribute
     {
         /// <summary>Creates a new <see cref="global::System.Runtime.CompilerServices2.InlineArrayAttribute"/> instance with the specified length.</summary>
         /// <param name="length">The number of sequential fields to replicate in the inline array type.</param>
