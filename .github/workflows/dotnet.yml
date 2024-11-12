@@ -29,11 +29,11 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build
       run: dotnet build -c ${{matrix.configuration}} /bl
     - name: Upload MSBuild binary log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: msbuild_log_${{matrix.configuration}}
         path: msbuild.binlog
@@ -46,7 +46,7 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Run unit tests
       run: dotnet test -c Release
 
@@ -58,11 +58,11 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Build PolySharp package
       run: dotnet build src\PolySharp.Package\PolySharp.Package.msbuildproj -c Release
     - name: Upload package artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nuget_packages
         path: artifacts\*.nupkg
@@ -77,11 +77,11 @@ jobs:
     runs-on: windows-2022
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Create local NuGet feed
       run: mkdir artifacts
     - name: Download package artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nuget_packages
         path: artifacts
