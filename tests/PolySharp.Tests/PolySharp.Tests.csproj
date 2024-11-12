@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes"/>
+    <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'netstandard2.0'">
