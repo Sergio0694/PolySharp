@@ -118,7 +118,9 @@ internal class TestClassWithRequiredMembers
 {
     // SetsRequiredMembersAttribute
     [SetsRequiredMembers]
+#pragma warning disable IDE0290
     public TestClassWithRequiredMembers()
+#pragma warning restore IDE0290
     {
         Name = "";
     }
