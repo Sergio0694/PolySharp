@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
@@ -123,6 +124,8 @@ internal class TestClassWithRequiredMembers
 #pragma warning restore IDE0290
     {
         Name = "";
+        // Dummy piece of code to not trigger IDE0290 (use primary constructor)
+        Debug.Assert(Name is not null);
     }
 
     // CompilerFeatureRequiredAttribute, RequiredMemberAttribute
@@ -162,9 +165,15 @@ internal static class IndexAndRangeTests
 [CollectionBuilder(typeof(CollectionClass), nameof(Create))]
 internal class CollectionClass : IEnumerable<int>
 {
-    public CollectionClass Test()
+    public static CollectionClass Test()
     {
+        Test2(1, 2, 3);
         return [1, 2, 3];
+    }
+
+    public static void Test2(params CollectionClass collection)
+    {
+
     }
 
     public static CollectionClass Create(ReadOnlySpan<int> values)
@@ -261,3 +270,21 @@ internal struct TaskLikeType
 }
 
 #endif
+
+internal static class OverloadResolutionPriorityTests
+{
+    public static void Test()
+    {
+        TestOverload(1);
+    }
+
+    [Obsolete("Do not use", error: true)]
+    [OverloadResolutionPriority(-1)]
+    public static void TestOverload(int x)
+    {
+    }
+
+    public static void TestOverload(int x, int y = 0)
+    {
+    }
+}
