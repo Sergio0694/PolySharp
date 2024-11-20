@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to **PolySharp**! Below you'll find some info on how to get started with the project.
 
-> **NOTE:** it is highly recommended to carfully read the [README](/README.md) first to get a general understanding of the library.
+> **NOTE:** it is highly recommended to carefully read the [README](/README.md) first to get a general understanding of the library.
 
 ## 🙋 Questions, bug reports, feature proposals
 

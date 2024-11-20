@@ -8,7 +8,7 @@
 
 # TLDR? What is this for? ✨
 
-Put simply: are you working on .NET Framework, or UWP, or some other older .NET runtime and still would like to use all the cool new features that C# 12 has? Well this library lets you do just that! It will generate for you all the "magic types" that the C# compiler needs to "see" in order for it to allow using new language features even if you're not using the latest framework out there.
+Put simply: are you working on .NET Framework, or UWP, or some other older .NET runtime and still would like to use all the cool new features that C# 13 has? Well this library lets you do just that! It will generate for you all the "magic types" that the C# compiler needs to "see" in order for it to allow using new language features even if you're not using the latest framework out there.
 
 Here's an example of some of the new features that **PolySharp** can enable downlevel:
 
@@ -52,8 +52,10 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[RequiresLocation]` (needed to enable [ref readonly parameters](https://github.com/dotnet/csharplang/issues/6010))
 - `[CollectionBuilder]` (needed for [collection expressions](https://github.com/dotnet/csharplang/issues/5354))
 - `[Experimental]` (needed for [experimental features](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-12.0/experimental-attribute))
+- `[OverloadResolutionPriority]` (needed for [overload resolution priority](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#overload-resolution-priority))
+- `[ParamsCollection]` (needed for [params collection](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#params-collections))
 
-To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>12.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
+To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>13.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
 It also includes the following optional runtime-supported polyfills:
 - Reflection annotation attributes (see [docs](https://learn.microsoft.com/dotnet/core/deploying/trimming/prepare-libraries-for-trimming)):
@@ -64,7 +66,7 @@ It also includes the following optional runtime-supported polyfills:
   - `[UnconditionalSuppressMessage]`
   - `[RequiresAssemblyFiles]`
 - `[StackTraceHidden]` (see [here](https://makolyte.com/csharp-exclude-exception-throw-helper-methods-from-the-stack-trace/))
-- `[UnmanagedCallersOnly]` (see [docs](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)))
+- `[UnmanagedCallersOnly]` (see [docs](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute))
 - Platform support annotation attributes (see [docs](https://learn.microsoft.com/dotnet/standard/analyzers/platform-compat-analyzer)):
   - `[ObsoletedOSPlatform]`
   - `[SupportedOSPlatform]`
@@ -76,6 +78,11 @@ It also includes the following optional runtime-supported polyfills:
 - `[DisableRuntimeMarshalling]` (see [here](https://learn.microsoft.com/dotnet/standard/native-interop/disabled-marshalling))
 - `[UnsafeAccessor]` (see [here](https://github.com/dotnet/runtime/issues/81741))
 - `[InlineArray]` (see [here](https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/csharp-12.0/inline-arrays))
+- `[DisableUserUnhandledExceptions]` (see [here](https://github.com/dotnet/runtime/issues/103105))
+- Attribute model for feature switches with trimming support (see [docs](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/runtime#attribute-model-for-feature-switches-with-trimming-support)):
+  - `[FeatureGuard]`
+  - `[FeatureSwitchDefinition]`
+- `[WasmImportLinkage]` (see [here](https://github.com/dotnet/runtime/pull/93823))
 
 # Options ⚙️
 

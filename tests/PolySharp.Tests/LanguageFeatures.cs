@@ -162,9 +162,16 @@ internal static class IndexAndRangeTests
 [CollectionBuilder(typeof(CollectionClass), nameof(Create))]
 internal class CollectionClass : IEnumerable<int>
 {
-    public CollectionClass Test()
+    public static CollectionClass Test()
     {
+        Test2(1, 2, 3);
+
         return [1, 2, 3];
+    }
+
+    public static void Test2(params CollectionClass collection)
+    {
+
     }
 
     public static CollectionClass Create(ReadOnlySpan<int> values)
@@ -261,3 +268,21 @@ internal struct TaskLikeType
 }
 
 #endif
+
+internal static class OverloadResolutionPriorityTests
+{
+    public static void Test()
+    {
+        TestOverload(1);
+    }
+
+    [Obsolete("Do not use", error: true)]
+    [OverloadResolutionPriority(-1)]
+    public static void TestOverload(int x)
+    {
+    }
+
+    public static void TestOverload(int x, int y = 0)
+    {
+    }
+}
