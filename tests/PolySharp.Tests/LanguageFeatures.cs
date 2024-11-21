@@ -286,3 +286,14 @@ internal static class OverloadResolutionPriorityTests
     {
     }
 }
+
+internal static class ConstantExpectedTests
+{
+    public static void CpuIntrinsic([ConstantExpected] int value)
+    {
+    }
+
+    public static void AnotherCpuIntrinsic([ConstantExpected(Min = 0, Max = 8)] int value)
+    {
+    }
+}
