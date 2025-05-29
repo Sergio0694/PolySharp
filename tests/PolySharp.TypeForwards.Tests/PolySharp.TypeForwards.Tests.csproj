@@ -12,8 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.6.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.6.2" />
+    <PackageReference Include="MSTest" Version="3.9.1" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48'">
