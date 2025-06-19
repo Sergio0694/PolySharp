@@ -14,13 +14,11 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for types that could require a <c>modreq</c>.
     /// </summary>
-    private static readonly ImmutableArray<string> ModreqCandidateFullyQualifiedTypeNames =
-    [
+    private static readonly ImmutableArray<string> ModreqCandidateFullyQualifiedTypeNames = ImmutableArray.Create(
         "System.Index",
         "System.Range",
         "System.Runtime.CompilerServices.IsExternalInit",
-        "System.Runtime.CompilerServices.RequiresLocationAttribute",
-    ];
+        "System.Runtime.CompilerServices.RequiresLocationAttribute");
 
     /// <summary>
     /// Gets the types from the BCL that should potentially receive type forwards.
@@ -33,7 +31,7 @@ partial class PolyfillsGenerator
         // Same check as when generating polyfills (if none can be generated, there's no need for type forwards)
         if (!compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
         {
-            return [];
+            return ImmutableArray<string>.Empty;
         }
 
         IAssemblySymbol coreLibAssemblySymbol = compilation.GetSpecialType(SpecialType.System_Object).ContainingAssembly;
