@@ -62,6 +62,11 @@ partial class PolyfillsGenerator
     private static readonly Regex ExcludeFromCodeCoverageRegex = new(@" *\[global::System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverage\]\r?\n", RegexOptions.Compiled);
 
     /// <summary>
+    /// The <see cref="Regex"/> to find all <see cref="EmbeddedAttribute"/> uses.
+    /// </summary>
+    private static readonly Regex EmbeddedAttributeRegex = new(@" *\[global::Microsoft\.CodeAnalysis\.Embedded\]\r?\n", RegexOptions.Compiled);
+
+    /// <summary>
     /// The dictionary of cached sources to produce.
     /// </summary>
     private readonly ConcurrentDictionary<GeneratedType, SourceText> manifestSources = new();
@@ -282,6 +287,9 @@ partial class PolyfillsGenerator
                     // rewriter, or just by retrieving the type declaration syntax and updating the modifier tokens, but since the
                     // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
+
+                    // If types are public, we also need to strip the '[Embedded]' attributes, as it's only allowed on public types
+                    adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
                 }
 
                 if ((type.FixupType & SyntaxFixupType.RemoveMethodImplAttributes) != 0)
