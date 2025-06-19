@@ -13,6 +13,9 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        // Emit any sources that are needed right after initialization
+        context.RegisterPostInitializationOutput(EmitPostInitializationSources);
+
         // Prepare all the generation options in a single incremental model
         IncrementalValueProvider<GenerationOptions> generationOptions =
             context.AnalyzerConfigOptionsProvider

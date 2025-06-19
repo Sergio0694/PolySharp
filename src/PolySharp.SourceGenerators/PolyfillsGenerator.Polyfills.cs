@@ -67,6 +67,18 @@ partial class PolyfillsGenerator
     private readonly ConcurrentDictionary<GeneratedType, SourceText> manifestSources = new();
 
     /// <summary>
+    /// Emits any sources that are needed right after initialization.
+    /// </summary>
+    /// <param name="context">The input <see cref="IncrementalGeneratorPostInitializationContext"/> value to use.</param>
+    private static void EmitPostInitializationSources(IncrementalGeneratorPostInitializationContext context)
+    {
+        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
+        // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
+        context.AddEmbeddedAttributeDefinition();
+    }
+
+    /// <summary>
     /// Extracts the <see cref="GenerationOptions"/> value for the current generation.
     /// </summary>
     /// <param name="options">The input <see cref="AnalyzerConfigOptionsProvider"/> instance.</param>
