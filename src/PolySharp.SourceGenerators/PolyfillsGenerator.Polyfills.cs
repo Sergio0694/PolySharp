@@ -35,23 +35,23 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
-    private static readonly ImmutableArray<string> LanguageSupportTypeNames = [..
+    private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
         from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
         where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
-        select resource.Key];
+        select resource.Key);
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
-    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = [..
+    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
         from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
         where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select resource.Key];
+        select resource.Key);
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
     /// </summary>
-    private static readonly ImmutableArray<string> AllSupportTypeNames = [.. LanguageSupportTypeNames.Concat(RuntimeSupportedTypeNames)];
+    private static readonly ImmutableArray<string> AllSupportTypeNames = ImmutableArray.CreateRange(LanguageSupportTypeNames.Concat(RuntimeSupportedTypeNames));
 
     /// <summary>
     /// The <see cref="Regex"/> to find all <see cref="System.Runtime.CompilerServices.MethodImplOptions"/> uses.
@@ -117,7 +117,7 @@ partial class PolyfillsGenerator
         // A minimum of C# 8.0 is required to benefit from the polyfills
         if (!compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
         {
-            return [];
+            return ImmutableArray<AvailableType>.Empty;
         }
 
         // Helper function to check whether a type is available

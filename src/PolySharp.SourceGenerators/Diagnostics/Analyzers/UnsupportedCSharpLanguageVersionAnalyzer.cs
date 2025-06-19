@@ -18,7 +18,7 @@ namespace PolySharp.SourceGenerators;
 public sealed partial class UnsupportedCSharpLanguageVersionAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = [UnsupportedCSharpLanguageVersionError];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(UnsupportedCSharpLanguageVersionError);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
