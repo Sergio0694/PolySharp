@@ -21,6 +21,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Method,
         Inherited = false, AllowMultiple = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class AsyncMethodBuilderAttribute : global::System.Attribute
     {
         /// <summary>Initializes the <see cref="global::System.Runtime.CompilerServices.AsyncMethodBuilderAttribute"/>.</summary>

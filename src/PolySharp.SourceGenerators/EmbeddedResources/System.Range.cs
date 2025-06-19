@@ -17,6 +17,7 @@ namespace System
     /// </code>
     /// </remarks>
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal readonly struct Range : global::System.IEquatable<global::System.Range>
     {
         /// <summary>Represent the inclusive start index of the Range.</summary>

@@ -38,6 +38,7 @@ namespace System.Diagnostics.CodeAnalysis
         AllowMultiple = false,
         Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class UnscopedRefAttribute : global::System.Attribute
     {
     }

@@ -12,6 +12,7 @@ namespace System.Runtime.CompilerServices
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.All, AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class CompilerFeatureRequiredAttribute : global::System.Attribute
     {
         /// <summary>

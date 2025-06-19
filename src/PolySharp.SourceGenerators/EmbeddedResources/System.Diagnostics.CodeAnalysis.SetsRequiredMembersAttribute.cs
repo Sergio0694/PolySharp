@@ -13,6 +13,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class SetsRequiredMembersAttribute : global::System.Attribute
     {
     }

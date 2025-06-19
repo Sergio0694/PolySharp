@@ -14,6 +14,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// bitwise combination of its member values.
     /// </summary>
     [global::System.Flags]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal enum DynamicallyAccessedMemberTypes
     {
         /// <summary>

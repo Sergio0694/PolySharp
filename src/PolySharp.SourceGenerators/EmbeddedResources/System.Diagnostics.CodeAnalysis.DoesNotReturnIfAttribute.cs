@@ -12,6 +12,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class DoesNotReturnIfAttribute : global::System.Attribute
     {
         /// <summary>

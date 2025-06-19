@@ -29,6 +29,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Delegate,
         Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class ExperimentalAttribute : global::System.Attribute
     {
         /// <summary>

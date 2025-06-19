@@ -29,6 +29,7 @@ namespace System.Runtime.CompilerServices
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class ModuleInitializerAttribute : global::System.Attribute
     {
     }
