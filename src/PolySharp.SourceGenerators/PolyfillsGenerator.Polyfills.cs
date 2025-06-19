@@ -23,7 +23,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// A regex to extract the fully qualified type name of a type from its embedded resource name.
     /// </summary>
-    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources(?:\.RuntimeSupported)?\.(System(?:\.\w+)+)\.cs$";
+    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources\.\w+\.(\w+(?:\.\w+)+)\.cs$";
 
     /// <summary>
     /// The mapping of fully qualified type names to embedded resource names.
@@ -35,16 +35,18 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
-    private static readonly ImmutableArray<string> LanguageSupportTypeNames = [.. from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where !resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value];
+    private static readonly ImmutableArray<string> LanguageSupportTypeNames = [..
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
+        select resource.Key];
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
-    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = [.. from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value];
+    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = [..
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
+        select resource.Key];
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
@@ -70,18 +72,6 @@ partial class PolyfillsGenerator
     /// The dictionary of cached sources to produce.
     /// </summary>
     private readonly ConcurrentDictionary<GeneratedType, SourceText> manifestSources = new();
-
-    /// <summary>
-    /// Emits any sources that are needed right after initialization.
-    /// </summary>
-    /// <param name="context">The input <see cref="IncrementalGeneratorPostInitializationContext"/> value to use.</param>
-    private static void EmitPostInitializationSources(IncrementalGeneratorPostInitializationContext context)
-    {
-        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
-        // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
-        // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
-        context.AddEmbeddedAttributeDefinition();
-    }
 
     /// <summary>
     /// Extracts the <see cref="GenerationOptions"/> value for the current generation.
@@ -254,6 +244,20 @@ partial class PolyfillsGenerator
         SyntaxFixupType fixupType = info.AvailableType.FixupType | GetSyntaxFixupType(info.AvailableType, info.Options);
 
         return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, fixupType);
+    }
+
+    /// <summary>
+    /// Emits the source for <see cref="EmbeddedAttribute"/>.
+    /// </summary>
+    /// <param name="context">The input <see cref="IncrementalGeneratorPostInitializationContext"/> instance to use to emit code.</param>
+    private static void EmitEmbeddedAttribute(IncrementalGeneratorPostInitializationContext context)
+    {
+        string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+
+        // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
+        string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
+
+        context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
     }
 
     /// <summary>
