@@ -15,6 +15,7 @@ namespace System.Diagnostics.CodeAnalysis
     /// </remarks>
     [global::System.AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class ConstantExpectedAttribute : global::System.Attribute
     {
         /// <summary>

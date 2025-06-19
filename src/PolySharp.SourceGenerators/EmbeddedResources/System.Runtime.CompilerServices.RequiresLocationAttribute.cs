@@ -14,6 +14,7 @@ namespace System.Runtime.CompilerServices
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
     [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class RequiresLocationAttribute : global::System.Attribute
     {
     }

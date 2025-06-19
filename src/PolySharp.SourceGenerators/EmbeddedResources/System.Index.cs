@@ -16,6 +16,7 @@ namespace System
     /// </code>
     /// </remarks>
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal readonly struct Index : global::System.IEquatable<global::System.Index>
     {
         private readonly int _value;

@@ -13,6 +13,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Interface,
         Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class CollectionBuilderAttribute : Attribute
     {
         /// <summary>

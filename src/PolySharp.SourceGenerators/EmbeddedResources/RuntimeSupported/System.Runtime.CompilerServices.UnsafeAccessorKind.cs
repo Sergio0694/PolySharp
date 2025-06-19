@@ -10,6 +10,7 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// Specifies the kind of target to which an <see cref="global::System.Runtime.CompilerServices.UnsafeAccessorAttribute" /> is providing access.
     /// </summary>
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal enum UnsafeAccessorKind
     {
         /// <summary>

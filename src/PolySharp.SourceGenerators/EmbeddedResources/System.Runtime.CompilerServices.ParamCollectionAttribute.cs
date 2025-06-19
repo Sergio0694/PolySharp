@@ -12,6 +12,7 @@ namespace System.Runtime.CompilerServices
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = true, AllowMultiple = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class ParamCollectionAttribute : global::System.Attribute
     {
     }
