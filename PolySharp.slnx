@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Projects/">
+    <File Path="src/PolySharp.Package/icon.png" />
+    <File Path="src/PolySharp.Package/PolySharp.Package.msbuildproj" />
+    <File Path="src/PolySharp.Package/README.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <File Path="tests/PolySharp.NuGet/PolySharp.NuGet.csproj" />
+    <Project Path="tests/PolySharp.MinimumCSharpVersion.Tests/PolySharp.MinimumCSharpVersion.Tests.csproj" />
+    <Project Path="tests/PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests/PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests.csproj" />
+    <Project Path="tests/PolySharp.Tests/PolySharp.Tests.csproj" />
+    <Project Path="tests/PolySharp.TypeForwards.Tests/PolySharp.TypeForwards.Tests.csproj" />
+  </Folder>
+  <Folder Name="/_SolutionItems/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/_SolutionItems/src/">
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/Directory.Build.targets" />
+  </Folder>
+  <Project Path="src/PolySharp.SourceGenerators/PolySharp.SourceGenerators.csproj" />
+</Solution>
