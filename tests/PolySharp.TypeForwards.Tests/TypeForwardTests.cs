@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +14,7 @@ public class TypeForwardTests
     [TestMethod]
     public void Index_IsForwarded()
     {
-#if NET6_0_OR_GREATER 
+#if NET8_0_OR_GREATER 
         Assert.AreEqual(typeof(object).Assembly, typeof(Index).Assembly);
         Assert.AreEqual(typeof(Index).Assembly.GetName().Name!, typeof(TypeForwardTests).Assembly.GetType("System.Index")!.Assembly.GetName().Name);
 #else
@@ -25,7 +25,7 @@ public class TypeForwardTests
     [TestMethod]
     public void Range_IsForwarded()
     {
-#if NET6_0_OR_GREATER 
+#if NET8_0_OR_GREATER 
         Assert.AreEqual(typeof(object).Assembly, typeof(Range).Assembly);
         Assert.AreEqual(typeof(Range).Assembly.GetName().Name!, typeof(TypeForwardTests).Assembly.GetType("System.Range")!.Assembly.GetName().Name);
 #else
@@ -45,7 +45,7 @@ public class TypeForwardTests
         Assert.AreEqual(1, returnRequiredModifiers.Length); // There is a single modreq
         Assert.AreEqual("System.Runtime.CompilerServices.IsExternalInit", returnRequiredModifiers[0].FullName); // The modreq is IsExternalInit
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Assert.AreEqual(typeof(object).Assembly, typeof(IsExternalInit).Assembly); // The IsExternalInit should be the one from the BCL
 
         string isExternalInitAssemblyName = typeof(IsExternalInit).Assembly.GetName().Name!;
