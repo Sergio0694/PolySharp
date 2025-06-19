@@ -13,6 +13,11 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
+        // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
+        context.RegisterPostInitializationOutput(EmitEmbeddedAttribute);
+
         // Prepare all the generation options in a single incremental model
         IncrementalValueProvider<GenerationOptions> generationOptions =
             context.AnalyzerConfigOptionsProvider

@@ -14,6 +14,7 @@ namespace System.Diagnostics
     /// </summary>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class DebuggerDisableUserUnhandledExceptionsAttribute : global::System.Attribute
     {

@@ -20,6 +20,7 @@ namespace System.Diagnostics.CodeAnalysis
         global::System.AttributeTargets.Constructor |
         global::System.AttributeTargets.Class, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class RequiresUnreferencedCodeAttribute : global::System.Attribute
     {

@@ -23,6 +23,7 @@ namespace System.Runtime.Versioning
         global::System.AttributeTargets.Property,
         AllowMultiple = true, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class SupportedOSPlatformGuardAttribute : global::System.Attribute // OSPlatformAttribute
     {
