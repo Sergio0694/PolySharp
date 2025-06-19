@@ -5,8 +5,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-#pragma warning disable IDE0090 // Use 'new DiagnosticDescriptor(...)'
-
 namespace PolySharp.SourceGenerators.Diagnostics;
 
 /// <summary>
@@ -20,7 +18,7 @@ internal static class DiagnosticDescriptors
     /// Format: <c>"The value "{0}" is not valid for property "{1}" (it has to be a valid MSBuild bool value)"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidBoolMSBuildProperty = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidBoolMSBuildProperty = new(
         id: "POLYSP0001",
         title: "Invalid PolySharp bool MSBuild property",
         messageFormat: "The value \"{0}\" is not valid for property \"{1}\" (it has to be a valid MSBuild bool value)",
@@ -36,7 +34,7 @@ internal static class DiagnosticDescriptors
     /// Format: <c>"The fully qualified metadata name "{0}" used in property "{1}" is not valid, and it does not match any available polyfill type"</c>.
     /// </para>
     /// </summary>
-    public static readonly DiagnosticDescriptor InvalidPolyfillFullyQualifiedMetadataName = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor InvalidPolyfillFullyQualifiedMetadataName = new(
         id: "POLYSP0002",
         title: "Invalid fully qualified metadata name for polyfill",
         messageFormat: "The fully qualified metadata name \"{0}\" used in property \"{1}\" is not a valid fully qualified type name, or it does not match any available polyfill type",
@@ -49,7 +47,7 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> indicating when an unsupported C# language version is being used.
     /// </summary>
-    public static readonly DiagnosticDescriptor UnsupportedCSharpLanguageVersionError = new DiagnosticDescriptor(
+    public static readonly DiagnosticDescriptor UnsupportedCSharpLanguageVersionError = new(
         id: "POLYSP0003",
         title: "Unsupported C# language version",
         messageFormat: "The source generator features from PolySharp require consuming projects to set the C# language version to at least C# 8.0",
@@ -57,5 +55,6 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         description: "The source generator features from PolySharp require consuming projects to set the C# language version to at least C# 8.0. Make sure to add <LangVersion>8.0</LangVersion> (or above) to your .csproj file.",
-        helpLinkUri: "https://github.com/Sergio0694/PolySharp");
+        helpLinkUri: "https://github.com/Sergio0694/PolySharp",
+        customTags: WellKnownDiagnosticTags.CompilationEnd);
 }

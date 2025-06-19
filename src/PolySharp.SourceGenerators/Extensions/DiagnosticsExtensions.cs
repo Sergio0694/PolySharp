@@ -5,7 +5,7 @@ using PolySharp.SourceGenerators.Models;
 namespace PolySharp.SourceGenerators.Extensions;
 
 /// <summary>
-/// Extension methods for <see cref="GeneratorExecutionContext"/>, specifically for reporting diagnostics.
+/// Extension methods for <see cref="DiagnosticInfo"/>, in various scenarios.
 /// </summary>
 internal static class DiagnosticsExtensions
 {
