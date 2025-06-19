@@ -7,7 +7,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- Remove the analyzer if using Roslyn < 4.3 (PolySharp's generators require Roslyn 4.3) -->
+  <!-- Remove the analyzer if using Roslyn < 4.14 (PolySharp's generators require Roslyn 4.14) -->
   <Target Name="_PolySharpRemoveAnalyzersForRoslyn3"
           Condition="'$(CSharpCoreTargetsPath)' != ''"
           AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
@@ -29,10 +29,10 @@
       <PolySharpCurrentCompilerVersion>@(PolySharpCurrentCompilerAssemblyIdentity->'%(Version)')</PolySharpCurrentCompilerVersion>
 
       <!-- The CurrentCompilerVersionIsNotNewEnough property can now be defined based on the Roslyn assembly version -->
-      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.3))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
+      <PolySharpCurrentCompilerVersionIsNotNewEnough Condition="$([MSBuild]::VersionLessThan($(PolySharpCurrentCompilerVersion), 4.14))">true</PolySharpCurrentCompilerVersionIsNotNewEnough>
     </PropertyGroup>
 
-    <!-- If the Roslyn version is < 4.3, disable the source generators -->
+    <!-- If the Roslyn version is < 4.14, disable the source generators -->
     <ItemGroup Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'">
       <Analyzer Remove="@(_PolySharpAnalyzer)"/>
     </ItemGroup>
@@ -44,7 +44,7 @@
     -->
     <Error Condition ="'$(PolySharpCurrentCompilerVersionIsNotNewEnough)' == 'true'"
            Code="POLYSPCFG0001"
-           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.3 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.3 or greater) or .NET SDK version (.NET 6.0.400 SDK or greater)."/>  
+           Text="The PolySharp source generators have been disabled on the current configuration, as they need Roslyn 4.14 in order to work. PolySharp requires the source generators to run in order to generate polyfills, so the library cannot be used without a more up to date IDE (eg. VS 2022 17.14 or greater) or .NET SDK version (.NET 8.0.411 SDK or greater)."/>  
   </Target>
   
   <!-- Remove the analyzer if Roslyn is missing -->

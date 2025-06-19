@@ -35,23 +35,21 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
-    private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
+    private static readonly ImmutableArray<string> LanguageSupportTypeNames = [.. from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         where !resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value];
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
-    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
+    private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = [.. from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
         where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value];
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
     /// </summary>
-    private static readonly ImmutableArray<string> AllSupportTypeNames = ImmutableArray.CreateRange(LanguageSupportTypeNames.Concat(RuntimeSupportedTypeNames));
+    private static readonly ImmutableArray<string> AllSupportTypeNames = [.. LanguageSupportTypeNames.Concat(RuntimeSupportedTypeNames)];
 
     /// <summary>
     /// The <see cref="Regex"/> to find all <see cref="System.Runtime.CompilerServices.MethodImplOptions"/> uses.
@@ -112,7 +110,7 @@ partial class PolyfillsGenerator
         // A minimum of C# 8.0 is required to benefit from the polyfills
         if (!compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
         {
-            return ImmutableArray<AvailableType>.Empty;
+            return [];
         }
 
         // Helper function to check whether a type is available

@@ -71,6 +71,6 @@ internal static class AnalyzerConfigOptionsProviderExtensions
             return builder.ToImmutable();
         }
 
-        return ImmutableArray<string>.Empty;
+        return [];
     }
 }
