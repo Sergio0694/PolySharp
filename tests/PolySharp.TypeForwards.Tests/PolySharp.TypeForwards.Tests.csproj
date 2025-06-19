@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net472;net48;net481;net8.0;net9.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.6.2" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48'">
+  <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
     <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
