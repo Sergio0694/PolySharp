@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Runtime.Versioning;
 #if !NETSTANDARD2_1
 using System.Threading.Tasks;
@@ -36,6 +38,13 @@ internal class TestClass
     // DoesNotReturnIfAttribute
     public void Throws([DoesNotReturnIf(true)] bool value)
     {
+    }
+
+    // UnreachableException
+    public object Unreachable()
+    {
+        ExceptionDispatchInfo.Capture(new Exception()).Throw();
+        throw new UnreachableException();
     }
 
     // MaybeNullAttribute
