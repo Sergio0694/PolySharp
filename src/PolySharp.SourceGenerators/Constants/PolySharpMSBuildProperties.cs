@@ -26,6 +26,11 @@ internal static class PolySharpMSBuildProperties
     public const string ExcludeGeneratedTypes = "PolySharpExcludeGeneratedTypes";
 
     /// <summary>
+    /// The MSBuild property for <see cref="Models.GenerationOptions.AlwaysGeneratePolyfills"/>.
+    /// </summary>
+    public const string AlwaysGeneratePolyfills = "PolySharpAlwaysGeneratePolyfills";
+
+    /// <summary>
     /// The MSBuild property for <see cref="Models.GenerationOptions.IncludeGeneratedTypes"/>.
     /// </summary>
     public const string IncludeGeneratedTypes = "PolySharpIncludeGeneratedTypes";

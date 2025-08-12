@@ -9,6 +9,7 @@ namespace PolySharp.SourceGenerators.Models;
 /// <param name="IncludeRuntimeSupportedAttributes">Whether to also generated dummy runtime supported attributes.</param>
 /// <param name="UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute">Whether to move the <c>[UnmanagedCallersOnly]</c> type to a dummy <c>InteropServices2</c> namespace.</param>
 /// <param name="ExcludeTypeForwardedToDeclarations">Whether to never generate any <c>[TypeForwardedTo]</c> declarations automatically.</param>
+/// <param name="AlwaysGeneratePolyfills">Whether to generate polyfills even if they are available through a referenced project.</param>
 /// <param name="ExcludeGeneratedTypes">The collection of fully qualified type names of types to exclude from generation.</param>
 /// <param name="IncludeGeneratedTypes">The collection of fully qualified type names of types to include in the generation.</param>
 internal sealed record GenerationOptions(
@@ -16,5 +17,6 @@ internal sealed record GenerationOptions(
     bool IncludeRuntimeSupportedAttributes,
     bool UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
     bool ExcludeTypeForwardedToDeclarations,
+    bool AlwaysGeneratePolyfills,
     EquatableArray<string> ExcludeGeneratedTypes,
     EquatableArray<string> IncludeGeneratedTypes);

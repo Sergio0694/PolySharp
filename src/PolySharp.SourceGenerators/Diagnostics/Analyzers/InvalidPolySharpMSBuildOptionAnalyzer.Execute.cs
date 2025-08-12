@@ -59,6 +59,14 @@ partial class InvalidPolySharpMSBuildOptionAnalyzer
 
         token.ThrowIfCancellationRequested();
 
+        // And for "AlwaysGeneratePolyfills" as well
+        if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.AlwaysGeneratePolyfills, out string? alwaysGeneratePolyfills))
+        {
+            builder.Add(InvalidBoolMSBuildProperty, alwaysGeneratePolyfills, PolySharpMSBuildProperties.AlwaysGeneratePolyfills);
+        }
+
+        token.ThrowIfCancellationRequested();
+
         ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.ExcludeGeneratedTypes);
 
         // Validate the fully qualified type names for "ExcludeGeneratedTypes"

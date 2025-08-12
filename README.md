@@ -96,3 +96,4 @@ The following properties are available:
 - "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
 - "PolySharpIncludeGeneratedTypes": only includes specific types for generation (';' or ',' separated type names).
 - "PolySharpExcludeTypeForwardedToDeclarations": never generates any `[TypeForwardedTo]` declarations.
+- "PolySharpAlwaysGeneratePolyfills": generates the polyfills, even when they are available from the referenced projects. Addresses the issue https://github.com/Sergio0694/PolySharp/issues/50

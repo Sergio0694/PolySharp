@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <PolySharpAlwaysGeneratePolyfills>true</PolySharpAlwaysGeneratePolyfills>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PolySharp.TestLibraryA\PolySharp.TestLibraryA.csproj" />
+    <ProjectReference Include="..\PolySharp.TestLibraryB\PolySharp.TestLibraryB.csproj" />
+    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <!-- Import the PolySharp targets manually since we're using ProjectReference instead of PackageReference -->
+  <Import Project="..\..\src\PolySharp.SourceGenerators\PolySharp.targets" />
+
+</Project>

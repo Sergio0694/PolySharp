@@ -85,6 +85,8 @@ partial class PolyfillsGenerator
         bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
         bool excludeTypeForwardedToDeclarations = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations);
 
+        bool alwaysGeneratePolyfills = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.AlwaysGeneratePolyfills);
+
         // Gather the list of any polyfills to exclude from generation (this can help to avoid conflicts with other generators). That's because
         // generators see the same compilation and can't know what others will generate, so $(PolySharpExcludeGeneratedTypes) can solve this issue.
         ImmutableArray<string> excludeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.ExcludeGeneratedTypes);
@@ -97,6 +99,7 @@ partial class PolyfillsGenerator
             includeRuntimeSupportedAttributes,
             useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
             excludeTypeForwardedToDeclarations,
+            alwaysGeneratePolyfills,
             excludeGeneratedTypes,
             includeGeneratedTypes);
     }
@@ -105,9 +108,10 @@ partial class PolyfillsGenerator
     /// Calculates the collection of <see cref="AvailableType"/> that could be generated.
     /// </summary>
     /// <param name="compilation">The current <see cref="Compilation"/> instance.</param>
+    /// <param name="options">The <see cref="GenerationOptions"/> for the current generation.</param>
     /// <param name="token">The cancellation token for the operation.</param>
     /// <returns>The collection of <see cref="AvailableType"/> that could be generated.</returns>
-    private static ImmutableArray<AvailableType> GetAvailableTypes(Compilation compilation, CancellationToken token)
+    private static ImmutableArray<AvailableType> GetAvailableTypes(Compilation compilation, GenerationOptions options, CancellationToken token)
     {
         // A minimum of C# 8.0 is required to benefit from the polyfills
         if (!compilation.HasLanguageVersionAtLeastEqualTo(LanguageVersion.CSharp8))
@@ -116,12 +120,12 @@ partial class PolyfillsGenerator
         }
 
         // Helper function to check whether a type is available
-        static bool IsTypeAvailable(Compilation compilation, string name, CancellationToken token)
+        static bool IsTypeAvailable(Compilation compilation, string name, GenerationOptions options, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
-            // First check whether the type is accessible, and if it is already then there is nothing left to do
-            if (compilation.HasAccessibleTypeWithMetadataName(name))
+            // If AlwaysGeneratePolyfills is enabled, generate polyfills regardless of availability
+            if (!options.AlwaysGeneratePolyfills && compilation.HasAccessibleTypeWithMetadataName(name))
             {
                 return false;
             }
@@ -169,7 +173,7 @@ partial class PolyfillsGenerator
         // Inspect all available types and filter them down according to the current compilation
         foreach (string name in AllSupportTypeNames)
         {
-            if (IsTypeAvailable(compilation, name, token))
+            if (IsTypeAvailable(compilation, name, options, token))
             {
                 builder.Add(new AvailableType(name, GetSyntaxFixupType(compilation, name)));
             }
