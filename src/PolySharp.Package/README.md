@@ -94,3 +94,55 @@ The following properties are available:
 - "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
 - "PolySharpIncludeGeneratedTypes": only includes specific types for generation (';' or ',' separated type names).
 - "PolySharpExcludeTypeForwardedToDeclarations": never generates any `[TypeForwardedTo]` declarations.
+
+# Debugging
+
+If you suspect the generator does not work as expected, you can debug its operation relatively easily. Let us assume we want to debug the polyfills generation for a project producing assembly named `X`.
+
+## One time setup
+1. Clone this repo, e.g. to **C:\work\PolySharp**
+1. Add **C:\work\PolySharp\artifacts** to the package sources. E.g. you can use the nuget.config like this:
+    ```
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+      <solution>
+        <add key="disableSourceControlIntegration" value="true" />
+      </solution>
+      <packageSources>
+        <add key="Temporary" value="C:\work\PolySharp\artifacts" />
+      </packageSources>
+    </configuration>
+    ```
+1. Modify the version of the PolySharp package used by `X` to `1.0.0-alpha`
+1. Install [DebugView](https://learn.microsoft.com/en-us/sysinternals/downloads/debugview) or any other trace log viewer.
+1. Open a console window where debug iterations will take place. Let us assume it is pwsh and refer it as **the console**.
+1. Run the trace viewer, filter messages containing **POLYSP**
+
+## Iteration
+
+On the console at **C:\work\PolySharp**:
+1. Delete the NuGet package
+    ```
+    del -r -force -EA SilentlyContinue ~\.nuget\packages\polysharp\1.0.0-alpha\,.\artifacts\,$env:TEMP\VBCSCompiler
+    ```
+1. Build the debug version of the package
+    ```
+    dotnet pack -c:Debug .\src\PolySharp.Package\PolySharp.Package.msbuildproj
+    ```
+1. Request debug
+   ```
+   $env:POLYSHARP_DEBUG = "AssemblyName[:TargetFramework]:DebugMode"
+   ```
+   where:
+   - `AssemblyName` is the assembly name of the project in question, in our case `X`
+   - `TargetFramework` is optional - denotes the target framework of the project in question. Helpful when multiple target frameworks are built.
+   - `DebugMode` is one of the following:
+     - `1` or `launch` - results in a `Debugger.Launch()` call
+     - `2` or `attach` - results in an infinite loop, you are expected to attach the debugger and break out of the loop. The PID to attach to is in the trace.
+     - `3` or `trace` - currently just outputs the values of the build variables to the trace.
+1. Build the project X only with the binary logs
+   ```
+   msbuild /bl /v:m PATH_TO_X_CSPROJ /p:BuildProjectReferences=false
+   ```
+
+The steps (1) and (2) are needed to get the debug version of the analyzer, which is easier to debug. They must be run each time you change the analyzer code or just once at the beginning.

@@ -94,6 +94,17 @@ partial class PolyfillsGenerator
         // Gather the list of polyfills to explicitly include in the generation. This will override combinations expressed above.
         ImmutableArray<string> includeGeneratedTypes = options.GetStringArrayMSBuildProperty(PolySharpMSBuildProperties.IncludeGeneratedTypes);
 
+        if (DebugHelper.IsTraceEnabled)
+        {
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes} = {usePublicAccessibilityForGeneratedTypes}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes} = {includeRuntimeSupportedAttributes}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute} = {useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.ExcludeTypeForwardedToDeclarations} = {excludeTypeForwardedToDeclarations}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.AlwaysGeneratePolyfills} = {alwaysGeneratePolyfills}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.ExcludeGeneratedTypes} = {string.Join(" , ", excludeGeneratedTypes)}");
+            DebugHelper.TraceWriteLine($"{PolySharpMSBuildProperties.IncludeGeneratedTypes} = {string.Join(" , ", includeGeneratedTypes)}");
+        }
+
         return new(
             usePublicAccessibilityForGeneratedTypes,
             includeRuntimeSupportedAttributes,

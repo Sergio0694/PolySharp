@@ -13,6 +13,8 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        context.SetupDebugging();
+
         // Prepare all the generation options in a single incremental model
         IncrementalValueProvider<GenerationOptions> generationOptions =
             context.AnalyzerConfigOptionsProvider
