@@ -55,6 +55,8 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[OverloadResolutionPriority]` (needed for [overload resolution priority](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#overload-resolution-priority))
 - `[ParamsCollection]` (needed for [params collection](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#params-collections))
 - `[ConstantExpected]` (see [proposal](https://github.com/dotnet/runtime/issues/33771))
+- `[CompilerLoweringPreserve]` (see [proposal](https://github.com/dotnet/runtime/issues/103430))
+- `[ExtensionMarker]` (needed for [extensions](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14#extension-members))
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>13.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
@@ -84,6 +86,7 @@ It also includes the following optional runtime-supported polyfills:
   - `[FeatureGuard]`
   - `[FeatureSwitchDefinition]`
 - `[WasmImportLinkage]` (see [here](https://github.com/dotnet/runtime/pull/93823))
+- `[UnsafeAccessorType]` (see [here](https://github.com/dotnet/runtime/issues/90081))
 
 # Options ⚙️
 
