@@ -134,6 +134,8 @@ namespace System.Diagnostics.CodeAnalysis
         /// <summary>
         /// Gets or sets the condition in which the dependency is applicable, e.g. "DEBUG".
         /// </summary>
+        [global::System.Obsolete("This property is no longer supported.")]
+        [global::System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public string? Condition { get; set; }
     }
 }
