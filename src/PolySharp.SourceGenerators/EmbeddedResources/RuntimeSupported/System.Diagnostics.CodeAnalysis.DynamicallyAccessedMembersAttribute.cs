@@ -43,6 +43,7 @@ namespace System.Diagnostics.CodeAnalysis
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
+    [global::System.Runtime.CompilerServices.CompilerLoweringPreserveAttribute]
     internal sealed class DynamicallyAccessedMembersAttribute : global::System.Attribute
     {
         /// <summary>
