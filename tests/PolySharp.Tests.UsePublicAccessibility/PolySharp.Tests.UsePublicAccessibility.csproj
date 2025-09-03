@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    This project mirrors 'PolySharp.Tests', just with 'PolySharpUsePublicAccessibilityForGeneratedTypes' set too.
+    The point is to verify that the additional logic around '[Embedded]' works correctly when polyfills are public.
+    Any changes to either of these two test projects should be kept in sync with the other one.
+  -->
+  <PropertyGroup>
+    <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="PolySharpIncludeRuntimeSupportedAttributes" />
+    <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\PolySharp.Tests\LanguageFeatures.cs" Link="LanguageFeatures.cs" />
+    <Compile Include="..\PolySharp.Tests\RuntimeSupport.cs" Link="RuntimeSupport.cs" />
+  </ItemGroup>
+
+</Project>

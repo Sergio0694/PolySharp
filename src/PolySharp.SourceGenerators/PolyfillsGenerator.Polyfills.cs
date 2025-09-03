@@ -23,7 +23,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// A regex to extract the fully qualified type name of a type from its embedded resource name.
     /// </summary>
-    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources(?:\.RuntimeSupported)?\.(System(?:\.\w+)+)\.cs$";
+    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources\.\w+\.(\w+(?:\.\w+)+)\.cs$";
 
     /// <summary>
     /// The mapping of fully qualified type names to embedded resource names.
@@ -36,17 +36,17 @@ partial class PolyfillsGenerator
     /// The collection of fully qualified type names for language support types.
     /// </summary>
     private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where !resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
+        select resource.Key);
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
     private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
+        select resource.Key);
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
@@ -62,6 +62,11 @@ partial class PolyfillsGenerator
     /// The <see cref="Regex"/> to find all <see cref="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"/> uses.
     /// </summary>
     private static readonly Regex ExcludeFromCodeCoverageRegex = new(@" *\[global::System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverage\]\r?\n", RegexOptions.Compiled);
+
+    /// <summary>
+    /// The <see cref="Regex"/> to find all <see cref="EmbeddedAttribute"/> uses.
+    /// </summary>
+    private static readonly Regex EmbeddedAttributeRegex = new(@" *\[global::Microsoft\.CodeAnalysis\.Embedded\]\r?\n", RegexOptions.Compiled);
 
     /// <summary>
     /// The dictionary of cached sources to produce.
@@ -242,6 +247,20 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
+    /// Emits the source for <see cref="EmbeddedAttribute"/>.
+    /// </summary>
+    /// <param name="context">The input <see cref="IncrementalGeneratorPostInitializationContext"/> instance to use to emit code.</param>
+    private static void EmitEmbeddedAttribute(IncrementalGeneratorPostInitializationContext context)
+    {
+        string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+
+        // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
+        string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
+
+        context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
+    }
+
+    /// <summary>
     /// Emits the source for a given <see cref="GeneratedType"/> object.
     /// </summary>
     /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
@@ -272,6 +291,9 @@ partial class PolyfillsGenerator
                     // rewriter, or just by retrieving the type declaration syntax and updating the modifier tokens, but since the
                     // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
+
+                    // If types are public, we also need to strip the '[Embedded]' attributes, as it's not allowed on public types
+                    adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
                 }
 
                 if ((type.FixupType & SyntaxFixupType.RemoveMethodImplAttributes) != 0)
