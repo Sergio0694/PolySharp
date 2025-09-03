@@ -292,7 +292,7 @@ partial class PolyfillsGenerator
                     // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
 
-                    // If types are public, we also need to strip the '[Embedded]' attributes, as it's only allowed on public types
+                    // If types are public, we also need to strip the '[Embedded]' attributes, as it's not allowed on public types
                     adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
                 }
 
