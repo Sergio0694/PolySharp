@@ -297,3 +297,39 @@ internal static class ConstantExpectedTests
     {
     }
 }
+
+internal class ExceptionPolyfillsTests : IDisposable
+{
+    private bool disposedValue = false;
+    private readonly IDisposable disposable;
+
+    public ExceptionPolyfillsTests(IDisposable disposable)
+    {
+        ArgumentNullException.ThrowIfNull(disposable);
+        this.disposable = disposable;
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!this.disposedValue)
+        {
+            if (disposing)
+            {
+                this.disposable.Dispose();
+            }
+
+            this.disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    public void Connect()
+    {
+        ObjectDisposedException.ThrowIf(this.disposedValue, this);
+    }
+}
