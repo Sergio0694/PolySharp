@@ -10,17 +10,57 @@ namespace System
     /// <summary>Provides downlevel polyfills for static methods on Exception-derived types.</summary>
     internal static class ExceptionPolyfills
     {
+        extension(global::System.ArgumentException)
+        {
+            /// <summary>Throws an exception if <paramref name="argument"/> is null or empty.</summary>
+            /// <param name="argument">The string argument to validate as non-null and non-empty.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+            /// <exception cref="global::System.ArgumentNullException"><paramref name="argument"/> is null.</exception>
+            /// <exception cref="global::System.ArgumentException"><paramref name="argument"/> is empty.</exception>
+            public static void ThrowIfNullOrEmpty(
+                [global::System.Diagnostics.CodeAnalysis.NotNull] string? argument,
+                [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(argument))] string? paramName = null
+            )
+            {
+                if (string.IsNullOrEmpty(argument))
+                    ThrowArgumentException(argument, paramName, "The value cannot be an empty string.");
+            }
+
+            /// <summary>Throws an exception if <paramref name="argument"/> is null, empty, or consists only of white-space characters.</summary>
+            /// <param name="argument">The string argument to validate.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+            /// <exception cref="global::System.ArgumentNullException"><paramref name="argument"/> is null.</exception>
+            /// <exception cref="global::System.ArgumentException"><paramref name="argument"/> is empty or consists only of white-space characters.</exception>
+            public static void ThrowIfNullOrWhiteSpace(
+                [global::System.Diagnostics.CodeAnalysis.NotNull] string? argument,
+                [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(argument))] string? paramName = null
+            )
+            {
+                if (string.IsNullOrWhiteSpace(argument))
+                    ThrowArgumentException(argument, paramName, "The value cannot be an empty string or composed entirely of whitespace.");
+            }
+        }
+
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        private static void ThrowArgumentException(string? argument, string? paramName, string message)
+        {
+            ExceptionPolyfills.ThrowIfNull(argument, paramName);
+            throw new global::System.ArgumentException(message, paramName);
+        }
+
         extension(global::System.ArgumentNullException)
         {
+            /// <summary>Throws an <see cref="global::System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            /// <param name="argument">The reference type argument to validate as non-null.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+            /// <exception cref="global::System.ArgumentNullException"><paramref name="argument"/> is null.</exception>
             public static void ThrowIfNull(
                 [global::System.Diagnostics.CodeAnalysis.NotNull] object? argument,
                 [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(argument))] string? paramName = null
             )
             {
                 if (argument is null)
-                {
                     ThrowArgumentNullException(paramName);
-                }
             }
         }
 
@@ -28,35 +68,102 @@ namespace System
         private static void ThrowArgumentNullException(string? paramName) =>
             throw new global::System.ArgumentNullException(paramName);
 
+        extension(global::System.ArgumentOutOfRangeException)
+        {
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is equal to <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as not equal to <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfEqual<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+            {
+                if (global::System.Collections.Generic.EqualityComparer<T>.Default.Equals(value, other))
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{(object?)value ?? "null"}') must not be equal to '{(object?)other ?? "null"}'.");
+            }
+
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is not equal to <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as equal to <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfNotEqual<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+            {
+                if (!global::System.Collections.Generic.EqualityComparer<T>.Default.Equals(value, other))
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{(object?)value ?? "null"}') must be equal to '{(object?)other ?? "null"}'.");
+            }
+
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfGreaterThan<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+                where T : global::System.IComparable<T>
+            {
+                if (value.CompareTo(other) > 0)
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{value}') must be less than or equal to '{other}'.");
+            }
+
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfGreaterThanOrEqual<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+                where T : global::System.IComparable<T>
+            {
+                if (value.CompareTo(other) >= 0)
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{value}') must be less than '{other}'.");
+            }
+
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as greater than or equal than <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfLessThan<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+                where T : global::System.IComparable<T>
+            {
+                if (value.CompareTo(other) < 0)
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{value}') must be greater than or equal to '{other}'.");
+            }
+
+            /// <summary>Throws an <see cref="global::System.ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
+            /// <param name="value">The argument to validate as greater than than <paramref name="other"/>.</param>
+            /// <param name="other">The value to compare with <paramref name="value"/>.</param>
+            /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
+            public static void ThrowIfLessThanOrEqual<T>(T value, T other, [global::System.Runtime.CompilerServices.CallerArgumentExpression(nameof(value))] string? paramName = null)
+                where T : global::System.IComparable<T>
+            {
+                if (value.CompareTo(other) <= 0)
+                    ThrowArgumentOutOfRangeException(paramName, $"{paramName} ('{value}') must be greater than '{other}'.");
+            }
+        }
+
+        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
+        private static void ThrowArgumentOutOfRangeException(string? paramName, string message) =>
+            throw new global::System.ArgumentOutOfRangeException(paramName, message);
+
         extension(global::System.ObjectDisposedException)
         {
+            /// <summary>Throws an <see cref="global::System.ObjectDisposedException"/> if the specified <paramref name="condition"/> is <see langword="true"/>.</summary>
+            /// <param name="condition">The condition to evaluate.</param>
+            /// <param name="instance">The object whose type's full name should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+            /// <exception cref="global::System.ObjectDisposedException">The <paramref name="condition"/> is <see langword="true"/>.</exception>
             public static void ThrowIf([global::System.Diagnostics.CodeAnalysis.DoesNotReturnIf(true)] bool condition, object instance)
             {
                 if (condition)
-                {
-                    ThrowObjectDisposedException(instance);
-                }
+                    ThrowObjectDisposedException(instance?.GetType());
             }
 
+            /// <summary>Throws an <see cref="global::System.ObjectDisposedException"/> if the specified <paramref name="condition"/> is <see langword="true"/>.</summary>
+            /// <param name="condition">The condition to evaluate.</param>
+            /// <param name="type">The type whose full name should be included in any resulting <see cref="ObjectDisposedException"/>.</param>
+            /// <exception cref="global::System.ObjectDisposedException">The <paramref name="condition"/> is <see langword="true"/>.</exception>
             public static void ThrowIf([global::System.Diagnostics.CodeAnalysis.DoesNotReturnIf(true)] bool condition, global::System.Type type)
             {
                 if (condition)
-                {
                     ThrowObjectDisposedException(type);
-                }
             }
         }
 
         [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        private static void ThrowObjectDisposedException(object? instance)
-        {
-            throw new global::System.ObjectDisposedException(instance?.GetType().FullName);
-        }
-
-        [global::System.Diagnostics.CodeAnalysis.DoesNotReturn]
-        private static void ThrowObjectDisposedException(global::System.Type? type)
-        {
+        private static void ThrowObjectDisposedException(global::System.Type? type) =>
             throw new global::System.ObjectDisposedException(type?.FullName);
-        }
     }
 }
