@@ -132,6 +132,12 @@ partial class PolyfillsGenerator
                 return compilation.GetTypeByMetadataName("System.ValueTuple`2") is not null;
             }
 
+            // Extension members only available starting with C# 14.0
+            if (name is "System.ExceptionPolyfills")
+            {
+                return compilation.HasLanguageVersionAtLeastEqualTo((LanguageVersion)1400);
+            }
+
             return true;
         }
 
