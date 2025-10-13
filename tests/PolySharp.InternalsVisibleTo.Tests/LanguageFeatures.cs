@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 
 #pragma warning disable CA2255
 
-[assembly: InternalsVisibleTo("PolySharp.InternalsVisibleTo.Tests")]
-
-namespace PolySharp.Tests;
+namespace PolySharp.InternalsVisibleTo.Tests;
 
 internal class TestClass
 {
