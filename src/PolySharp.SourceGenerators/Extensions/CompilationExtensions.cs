@@ -50,18 +50,51 @@ internal static class CompilationExtensions
         // If there is only a single matching symbol, check its accessibility
         if (compilation.GetTypeByMetadataName(fullyQualifiedMetadataName) is INamedTypeSymbol typeSymbol)
         {
-            return compilation.IsSymbolAccessibleWithin(typeSymbol, compilation.Assembly);
+            return isSymbolAccessible(typeSymbol);
         }
 
         // Otherwise, check all available types
         foreach (INamedTypeSymbol currentTypeSymbol in compilation.GetTypesByMetadataName(fullyQualifiedMetadataName))
         {
-            if (compilation.IsSymbolAccessibleWithin(currentTypeSymbol, compilation.Assembly))
+            if (isSymbolAccessible(currentTypeSymbol))
             {
                 return true;
             }
         }
 
         return false;
+
+        bool isSymbolAccessible(INamedTypeSymbol symbol)
+        {
+            if (!compilation.IsSymbolAccessibleWithin(symbol, compilation.Assembly))
+            {
+                return false;
+            }
+            else if (!SymbolEqualityComparer.Default.Equals(compilation.Assembly, symbol.ContainingAssembly))
+            {
+                foreach (AttributeData attribute in symbol.GetAttributes())
+                {
+                    if (attribute.AttributeClass is
+                        {
+                            ContainingNamespace:
+                            {
+                                ContainingNamespace:
+                                {
+                                    ContainingNamespace.IsGlobalNamespace: true,
+                                    Name: "Microsoft",
+                                },
+                                Name: "CodeAnalysis",
+
+                            },
+                            Name: "EmbeddedAttribute",
+                        })
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }
