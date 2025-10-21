@@ -55,6 +55,7 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[OverloadResolutionPriority]` (needed for [overload resolution priority](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#overload-resolution-priority))
 - `[ParamsCollection]` (needed for [params collection](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#params-collections))
 - `[ConstantExpected]` (see [proposal](https://github.com/dotnet/runtime/issues/33771))
+- `UnreachableException` (see [docs](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.unreachableexception))
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>13.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 
