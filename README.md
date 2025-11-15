@@ -91,6 +91,7 @@ It also includes the following optional runtime-supported polyfills:
 
 The following properties are available:
 - "PolySharpUsePublicAccessibilityForGeneratedTypes": makes all generated types public.
+- "PolySharpUseEmbeddedAttributeForGeneratedTypes": adds the `[Embedded]` attributes to generated pofylill types.
 - "PolySharpIncludeRuntimeSupportedAttributes": enables polyfills for (dummy) runtime-supported attributes too.
 - "PolySharpUseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute": moves `[UnmanagedCallersOnly]`.
 - "PolySharpExcludeGeneratedTypes": excludes specific types from generation (';' or ',' separated type names).
