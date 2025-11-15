@@ -85,6 +85,9 @@ partial class PolyfillsGenerator
         // $(PolySharpUsePublicAccessibilityForGeneratedTypes) MSBuild property to configure this however they need.
         bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
 
+        // Check whether to emit the '[Embedded]' attribute and apply it to generated types
+        bool useEmbeddedAttributeForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes);
+
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
         bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
@@ -99,6 +102,7 @@ partial class PolyfillsGenerator
 
         return new(
             usePublicAccessibilityForGeneratedTypes,
+            useEmbeddedAttributeForGeneratedTypes,
             includeRuntimeSupportedAttributes,
             useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
             excludeTypeForwardedToDeclarations,
@@ -247,17 +251,24 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Emits the source for <see cref="EmbeddedAttribute"/>.
+    /// Emits all requested "pre-initialization" types (but as an output step, so we can handle conditions).
     /// </summary>
-    /// <param name="context">The input <see cref="IncrementalGeneratorPostInitializationContext"/> instance to use to emit code.</param>
-    private static void EmitEmbeddedAttribute(IncrementalGeneratorPostInitializationContext context)
+    /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
+    /// <param name="options">The input <see cref="GenerationOptions"/> instance to use to emit code.</param>
+    private static void EmitPreInitializationTypes(SourceProductionContext context, GenerationOptions options)
     {
-        string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
+        // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
+        if (options.UseEmbeddedAttributeForGeneratedTypes)
+        {
+            string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
 
-        // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
-        string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
+            // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
+            string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
 
-        context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
+            context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
+        }
     }
 
     /// <summary>
