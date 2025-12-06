@@ -247,7 +247,11 @@ partial class PolyfillsGenerator
         // Combine the syntax type with any analyzer options
         SyntaxFixupType fixupType = info.AvailableType.FixupType | GetSyntaxFixupType(info.AvailableType, info.Options);
 
-        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, fixupType);
+        // Also combine additional flags from project settings
+        fixupType |= info.Options.UsePublicAccessibilityForGeneratedTypes ? SyntaxFixupType.UsePublicAccessibilityModifier : SyntaxFixupType.None;
+        fixupType |= !info.Options.UseEmbeddedAttributeForGeneratedTypes ? SyntaxFixupType.RemoveEmbeddedAttributes : SyntaxFixupType.None;
+
+        return new(info.AvailableType.FullyQualifiedMetadataName, fixupType);
     }
 
     /// <summary>
@@ -285,8 +289,8 @@ partial class PolyfillsGenerator
 
             using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
-            // If public accessibility has been requested or a syntax fixup is needed, we need to update the loaded source files
-            if (type is { IsPublicAccessibilityRequired: true } or { FixupType: not SyntaxFixupType.None })
+            // If a syntax fixup is needed, we need to update the loaded source files
+            if (type is { FixupType: not SyntaxFixupType.None })
             {
                 string adjustedSource;
 
@@ -295,7 +299,7 @@ partial class PolyfillsGenerator
                     adjustedSource = reader.ReadToEnd();
                 }
 
-                if (type.IsPublicAccessibilityRequired)
+                if ((type.FixupType & SyntaxFixupType.UsePublicAccessibilityModifier) != 0)
                 {
                     // After reading the file, replace all internal keywords with public. Use a space before and after the identifier
                     // to avoid potential false positives. This could also be done by loading the source tree and using a syntax
@@ -304,6 +308,12 @@ partial class PolyfillsGenerator
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
 
                     // If types are public, we also need to strip the '[Embedded]' attributes, as it's not allowed on public types
+                    adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
+                }
+                else if ((type.FixupType & SyntaxFixupType.RemoveEmbeddedAttributes) != 0)
+                {
+                    // Remove the '[Embedded]' attributes as above, if requested. We only need this check if types
+                    // are not public, or these attributes would've already been stripped by the previous branch.
                     adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
                 }
 
@@ -344,7 +354,7 @@ partial class PolyfillsGenerator
             }
             else
             {
-                // If the default accessibility is used, we can load the source directly
+                // Otherwise if no fixups are needed, we can load the source directly
                 sourceText = SourceText.From(stream, Encoding.UTF8, canBeEmbedded: true);
             }
 
