@@ -86,7 +86,7 @@ partial class PolyfillsGenerator
         bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
 
         // Check whether to emit the '[Embedded]' attribute and apply it to generated types
-        bool useEmbeddedAttributeForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes);
+        bool useEmbeddedAttributeForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes, defaultValue: true);
 
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);

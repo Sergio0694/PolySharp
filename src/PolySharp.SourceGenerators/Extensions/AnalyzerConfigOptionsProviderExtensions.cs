@@ -47,6 +47,28 @@ internal static class AnalyzerConfigOptionsProviderExtensions
     }
 
     /// <summary>
+    /// Gets the value of a <see cref="bool"/> MSBuild property.
+    /// </summary>
+    /// <param name="options">The input <see cref="AnalyzerConfigOptionsProvider"/> instance.</param>
+    /// <param name="propertyName">The MSBuild property name.</param>
+    /// <param name="defaultValue">The default value for the property, if missing.</param>
+    /// <returns>The value of the specified MSBuild property, or <paramref name="defaultValue"/>.</returns>
+    public static bool GetBoolMSBuildProperty(this AnalyzerConfigOptionsProvider options, string propertyName, bool defaultValue = false)
+    {
+        if (!options.GlobalOptions.TryGetValue($"build_property.{propertyName}", out string? propertyValue))
+        {
+            return defaultValue;
+        }
+
+        if (string.IsNullOrEmpty(propertyValue))
+        {
+            return defaultValue;
+        }
+
+        return string.Equals(propertyValue, bool.TrueString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
     /// Gets the value of an MSBuild property representing a semicolon-separated list of <see cref="string"/>-s.
     /// </summary>
     /// <param name="options">The input <see cref="AnalyzerConfigOptionsProvider"/> instance.</param>
