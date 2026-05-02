@@ -305,6 +305,25 @@ internal static class ConstantExpectedTests
     }
 }
 
+// UnionAttribute, IUnion
+[Union]
+internal sealed class TestUnion : IUnion
+{
+    private readonly object? value;
+
+    public TestUnion(int value)
+    {
+        this.value = value;
+    }
+
+    public TestUnion(string value)
+    {
+        this.value = value;
+    }
+
+    public object? Value => this.value;
+}
+
 [CompilerLoweringPreserve]
 internal sealed class TestFlowingAttribute : Attribute;
 
