@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+
+    <!-- Define a constant to change the namespace of the test files -->
+    <DefineConstants>$(DefineConstants);INTERNALS_VISIBLE_TO_TESTS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +19,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
     <ProjectReference Include="..\PolySharp.Tests\PolySharp.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\PolySharp.Tests\LanguageFeatures.cs" Link="LanguageFeatures.cs" />
+    <Compile Include="..\PolySharp.Tests\RuntimeSupport.cs" Link="RuntimeSupport.cs" />
   </ItemGroup>
 
 </Project>
