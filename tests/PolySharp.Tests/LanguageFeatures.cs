@@ -301,3 +301,15 @@ internal static class ConstantExpectedTests
     {
     }
 }
+
+[CompilerLoweringPreserve]
+internal sealed class TestFlowingAttribute : Attribute;
+
+// Test for '[ExtensionMarker]'
+internal static class ExtensionContainer
+{
+    extension(string s)
+    {
+        public bool M => s == "PolySharp";
+    }
+}
