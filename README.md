@@ -55,6 +55,18 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[OverloadResolutionPriority]` (needed for [overload resolution priority](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#overload-resolution-priority))
 - `[ParamsCollection]` (needed for [params collection](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#params-collections))
 - `[ConstantExpected]` (see [proposal](https://github.com/dotnet/runtime/issues/33771))
+- Throw helper methods (only for C# 14 and above, because these polyfills require [Extension members](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14#extension-members))
+  - `ArgumentException.ThrowIfNullOrEmpty(string? argument, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentexception.throwifnullorempty))
+  - `ArgumentException.ThrowIfNullOrWhiteSpace(string? argument, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentexception.throwifnullorwhitespace))
+  - `ArgumentNullException.ThrowIfNull(object? argument, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentnullexception.throwifnull))
+  - `ArgumentOutOfRangeException.ThrowIfEqual<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwifequal))
+  - `ArgumentOutOfRangeException.ThrowIfNotEqual<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwifnotequal))
+  - `ArgumentOutOfRangeException.ThrowIfGreaterThan<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwifgreaterthan))
+  - `ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwifgreaterthanorequal))
+  - `ArgumentOutOfRangeException.ThrowIfLessThan<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwiflessthan))
+  - `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual<T>(T value, T other, string? paramName = default)` (see [docs](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception.throwiflessthanorequal))
+  - `ObjectDisposedException.ThrowIf(bool condition, object instance)` (see [docs](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception.throwif#system-objectdisposedexception-throwif(system-boolean-system-object)))
+  - `ObjectDisposedException.ThrowIf(bool condition, Type type)` (see [docs](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception.throwif#system-objectdisposedexception-throwif(system-boolean-system-type)))
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>13.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 

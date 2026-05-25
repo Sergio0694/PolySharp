@@ -1,7 +1,8 @@
 <Project>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>13.0</LangVersion>
+    <!-- Use C# 14 -->
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 

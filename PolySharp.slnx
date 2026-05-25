@@ -7,6 +7,7 @@
   <Folder Name="/Tests/">
     <File Path="tests/PolySharp.NuGet/PolySharp.NuGet.csproj" />
     <Project Path="tests/PolySharp.MinimumCSharpVersion.Tests/PolySharp.MinimumCSharpVersion.Tests.csproj" />
+    <Project Path="tests/PolySharp.OldCSharpVersion.Tests/PolySharp.OldCSharpVersion.Tests.csproj" />
     <Project Path="tests/PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests/PolySharp.PolySharpUseTypeAliasForUnmanagedCallersOnlyAttribute.Tests.csproj" />
     <Project Path="tests/PolySharp.Tests.UsePublicAccessibility/PolySharp.Tests.UsePublicAccessibility.csproj" />
     <Project Path="tests/PolySharp.InternalsVisibleTo.Tests/PolySharp.InternalsVisibleTo.Tests.csproj" />
