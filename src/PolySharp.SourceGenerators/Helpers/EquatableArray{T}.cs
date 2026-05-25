@@ -93,7 +93,7 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
     }
 
     /// <sinheritdoc/>
-    public override unsafe int GetHashCode()
+    public override int GetHashCode()
     {
         if (this.array is not T[] array)
         {
