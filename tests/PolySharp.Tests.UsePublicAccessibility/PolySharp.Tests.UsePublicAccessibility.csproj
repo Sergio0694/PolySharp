@@ -6,7 +6,7 @@
     Any changes to either of these two test projects should be kept in sync with the other one.
   -->
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0</TargetFrameworks>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
     <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
   </PropertyGroup>
