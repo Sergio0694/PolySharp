@@ -1,7 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -47,54 +43,42 @@ internal static class CompilationExtensions
     /// <returns>Whether a type with the specified metadata name can be accessed from the given compilation.</returns>
     public static bool HasAccessibleTypeWithMetadataName(this Compilation compilation, string fullyQualifiedMetadataName)
     {
+        // Helper to check for accessiblity and '[Embedded]' at the same time (Roslyn doesn't check the latter here)
+        static bool IsSymbolAccessibleAndNotEmbedded(Compilation compilation, INamedTypeSymbol symbol)
+        {
+            // First use the built-in Roslyn check (this doesn't check for '[Embedded]').
+            // If the symbol is already not embedded (e.g. it's internal), stop here.
+            if (!compilation.IsSymbolAccessibleWithin(symbol, compilation.Assembly))
+            {
+                return false;
+            }
+
+            // If the symbol is defined in this same assembly, then it's considered accessible
+            if (SymbolEqualityComparer.Default.Equals(compilation.Assembly, symbol.ContainingAssembly))
+            {
+                return true;
+            }
+
+            // If the type has '[Embedded]' on it, then it is not accessible, because Roslyn
+            // will just ignore it completely (even if its accessiblity is 'public' or similar).
+            return !symbol.HasEmbeddedAttribute();
+        }
+
         // If there is only a single matching symbol, check its accessibility
         if (compilation.GetTypeByMetadataName(fullyQualifiedMetadataName) is INamedTypeSymbol typeSymbol)
         {
-            return isSymbolAccessible(typeSymbol);
+            return IsSymbolAccessibleAndNotEmbedded(compilation, typeSymbol);
         }
 
         // Otherwise, check all available types
         foreach (INamedTypeSymbol currentTypeSymbol in compilation.GetTypesByMetadataName(fullyQualifiedMetadataName))
         {
-            if (isSymbolAccessible(currentTypeSymbol))
+            if (IsSymbolAccessibleAndNotEmbedded(compilation, currentTypeSymbol))
             {
                 return true;
             }
         }
 
         return false;
-
-        bool isSymbolAccessible(INamedTypeSymbol symbol)
-        {
-            if (!compilation.IsSymbolAccessibleWithin(symbol, compilation.Assembly))
-            {
-                return false;
-            }
-            else if (!SymbolEqualityComparer.Default.Equals(compilation.Assembly, symbol.ContainingAssembly))
-            {
-                foreach (AttributeData attribute in symbol.GetAttributes())
-                {
-                    if (attribute.AttributeClass is
-                        {
-                            ContainingNamespace:
-                            {
-                                ContainingNamespace:
-                                {
-                                    ContainingNamespace.IsGlobalNamespace: true,
-                                    Name: "Microsoft",
-                                },
-                                Name: "CodeAnalysis",
-
-                            },
-                            Name: "EmbeddedAttribute",
-                        })
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
     }
 }
