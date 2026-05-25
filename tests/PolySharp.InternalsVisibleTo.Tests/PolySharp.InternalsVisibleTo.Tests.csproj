@@ -1,8 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0</TargetFrameworks>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+
+    <!-- Define a constant to change the namespace of the test files -->
+    <DefineConstants>$(DefineConstants);INTERNALS_VISIBLE_TO_TESTS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,14 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\PolySharp.Tests\PolySharp.Tests.csproj" />
   </ItemGroup>
 
-  <!--
-    Declare internal accessibility for the 'PolySharp.InternalsVisibleTo.Tests' project, which
-    is used to validate that '[Embedded]' is correctly filtered when detecting accessible types.
-  -->
   <ItemGroup>
-    <InternalsVisibleTo Include="PolySharp.InternalsVisibleTo.Tests" />
+    <Compile Include="..\PolySharp.Tests\LanguageFeatures.cs" Link="LanguageFeatures.cs" />
+    <Compile Include="..\PolySharp.Tests\RuntimeSupport.cs" Link="RuntimeSupport.cs" />
   </ItemGroup>
 
 </Project>
