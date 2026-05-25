@@ -28,6 +28,7 @@ namespace System.Runtime.CompilerServices2
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Struct, AllowMultiple = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class InlineArrayAttribute : global::System.Attribute
     {

@@ -11,6 +11,11 @@ internal static class PolySharpMSBuildProperties
     public const string UsePublicAccessibilityForGeneratedTypes = "PolySharpUsePublicAccessibilityForGeneratedTypes";
 
     /// <summary>
+    /// The MSBuild property for <see cref="Models.GenerationOptions.UseEmbeddedAttributeForGeneratedTypes"/>.
+    /// </summary>
+    public const string UseEmbeddedAttributeForGeneratedTypes = "PolySharpUseEmbeddedAttributeForGeneratedTypes";
+
+    /// <summary>
     /// The MSBuild property for <see cref="Models.GenerationOptions.IncludeRuntimeSupportedAttributes"/>.
     /// </summary>
     public const string IncludeRuntimeSupportedAttributes = "PolySharpIncludeRuntimeSupportedAttributes";

@@ -18,6 +18,9 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
             context.AnalyzerConfigOptionsProvider
             .Select(GetGenerationOptions);
 
+        // Generate sources that only depend on the options in use
+        context.RegisterSourceOutput(generationOptions, EmitPreInitializationTypes);
+
         // Get the sequence of all available types that could be generated
         IncrementalValuesProvider<AvailableType> availableTypes =
             context.CompilationProvider

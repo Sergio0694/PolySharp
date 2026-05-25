@@ -14,24 +14,34 @@ internal enum SyntaxFixupType
     None = 0,
 
     /// <summary>
+    /// Uses the <see langword="public"/> accessibility modifier (instead of <see langword="internal"/>).
+    /// </summary>
+    UsePublicAccessibilityModifier = 1 << 0,
+
+    /// <summary>
+    /// Remove all <c>[Embedded]</c> attributes.
+    /// </summary>
+    RemoveEmbeddedAttributes = 1 << 1,
+
+    /// <summary>
     /// Remove all <c>[MethodImpl]</c> attributes.
     /// </summary>
-    RemoveMethodImplAttributes = 1 << 0,
+    RemoveMethodImplAttributes = 1 << 2,
 
     /// <summary>
     /// Remove all <c>[ExcludeFromCodeCoverage]</c> attributes.
     /// </summary>
-    RemoveExcludeFromCodeCoverageAttributes = 1 << 1,
+    RemoveExcludeFromCodeCoverageAttributes = 1 << 3,
 
     /// <summary>
     /// Generates the <c>[UnmanagedCallersOnly]</c> type in the <c>InteropServices2</c> dummy namespace.
     /// </summary>
     /// <remarks>This is needed when methods annotated with the attribute have to be assigned to delegates, which Roslyn will otherwise block.</remarks>
-    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 2,
+    UseInteropServices2ForUnmanagedCallersOnlyAttribute = 1 << 4,
 
     /// <summary>
     /// Generates a global using for the <c>[InlineArray]</c> type in the dummy namespace.
     /// </summary>
     /// <remarks>This is always needed when the type is used, as the usage is entirely blocked in the normal namespace.</remarks>
-    EmitGlobalUsingForInlineArrayAttribute = 1 << 3
+    EmitGlobalUsingForInlineArrayAttribute = 1 << 5
 }

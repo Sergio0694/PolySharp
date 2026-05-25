@@ -63,6 +63,7 @@ namespace System.Runtime.InteropServices
     /// </remarks>
     [global::System.AttributeUsage(global::System.AttributeTargets.Method, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     [global::System.Diagnostics.Conditional("MULTI_TARGETING_SUPPORT_ATTRIBUTES")]
     internal sealed class SuppressGCTransitionAttribute : global::System.Attribute
     {

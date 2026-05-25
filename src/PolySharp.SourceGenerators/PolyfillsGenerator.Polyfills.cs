@@ -23,7 +23,7 @@ partial class PolyfillsGenerator
     /// <summary>
     /// A regex to extract the fully qualified type name of a type from its embedded resource name.
     /// </summary>
-    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources(?:\.RuntimeSupported)?\.(System(?:\.\w+)+)\.cs$";
+    private const string EmbeddedResourceNameToFullyQualifiedTypeNameRegex = @"^PolySharp\.SourceGenerators\.EmbeddedResources\.\w+\.(\w+(?:\.\w+)+)\.cs$";
 
     /// <summary>
     /// The mapping of fully qualified type names to embedded resource names.
@@ -36,17 +36,17 @@ partial class PolyfillsGenerator
     /// The collection of fully qualified type names for language support types.
     /// </summary>
     private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where !resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
+        select resource.Key);
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
     private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
-        from string resourceName in typeof(PolyfillsGenerator).Assembly.GetManifestResourceNames()
-        where resourceName.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select Regex.Match(resourceName, EmbeddedResourceNameToFullyQualifiedTypeNameRegex).Groups[1].Value);
+        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
+        select resource.Key);
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
@@ -62,6 +62,11 @@ partial class PolyfillsGenerator
     /// The <see cref="Regex"/> to find all <see cref="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute"/> uses.
     /// </summary>
     private static readonly Regex ExcludeFromCodeCoverageRegex = new(@" *\[global::System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverage\]\r?\n", RegexOptions.Compiled);
+
+    /// <summary>
+    /// The <see cref="Regex"/> to find all <see cref="EmbeddedAttribute"/> uses.
+    /// </summary>
+    private static readonly Regex EmbeddedAttributeRegex = new(@" *\[global::Microsoft\.CodeAnalysis\.Embedded\]\r?\n", RegexOptions.Compiled);
 
     /// <summary>
     /// The dictionary of cached sources to produce.
@@ -80,6 +85,9 @@ partial class PolyfillsGenerator
         // $(PolySharpUsePublicAccessibilityForGeneratedTypes) MSBuild property to configure this however they need.
         bool usePublicAccessibilityForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
 
+        // Check whether to emit the '[Embedded]' attribute and apply it to generated types
+        bool useEmbeddedAttributeForGeneratedTypes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes, defaultValue: true);
+
         // Do the same as above for all other available boolean properties
         bool includeRuntimeSupportedAttributes = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.IncludeRuntimeSupportedAttributes);
         bool useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute = options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseInteropServices2NamespaceForUnmanagedCallersOnlyAttribute);
@@ -94,6 +102,7 @@ partial class PolyfillsGenerator
 
         return new(
             usePublicAccessibilityForGeneratedTypes,
+            useEmbeddedAttributeForGeneratedTypes,
             includeRuntimeSupportedAttributes,
             useInteropServices2NamespaceForUnmanagedCallersOnlyAttribute,
             excludeTypeForwardedToDeclarations,
@@ -238,7 +247,32 @@ partial class PolyfillsGenerator
         // Combine the syntax type with any analyzer options
         SyntaxFixupType fixupType = info.AvailableType.FixupType | GetSyntaxFixupType(info.AvailableType, info.Options);
 
-        return new(info.AvailableType.FullyQualifiedMetadataName, info.Options.UsePublicAccessibilityForGeneratedTypes, fixupType);
+        // Also combine additional flags from project settings
+        fixupType |= info.Options.UsePublicAccessibilityForGeneratedTypes ? SyntaxFixupType.UsePublicAccessibilityModifier : SyntaxFixupType.None;
+        fixupType |= !info.Options.UseEmbeddedAttributeForGeneratedTypes ? SyntaxFixupType.RemoveEmbeddedAttributes : SyntaxFixupType.None;
+
+        return new(info.AvailableType.FullyQualifiedMetadataName, fixupType);
+    }
+
+    /// <summary>
+    /// Emits all requested "pre-initialization" types (but as an output step, so we can handle conditions).
+    /// </summary>
+    /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
+    /// <param name="options">The input <see cref="GenerationOptions"/> instance to use to emit code.</param>
+    private static void EmitPreInitializationTypes(SourceProductionContext context, GenerationOptions options)
+    {
+        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
+        // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
+        if (options.UseEmbeddedAttributeForGeneratedTypes)
+        {
+            string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+
+            // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
+            string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
+
+            context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
+        }
     }
 
     /// <summary>
@@ -255,8 +289,8 @@ partial class PolyfillsGenerator
 
             using Stream stream = typeof(PolyfillsGenerator).Assembly.GetManifestResourceStream(resourceName);
 
-            // If public accessibility has been requested or a syntax fixup is needed, we need to update the loaded source files
-            if (type is { IsPublicAccessibilityRequired: true } or { FixupType: not SyntaxFixupType.None })
+            // If a syntax fixup is needed, we need to update the loaded source files
+            if (type is { FixupType: not SyntaxFixupType.None })
             {
                 string adjustedSource;
 
@@ -265,13 +299,22 @@ partial class PolyfillsGenerator
                     adjustedSource = reader.ReadToEnd();
                 }
 
-                if (type.IsPublicAccessibilityRequired)
+                if ((type.FixupType & SyntaxFixupType.UsePublicAccessibilityModifier) != 0)
                 {
                     // After reading the file, replace all internal keywords with public. Use a space before and after the identifier
                     // to avoid potential false positives. This could also be done by loading the source tree and using a syntax
                     // rewriter, or just by retrieving the type declaration syntax and updating the modifier tokens, but since the
                     // change is so minimal, it can very well just be done this way to keep things simple, that's fine in this case.
                     adjustedSource = adjustedSource.Replace(" internal ", " public ");
+
+                    // If types are public, we also need to strip the '[Embedded]' attributes, as it's not allowed on public types
+                    adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
+                }
+                else if ((type.FixupType & SyntaxFixupType.RemoveEmbeddedAttributes) != 0)
+                {
+                    // Remove the '[Embedded]' attributes as above, if requested. We only need this check if types
+                    // are not public, or these attributes would've already been stripped by the previous branch.
+                    adjustedSource = EmbeddedAttributeRegex.Replace(adjustedSource, "");
                 }
 
                 if ((type.FixupType & SyntaxFixupType.RemoveMethodImplAttributes) != 0)
@@ -311,7 +354,7 @@ partial class PolyfillsGenerator
             }
             else
             {
-                // If the default accessibility is used, we can load the source directly
+                // Otherwise if no fixups are needed, we can load the source directly
                 sourceText = SourceText.From(stream, Encoding.UTF8, canBeEmbedded: true);
             }
 
