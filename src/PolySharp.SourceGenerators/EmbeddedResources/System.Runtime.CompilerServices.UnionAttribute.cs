@@ -15,6 +15,7 @@ namespace System.Runtime.CompilerServices
         global::System.AttributeTargets.Struct,
         AllowMultiple = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class UnionAttribute : global::System.Attribute
     {
     }
