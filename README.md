@@ -55,7 +55,7 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[OverloadResolutionPriority]` (needed for [overload resolution priority](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#overload-resolution-priority))
 - `[ParamsCollection]` (needed for [params collection](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-13#params-collections))
 - `[ConstantExpected]` (see [proposal](https://github.com/dotnet/runtime/issues/33771))
-- Union types (needed for [C# 15 union types](https://devblogs.microsoft.com/dotnet/csharp-15-union-types/))
+- Union types (needed for [C# 15 union types](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union))
   - `[Union]`
   - `IUnion`
 - `[CompilerLoweringPreserve]` (see [proposal](https://github.com/dotnet/runtime/issues/103430))
