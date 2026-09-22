@@ -10,6 +10,7 @@ namespace System.Runtime.CompilerServices
     /// <summary>
     /// Defines the contract for union types, providing access to the underlying value.
     /// </summary>
+    [global::Microsoft.CodeAnalysis.Embedded]
     internal interface IUnion
     {
         /// <summary>

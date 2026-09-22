@@ -13,7 +13,8 @@ namespace System.Runtime.CompilerServices
     [global::System.AttributeUsage(
         global::System.AttributeTargets.Class |
         global::System.AttributeTargets.Struct,
-        AllowMultiple = false)]
+        AllowMultiple = false,
+        Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::Microsoft.CodeAnalysis.Embedded]
     internal sealed class UnionAttribute : global::System.Attribute
