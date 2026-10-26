@@ -24,6 +24,8 @@ namespace System.Diagnostics.CodeAnalysis
         /// <summary>
         /// Initializes a new instance of the <see cref="RequiresUnsafeAttribute"/> class.
         /// </summary>
-        public RequiresUnsafeAttribute() { }
+        public RequiresUnsafeAttribute()
+        {
+        }
     }
 }

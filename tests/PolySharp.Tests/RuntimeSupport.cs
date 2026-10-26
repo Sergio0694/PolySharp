@@ -102,10 +102,10 @@ internal class AccessorApis
     }
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = nameof(field))]
-    public static extern ref int GetField(RandomApis obj);
+    public static extern safe ref int GetField(RandomApis obj);
 
     [UnsafeAccessor(UnsafeAccessorKind.Field, Name = nameof(field))]
-    public static extern ref int GetAnonymousField([UnsafeAccessorType("Foo, PolySharp.ExternalTypes")] object? obj);
+    public static extern safe ref int GetAnonymousField([UnsafeAccessorType("Foo, PolySharp.ExternalTypes")] object? obj);
 }
 
 [InlineArray(16)]
