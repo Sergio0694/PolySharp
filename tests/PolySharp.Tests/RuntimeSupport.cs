@@ -10,7 +10,7 @@ using System.Runtime.Versioning;
 [assembly: DisableRuntimeMarshalling]
 
 #if INTERNALS_VISIBLE_TO_TESTS
-namespace PolySharp.InternalsVisbleTo.Tests;
+namespace PolySharp.InternalsVisibleTo.Tests;
 #else
 namespace PolySharp.Tests;
 #endif
