@@ -255,23 +255,28 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Emits all requested "pre-initialization" types (but as an output step, so we can handle conditions).
+    /// Calculates the collection of pre-initialization types to generate.
     /// </summary>
-    /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
-    /// <param name="info">The generation options and framework support info to use to emit code.</param>
-    private void EmitPreInitializationTypes(SourceProductionContext context, (GenerationOptions Options, bool HasExcludeFromCodeCoverageAttribute) info)
+    /// <param name="info">The current compilation and generation options.</param>
+    /// <param name="token">The cancellation token for the operation.</param>
+    /// <returns>The collection of pre-initialization types to generate.</returns>
+    private static ImmutableArray<GeneratedType> GetPreInitializationTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
     {
-        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        token.ThrowIfCancellationRequested();
+
+        if (!info.Options.UseEmbeddedAttributeForGeneratedTypes)
+        {
+            return ImmutableArray<GeneratedType>.Empty;
+        }
+
+        // Generate the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
         // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
         // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
-        if (info.Options.UseEmbeddedAttributeForGeneratedTypes)
-        {
-            SyntaxFixupType fixupType = info.HasExcludeFromCodeCoverageAttribute
-                ? SyntaxFixupType.None
-                : SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
+        SyntaxFixupType fixupType = info.Compilation.HasAccessibleTypeWithMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
+            ? SyntaxFixupType.None
+            : SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
 
-            EmitGeneratedType(context, new GeneratedType("Microsoft.CodeAnalysis.EmbeddedAttribute", fixupType));
-        }
+        return ImmutableArray.Create(new GeneratedType("Microsoft.CodeAnalysis.EmbeddedAttribute", fixupType));
     }
 
     /// <summary>
