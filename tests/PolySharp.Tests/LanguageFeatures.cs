@@ -306,22 +306,96 @@ internal static class ConstantExpectedTests
 }
 
 // UnionAttribute, IUnion
-[Union]
-internal sealed class TestUnion : IUnion
+internal static class UnionTests
 {
-    private readonly object? value;
-
-    public TestUnion(int value)
+    public static int Test()
     {
-        this.value = value;
+        IntOrString number = 42;
+        IntOrString text = "PolySharp";
+        IUnion union = number;
+
+        _ = union.Value;
+        _ = GetValue(number);
+        _ = GetValue(default);
+
+        return GetValue(text);
     }
 
-    public TestUnion(string value)
+    public static int GetValue(IntOrString value)
     {
-        this.value = value;
+        return value switch
+        {
+            int number => number,
+            string text => text.Length,
+            null => 0
+        };
     }
 
-    public object? Value => this.value;
+    public static int TestManualUnion()
+    {
+        IntOrBool number = 42;
+        IntOrBool boolean = true;
+
+        _ = GetManualValue(number);
+        _ = GetManualValue(default);
+
+        return GetManualValue(boolean);
+    }
+
+    public static int GetManualValue(IntOrBool value)
+    {
+        return value switch
+        {
+            int number => number,
+            bool boolean => boolean ? 1 : 0,
+            null => -1
+        };
+    }
+
+    public readonly union IntOrString(int, string);
+
+    [Union]
+    public readonly struct IntOrBool : IUnion
+    {
+        private readonly int number;
+        private readonly bool boolean;
+        private readonly byte tag;
+
+        public IntOrBool(int value)
+        {
+            this.number = value;
+            this.tag = 1;
+        }
+
+        public IntOrBool(bool value)
+        {
+            this.boolean = value;
+            this.tag = 2;
+        }
+
+        public object? Value => this.tag switch
+        {
+            1 => this.number,
+            2 => this.boolean,
+            _ => null
+        };
+
+        public bool HasValue => this.tag != 0;
+
+        public bool TryGetValue(out int value)
+        {
+            value = this.number;
+
+            return this.tag == 1;
+        }
+
+        public bool TryGetValue(out bool value)
+        {
+            value = this.boolean;
+
+            return this.tag == 2;
+        }
+    }
 }
 
 [CompilerLoweringPreserve]

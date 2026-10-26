@@ -8,8 +8,14 @@
 namespace System.Runtime.CompilerServices
 {
     /// <summary>
-    /// Indicates that a type is a union type, allowing the C# compiler to recognize it for union type features.
+    /// Indicates that a class or struct is a union type, enabling compiler support for union behaviors.
     /// </summary>
+    /// <remarks>
+    /// Any class or struct annotated with this attribute is recognized by the C# compiler as a union type.
+    /// Union types may support behaviors such as implicit conversions from case types, pattern matching
+    /// that unwraps the union's contents, and switch exhaustiveness checking.
+    /// </remarks>
+    /// <seealso cref="global::System.Runtime.CompilerServices.IUnion"/>
     [global::System.AttributeUsage(
         global::System.AttributeTargets.Class |
         global::System.AttributeTargets.Struct,
