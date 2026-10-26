@@ -58,4 +58,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "The source generator features from PolySharp require consuming projects to set the C# language version to at least C# 8.0. Make sure to add <LangVersion>8.0</LangVersion> (or above) to your .csproj file.",
         helpLinkUri: "https://github.com/Sergio0694/PolySharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> indicating when embedded attributes are explicitly enabled on an unsupported Roslyn version.
+    /// <para>
+    /// Format: <c>"The property "{0}" requires Roslyn 4.14 or newer when set to "true" and will be ignored on the current compiler version"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor UnsupportedEmbeddedAttributeRoslynVersion = new DiagnosticDescriptor(
+        id: "POLYSP0004",
+        title: "Unsupported Roslyn version for embedded attributes",
+        messageFormat: "The property \"{0}\" requires Roslyn 4.14 or newer when set to \"true\" and will be ignored on the current compiler version",
+        category: typeof(InvalidPolySharpMSBuildOptionAnalyzer).FullName,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Explicitly enabling embedded attributes requires Roslyn 4.14 or newer. Embedded attributes are disabled on older compilers to avoid 'CS8336'.",
+        helpLinkUri: "https://github.com/Sergio0694/PolySharp");
 }
