@@ -401,9 +401,12 @@ internal static class UnionTests
 [CompilerLoweringPreserve]
 internal sealed class TestFlowingAttribute : Attribute;
 
-// Test for '[ExtensionMarker]'
 internal static class ExtensionContainer
 {
+    // Test for '[Extension]'
+    public static bool Test(this string s) => s == "PolySharp";
+
+    // Test for '[ExtensionMarker]'
     extension(string s)
     {
         public bool M => s == "PolySharp";

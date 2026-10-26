@@ -21,6 +21,7 @@ Here's an example of some of the new features that **PolySharp** can enable down
 # Documentation 📖
 
 **PolySharp** includes the following polyfills:
+- `[Extension]` (see [extension methods](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods))
 - Nullability attributes (for [nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references)):
   - `[AllowNull]`
   - `[DisallowNull]`
