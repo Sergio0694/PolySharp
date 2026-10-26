@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
+    <TargetFrameworks>net20;net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
       ..\..\artifacts;
@@ -9,9 +9,13 @@
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.1'))">
+    <DefineConstants>$(DefineConstants);COMP_NETSTANDARD1_1</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="$(PackageVersion)" />
-    <PackageReference Include="System.Memory" Version="4.5.5" Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))" />
+    <PackageReference Include="System.Memory" Version="4.5.5" Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.1')) and !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))" />
   </ItemGroup>
 
   <ItemGroup>
