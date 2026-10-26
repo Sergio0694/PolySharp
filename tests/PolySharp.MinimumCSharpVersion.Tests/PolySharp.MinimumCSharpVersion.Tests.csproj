@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
     <!--
       The generator runs in the compiler, so skip compatibility checks against the older test frameworks.
       Also remove 'TargetFramework' from forwarded properties so the generator builds for its own framework.

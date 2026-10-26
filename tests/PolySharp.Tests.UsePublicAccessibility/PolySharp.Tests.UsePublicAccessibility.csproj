@@ -25,7 +25,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" SetTargetFramework="TargetFramework=netstandard2.0" />
+    <!--
+      The generator runs in the compiler, so skip compatibility checks against the older test frameworks.
+      Also remove 'TargetFramework' from forwarded properties so the generator builds for its own framework.
+    -->
+    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework"
+                      PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
   <ItemGroup>
