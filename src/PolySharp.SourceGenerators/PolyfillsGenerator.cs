@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using PolySharp.SourceGenerators.Extensions;
 using PolySharp.SourceGenerators.Models;
 
 namespace PolySharp.SourceGenerators;
@@ -18,8 +19,14 @@ public sealed partial class PolyfillsGenerator : IIncrementalGenerator
             context.AnalyzerConfigOptionsProvider
             .Select(GetGenerationOptions);
 
-        // Generate sources that only depend on the options in use
-        context.RegisterSourceOutput(generationOptions, EmitPreInitializationTypes);
+        // Gather the options and framework support needed by pre-initialization types
+        IncrementalValueProvider<(GenerationOptions Options, bool HasExcludeFromCodeCoverageAttribute)> preInitializationOptions =
+            generationOptions.Combine(
+                context.CompilationProvider.Select(static (compilation, _) =>
+                    compilation.HasAccessibleTypeWithMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")));
+
+        // Generate sources for pre-initialization types
+        context.RegisterSourceOutput(preInitializationOptions, EmitPreInitializationTypes);
 
         // Get the sequence of all available types that could be generated
         IncrementalValuesProvider<AvailableType> availableTypes =

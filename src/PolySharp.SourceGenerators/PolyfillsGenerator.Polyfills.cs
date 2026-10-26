@@ -258,20 +258,19 @@ partial class PolyfillsGenerator
     /// Emits all requested "pre-initialization" types (but as an output step, so we can handle conditions).
     /// </summary>
     /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
-    /// <param name="options">The input <see cref="GenerationOptions"/> instance to use to emit code.</param>
-    private static void EmitPreInitializationTypes(SourceProductionContext context, GenerationOptions options)
+    /// <param name="info">The generation options and framework support info to use to emit code.</param>
+    private void EmitPreInitializationTypes(SourceProductionContext context, (GenerationOptions Options, bool HasExcludeFromCodeCoverageAttribute) info)
     {
         // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
         // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
         // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
-        if (options.UseEmbeddedAttributeForGeneratedTypes)
+        if (info.Options.UseEmbeddedAttributeForGeneratedTypes)
         {
-            string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+            SyntaxFixupType fixupType = info.HasExcludeFromCodeCoverageAttribute
+                ? SyntaxFixupType.None
+                : SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
 
-            // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
-            string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
-
-            context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
+            EmitGeneratedType(context, new GeneratedType("Microsoft.CodeAnalysis.EmbeddedAttribute", fixupType));
         }
     }
 
