@@ -1,11 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
+
+#if COMP_NETSTANDARD1_1
+using System.Collections;
+using System.Collections.Generic;
+
 #if !NETSTANDARD2_1
 using System.Threading.Tasks;
+#endif
 #endif
 
 #pragma warning disable CA2255
@@ -134,7 +138,7 @@ internal class TestClassWithRequiredMembers
 }
 
 // IsExternalInit
-internal record Person(string Name);
+internal record struct Person(string Name);
 
 internal readonly struct TestStruct
 {
@@ -148,6 +152,7 @@ internal readonly struct TestStruct
     }
 }
 
+#if COMP_NETSTANDARD1_1
 internal static class IndexAndRangeTests
 {
     // Index
@@ -215,13 +220,14 @@ internal class AnotherTestClass
     {
     }
 }
+#endif
 
 [InterpolatedStringHandler]
 internal struct TestHandler
 {
 }
 
-#if !NETSTANDARD2_1
+#if COMP_NETSTANDARD1_1 && !NETSTANDARD2_1
 
 internal struct TaskLikeType
 {
@@ -404,7 +410,10 @@ internal sealed class TestFlowingAttribute : Attribute;
 internal static class ExtensionContainer
 {
     // Test for '[Extension]'
-    public static bool Test(this string s) => s == "PolySharp";
+    public static bool Test(this string s)
+    {
+        return s == "PolySharp";
+    }
 
     // Test for '[ExtensionMarker]'
     extension(string s)
