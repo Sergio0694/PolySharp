@@ -5,6 +5,7 @@
 using System.Collections.Immutable;
 using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using PolySharp.SourceGenerators.Constants;
 using PolySharp.SourceGenerators.Extensions;
@@ -31,6 +32,19 @@ partial class InvalidPolySharpMSBuildOptionAnalyzer
         if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes, out string? usePublicAccessibilityForGeneratedTypes))
         {
             builder.Add(InvalidBoolMSBuildProperty, usePublicAccessibilityForGeneratedTypes, PolySharpMSBuildProperties.UsePublicAccessibilityForGeneratedTypes);
+        }
+
+        token.ThrowIfCancellationRequested();
+
+        // Validate "UseEmbeddedAttributeForGeneratedTypes" and its Roslyn version requirement
+        if (!options.IsValidMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes, out string? useEmbeddedAttributeForGeneratedTypes))
+        {
+            builder.Add(InvalidBoolMSBuildProperty, useEmbeddedAttributeForGeneratedTypes, PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes);
+        }
+        else if (!CSharpCompilation.IsEmbeddedAttributeSupported &&
+                 options.GetBoolMSBuildProperty(PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes))
+        {
+            builder.Add(UnsupportedEmbeddedAttributeRoslynVersion, PolySharpMSBuildProperties.UseEmbeddedAttributeForGeneratedTypes);
         }
 
         token.ThrowIfCancellationRequested();
