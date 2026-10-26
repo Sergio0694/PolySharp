@@ -152,22 +152,24 @@ internal readonly struct TestStruct
     }
 }
 
-#if COMP_NETSTANDARD1_1
 internal static class IndexAndRangeTests
 {
     // Index
-    public static int TestIndex(ReadOnlySpan<int> numbers)
+    public static char TestIndex(string chars)
     {
-        return numbers[^1];
+        return chars[^1];
     }
 
+#if COMP_NETSTANDARD1_1
     // Range
-    public static ReadOnlySpan<int> TestRange(ReadOnlySpan<int> numbers)
+    public static string TestRange(string chars)
     {
-        return numbers[1..^4];
+        return chars[1..^4];
     }
+#endif
 }
 
+#if COMP_NETSTANDARD1_1
 [CollectionBuilder(typeof(CollectionClass), nameof(Create))]
 internal class CollectionClass : IEnumerable<int>
 {
@@ -198,6 +200,7 @@ internal class CollectionClass : IEnumerable<int>
         return null!;
     }
 }
+#endif
 
 internal class AnotherTestClass
 {
@@ -207,6 +210,7 @@ internal class AnotherTestClass
         return name;
     }
 
+#if COMP_NETSTANDARD1_1
     [SkipLocalsInit]
     public void Stackalloc()
     {
@@ -215,12 +219,12 @@ internal class AnotherTestClass
             _ = stackalloc int[8];
         }
     }
+#endif
 
     public void Handler(string name, [InterpolatedStringHandlerArgument(nameof(name))] ref TestHandler handler)
     {
     }
 }
-#endif
 
 [InterpolatedStringHandler]
 internal struct TestHandler
@@ -228,7 +232,6 @@ internal struct TestHandler
 }
 
 #if COMP_NETSTANDARD1_1 && !NETSTANDARD2_1
-
 internal struct TaskLikeType
 {
     [AsyncMethodBuilder(typeof(CustomAsyncMethodBuilder))]
@@ -279,7 +282,6 @@ internal struct TaskLikeType
         }
     }
 }
-
 #endif
 
 internal static class OverloadResolutionPriorityTests
