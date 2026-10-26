@@ -264,6 +264,7 @@ partial class PolyfillsGenerator
     {
         token.ThrowIfCancellationRequested();
 
+        // '[Embedded]' is the only pre-initialization type for now, so disabling it leaves nothing to generate
         if (!info.Options.UseEmbeddedAttributeForGeneratedTypes)
         {
             return ImmutableArray<GeneratedType>.Empty;
