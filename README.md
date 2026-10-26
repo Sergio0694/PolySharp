@@ -57,6 +57,8 @@ Here's an example of some of the new features that **PolySharp** can enable down
 - `[ConstantExpected]` (see [proposal](https://github.com/dotnet/runtime/issues/33771))
 - `[CompilerLoweringPreserve]` (see [proposal](https://github.com/dotnet/runtime/issues/103430))
 - `[ExtensionMarker]` (needed for [extensions](https://learn.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-14#extension-members))
+- `[IsClosedType]` (needed for [closed hierarchies](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-15.0/closed-hierarchies))
+- `[RequiresUnsafe]` (needed for [unsafe evolution](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/unsafe-evolution))
 
 To leverage them, make sure to bump your C# language version. You can do this by setting the `<LangVersion>` MSBuild property in your project. For instance, by adding `<LangVersion>15.0</LangVersion>` (or your desired C# version) to the first `<PropertyGroup>` of your .csproj file. For more info on this, [see here](https://sergiopedri.medium.com/enabling-and-using-c-9-features-on-older-and-unsupported-runtimes-ce384d8debb), but remember that you don't need to manually copy polyfills anymore: simply adding a reference to **PolySharp** will do this for you automatically.
 

@@ -205,7 +205,10 @@ internal class AnotherTestClass
     [SkipLocalsInit]
     public void Stackalloc()
     {
-        _ = stackalloc int[8];
+        unsafe
+        {
+            _ = stackalloc int[8];
+        }
     }
 
     public void Handler(string name, [InterpolatedStringHandlerArgument(nameof(name))] ref TestHandler handler)
@@ -311,5 +314,43 @@ internal static class ExtensionContainer
     extension(string s)
     {
         public bool M => s == "PolySharp";
+    }
+}
+
+// IsClosedTypeAttribute
+internal static class ClosedHierarchyTests
+{
+    public static int Test(ClosedClass value)
+    {
+        return value switch
+        {
+            FirstDerivedClass => 1,
+            SecondDerivedClass => 2
+        };
+    }
+
+    public closed class ClosedClass;
+
+    public sealed class FirstDerivedClass : ClosedClass;
+
+    public sealed class SecondDerivedClass : ClosedClass;
+}
+
+// RequiresUnsafeAttribute
+internal static class RequiresUnsafeTests
+{
+    public static void Test()
+    {
+        unsafe
+        {
+            UnsafeMethod();
+        }
+    }
+
+#pragma warning disable IDE0380
+    public static unsafe void UnsafeMethod()
+#pragma warning restore IDE0380
+    {
+        // The unsafe modifier makes the compiler emit '[RequiresUnsafe]', which cannot be applied explicitly
     }
 }

@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>15.0</LangVersion>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -23,6 +23,9 @@
       For instance, this will warn when using the == operator to compare a struct with a null literal.
     -->
     <Features>strict</Features>
+
+    <!-- Enable the updated memory safety rules (see https://learn.microsoft.com/dotnet/csharp/language-reference/proposals/unsafe-evolution) -->
+    <Features>$(Features);updated-memory-safety-rules</Features>
   </PropertyGroup>
 
   <!-- Centralized location for all generated artifacts -->
