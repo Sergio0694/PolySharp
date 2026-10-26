@@ -255,24 +255,29 @@ partial class PolyfillsGenerator
     }
 
     /// <summary>
-    /// Emits all requested "pre-initialization" types (but as an output step, so we can handle conditions).
+    /// Calculates the collection of pre-initialization types to generate.
     /// </summary>
-    /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use to emit code.</param>
-    /// <param name="options">The input <see cref="GenerationOptions"/> instance to use to emit code.</param>
-    private static void EmitPreInitializationTypes(SourceProductionContext context, GenerationOptions options)
+    /// <param name="info">The current compilation and generation options.</param>
+    /// <param name="token">The cancellation token for the operation.</param>
+    /// <returns>The collection of pre-initialization types to generate.</returns>
+    private static ImmutableArray<GeneratedType> GetPreInitializationTypes((Compilation Compilation, GenerationOptions Options) info, CancellationToken token)
     {
-        // Emit the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
+        token.ThrowIfCancellationRequested();
+
+        // '[Embedded]' is the only pre-initialization type for now, so disabling it leaves nothing to generate
+        if (!info.Options.UseEmbeddedAttributeForGeneratedTypes)
+        {
+            return ImmutableArray<GeneratedType>.Empty;
+        }
+
+        // Generate the '[Embedded]' definition, which is used by all polyfill types. This is needed to avoid
         // conflicts when multiple polyfills are transitively visible in scenarios such as '[InternalsVisibleTo]'.
         // When '[Embedded]' is used, Roslyn will instead just pick one of the accessible copies, with no errors.
-        if (options.UseEmbeddedAttributeForGeneratedTypes)
-        {
-            string resourceName = FullyQualifiedTypeNamesToResourceNames["Microsoft.CodeAnalysis.EmbeddedAttribute"];
+        SyntaxFixupType fixupType = info.Compilation.HasAccessibleTypeWithMetadataName("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")
+            ? SyntaxFixupType.None
+            : SyntaxFixupType.RemoveExcludeFromCodeCoverageAttributes;
 
-            // We don't need any adjustments for this attribute, we just read it directly from the embedded resource
-            string sourceText = typeof(PolyfillsGenerator).Assembly.ReadManifestResource(resourceName);
-
-            context.AddSource("Microsoft.CodeAnalysis.EmbeddedAttribute.g.cs", sourceText);
-        }
+        return ImmutableArray.Create(new GeneratedType("Microsoft.CodeAnalysis.EmbeddedAttribute", fixupType));
     }
 
     /// <summary>
