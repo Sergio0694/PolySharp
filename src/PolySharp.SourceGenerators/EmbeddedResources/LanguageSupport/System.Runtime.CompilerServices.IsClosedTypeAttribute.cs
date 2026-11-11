@@ -15,7 +15,7 @@ namespace System.Runtime.CompilerServices
     [global::System.AttributeUsage(AttributeTargets.Class, Inherited = false)]
     [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::Microsoft.CodeAnalysis.Embedded]
-    public sealed class IsClosedTypeAttribute : global::System.Attribute
+    internal sealed class IsClosedTypeAttribute : global::System.Attribute
     {
         private global::System.Type[] _derivedTypes = global::System.Type.EmptyTypes;
 
