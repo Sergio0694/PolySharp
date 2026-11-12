@@ -21,4 +21,35 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!--
+    Validate that all polyfill types are declared as 'internal'. The generator only rewrites 'internal' to 'public' when
+    $(PolySharpUsePublicAccessibilityForGeneratedTypes) is set, so a type declared as 'public' in the embedded sources
+    would always be emitted as public, regardless of the configuration, and would go unnoticed since nothing else checks it.
+  -->
+  <Target Name="ValidatePolyfillTypeAccessibility" BeforeTargets="CoreCompile">
+
+      <!--
+      Build the regex from named parts. It matches a line starting with 'public', followed by any
+      number of modifiers, and then a type keyword (eg. 'public sealed class Foo'). Only 'public' is
+      checked, as private nested types (eg. helper classes) are expected in some of the polyfills.
+    -->
+    <PropertyGroup>
+      <_PolyfillTypeModifiers>sealed|static|abstract|readonly|ref|unsafe|partial|file</_PolyfillTypeModifiers>
+      <_PolyfillTypeKeywords>class|struct|enum|interface|delegate|record</_PolyfillTypeKeywords>
+      <_PublicTypeDeclarationRegex>(?m)^\s*public\s+(?:(?:$(_PolyfillTypeModifiers))\s+)*(?:$(_PolyfillTypeKeywords))\b</_PublicTypeDeclarationRegex>
+    </PropertyGroup>
+
+    <!-- Gather any polyfills that were accidentally not marked as internal -->
+    <ItemGroup>
+      <_PolyfillSource Include="@(EmbeddedResource)" Condition="'%(Extension)' == '.cs'" />
+
+      <_NonInternalPolyfill Include="@(_PolyfillSource)"
+                            Condition="$([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('%(FullPath)')), '$(_PublicTypeDeclarationRegex)'))" />
+    </ItemGroup>
+
+    <!-- Error to enforce that we never accidentally ship public polyfills, as that would break consumers -->
+    <Error Condition="'@(_NonInternalPolyfill)' != ''"
+           Text="Polyfill types must be declared as 'internal', but a non-internal type was found in: @(_NonInternalPolyfill->'%(Filename)%(Extension)', ', ')." />
+  </Target>
+
 </Project>
