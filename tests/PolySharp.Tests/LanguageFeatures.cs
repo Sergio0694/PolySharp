@@ -1,17 +1,21 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
+
+#if COMP_NETSTANDARD1_1
+using System.Collections;
+using System.Collections.Generic;
+
 #if !NETSTANDARD2_1
 using System.Threading.Tasks;
+#endif
 #endif
 
 #pragma warning disable CA2255
 
 #if INTERNALS_VISIBLE_TO_TESTS
-namespace PolySharp.InternalsVisbleTo.Tests;
+namespace PolySharp.InternalsVisibleTo.Tests;
 #else
 namespace PolySharp.Tests;
 #endif
@@ -134,7 +138,7 @@ internal class TestClassWithRequiredMembers
 }
 
 // IsExternalInit
-internal record Person(string Name);
+internal record struct Person(string Name);
 
 internal readonly struct TestStruct
 {
@@ -151,18 +155,21 @@ internal readonly struct TestStruct
 internal static class IndexAndRangeTests
 {
     // Index
-    public static int TestIndex(ReadOnlySpan<int> numbers)
+    public static char TestIndex(string chars)
     {
-        return numbers[^1];
+        return chars[^1];
     }
 
+#if COMP_NETSTANDARD1_1
     // Range
-    public static ReadOnlySpan<int> TestRange(ReadOnlySpan<int> numbers)
+    public static string TestRange(string chars)
     {
-        return numbers[1..^4];
+        return chars[1..^4];
     }
+#endif
 }
 
+#if COMP_NETSTANDARD1_1
 [CollectionBuilder(typeof(CollectionClass), nameof(Create))]
 internal class CollectionClass : IEnumerable<int>
 {
@@ -193,6 +200,7 @@ internal class CollectionClass : IEnumerable<int>
         return null!;
     }
 }
+#endif
 
 internal class AnotherTestClass
 {
@@ -202,6 +210,7 @@ internal class AnotherTestClass
         return name;
     }
 
+#if COMP_NETSTANDARD1_1
     [SkipLocalsInit]
     public void Stackalloc()
     {
@@ -210,6 +219,7 @@ internal class AnotherTestClass
             _ = stackalloc int[8];
         }
     }
+#endif
 
     public void Handler(string name, [InterpolatedStringHandlerArgument(nameof(name))] ref TestHandler handler)
     {
@@ -221,8 +231,7 @@ internal struct TestHandler
 {
 }
 
-#if !NETSTANDARD2_1
-
+#if COMP_NETSTANDARD1_1 && !NETSTANDARD2_1
 internal struct TaskLikeType
 {
     [AsyncMethodBuilder(typeof(CustomAsyncMethodBuilder))]
@@ -273,7 +282,6 @@ internal struct TaskLikeType
         }
     }
 }
-
 #endif
 
 internal static class OverloadResolutionPriorityTests
@@ -401,9 +409,15 @@ internal static class UnionTests
 [CompilerLoweringPreserve]
 internal sealed class TestFlowingAttribute : Attribute;
 
-// Test for '[ExtensionMarker]'
 internal static class ExtensionContainer
 {
+    // Test for '[Extension]'
+    public static bool Test(this string s)
+    {
+        return s == "PolySharp";
+    }
+
+    // Test for '[ExtensionMarker]'
     extension(string s)
     {
         public bool M => s == "PolySharp";

@@ -6,9 +6,13 @@
     Any changes to either of these two test projects should be kept in sync with the other one.
   -->
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
+    <TargetFrameworks>net20;net472;net48;net481;netstandard2.0;netstandard2.1;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
     <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.1'))">
+    <DefineConstants>$(DefineConstants);COMP_NETSTANDARD1_1</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,12 +20,21 @@
     <CompilerVisibleProperty Include="PolySharpUsePublicAccessibilityForGeneratedTypes" />
   </ItemGroup>
 
-  <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+  <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard1.1')) and !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
     <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <!--
+      The generator runs in the compiler, so skip compatibility checks against the older test frameworks.
+      Also remove 'TargetFramework' from forwarded properties so the generator builds for its own framework.
+    -->
+    <ProjectReference Include="..\..\src\PolySharp.SourceGenerators\PolySharp.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="TargetFramework"
+                      PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
   <ItemGroup>
