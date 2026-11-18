@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -35,18 +36,23 @@ partial class PolyfillsGenerator
     /// <summary>
     /// The collection of fully qualified type names for language support types.
     /// </summary>
+    /// <remarks>
+    /// The names are sorted: <see cref="ImmutableDictionary{TKey, TValue}"/> enumerates in hash code order, and string hash codes
+    /// are randomized per process, so the polyfills would otherwise be emitted in a different order by every compiler process.
+    /// </remarks>
     private static readonly ImmutableArray<string> LanguageSupportTypeNames = ImmutableArray.CreateRange(
-        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
-        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
-        select resource.Key);
+        (from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+         where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.LanguageSupport.")
+         select resource.Key).OrderBy(static name => name, StringComparer.Ordinal));
 
     /// <summary>
     /// The collection of fully qualified type names for runtime supported types.
     /// </summary>
+    /// <remarks>Sorted for the same reason as <see cref="LanguageSupportTypeNames"/>.</remarks>
     private static readonly ImmutableArray<string> RuntimeSupportedTypeNames = ImmutableArray.CreateRange(
-        from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
-        where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
-        select resource.Key);
+        (from KeyValuePair<string, string> resource in FullyQualifiedTypeNamesToResourceNames
+         where resource.Value.StartsWith("PolySharp.SourceGenerators.EmbeddedResources.RuntimeSupported.")
+         select resource.Key).OrderBy(static name => name, StringComparer.Ordinal));
 
     /// <summary>
     /// The collection of all fully qualified type names for available polyfill types.
